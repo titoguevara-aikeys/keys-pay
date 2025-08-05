@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Wallet, 
   LogOut, 
   User, 
   Plus, 
@@ -18,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { SendAppLink } from '@/components/SendAppLink';
+import Navigation from '@/components/Navigation';
 
 const Index = () => {
   const { user, signOut } = useAuth();
@@ -44,30 +44,18 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
-      {/* Header */}
-      <header className="border-b bg-background/80 backdrop-blur-sm">
+      {/* Navigation */}
+      <Navigation />
+      
+      {/* User Info Header */}
+      <header className="bg-background/50 border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <Wallet className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold">AIKEYS Wallet</h1>
-                <p className="text-sm text-muted-foreground">Welcome back, {user?.email?.split('@')[0]}</p>
-              </div>
-            </div>
+          <div className="flex items-center justify-between h-12">
+            <p className="text-sm text-muted-foreground">Welcome back, {user?.email?.split('@')[0]}</p>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm">
                 <Settings className="h-4 w-4" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => window.location.href = '/security'}
-              >
-                Security
               </Button>
               <Button variant="ghost" size="sm" onClick={handleSignOut}>
                 <LogOut className="h-4 w-4" />
