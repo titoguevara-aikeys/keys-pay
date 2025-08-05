@@ -412,6 +412,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_child_account: {
+        Args: {
+          p_parent_id: string
+          p_child_email: string
+          p_first_name: string
+          p_last_name: string
+          p_relationship_type: string
+          p_spending_limit?: number
+          p_transaction_limit?: number
+        }
+        Returns: Json
+      }
       log_security_event: {
         Args: {
           p_user_id: string

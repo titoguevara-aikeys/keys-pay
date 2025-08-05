@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -38,6 +39,7 @@ const formSchema = z.object({
   relationship_type: z.string().min(1, 'Please select a relationship'),
   spending_limit: z.string().optional(),
   daily_limit: z.string().optional(),
+  create_account: z.boolean().default(false),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -63,6 +65,7 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({
       relationship_type: '',
       spending_limit: '',
       daily_limit: '',
+      create_account: false,
     },
   });
 
@@ -75,11 +78,16 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({
         relationship_type: data.relationship_type,
         spending_limit: data.spending_limit ? parseFloat(data.spending_limit) : undefined,
         daily_limit: data.daily_limit ? parseFloat(data.daily_limit) : undefined,
+        create_account: data.create_account,
       });
 
+      const successMessage = data.create_account 
+        ? `${data.first_name} ${data.last_name} has been added with a new child account created!`
+        : `${data.first_name} ${data.last_name} has been added to your family controls.`;
+      
       toast({
         title: 'Family member added!',
-        description: `${data.first_name} ${data.last_name} has been added to your family controls.`,
+        description: successMessage,
       });
 
       form.reset();
@@ -104,7 +112,7 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({
         <DialogHeader>
           <DialogTitle>Add Family Member</DialogTitle>
           <DialogDescription>
-            Add a family member to manage their spending and set controls. The person must already have an account.
+            Add a family member to manage their spending and set controls. You can either link an existing account or create a new child account.
           </DialogDescription>
         </DialogHeader>
 
@@ -146,12 +154,12 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email Address</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="john.doe@example.com" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    The email address of their existing account
-                  </FormDescription>
+                   <FormControl>
+                     <Input type="email" placeholder="john.doe@example.com" {...field} />
+                   </FormControl>
+                   <FormDescription>
+                     Email address for the account (existing or new)
+                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -221,6 +229,29 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({
                 )}
               />
             </div>
+
+            <FormField
+              control={form.control}
+              name="create_account"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Create new child account
+                    </FormLabel>
+                    <FormDescription>
+                      Check this box to automatically create a new account for this family member. If unchecked, they must already have an existing account.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={handleClose}>

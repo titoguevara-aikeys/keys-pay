@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
-import { Plus, Settings, Shield, DollarSign, Clock, Users } from 'lucide-react';
+import { Plus, Settings, Shield, DollarSign, Clock, Users, CreditCard } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useFamilyMembers, useAddFamilyMember, useUpdateFamilyMember } from '@/hooks/useFamilyMembers';
 import { AddFamilyMemberDialog } from '@/components/AddFamilyMemberDialog';
-import { FamilyMemberCard } from '@/components/FamilyMemberCard';
+import { ChildAccountCard } from '@/components/ChildAccountCard';
+import { TransferMoneyDialog } from '@/components/TransferMoneyDialog';
 import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
+import type { FamilyMember } from '@/hooks/useFamilyMembers';
 
 const FamilyControls = () => {
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showTransferDialog, setShowTransferDialog] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<FamilyMember | null>(null);
   const { data: familyMembers, isLoading } = useFamilyMembers();
   const { toast } = useToast();
 
@@ -18,6 +22,20 @@ const FamilyControls = () => {
     totalMembers: familyMembers?.length || 0,
     activeMembers: familyMembers?.filter(m => m.status === 'active').length || 0,
     totalSpendingLimit: familyMembers?.reduce((sum, m) => sum + (m.spending_limit || 0), 0) || 0,
+  };
+
+  const handleEditMember = (member: FamilyMember) => {
+    setSelectedMember(member);
+    // TODO: Implement edit dialog
+    toast({
+      title: 'Edit Controls',
+      description: 'Edit functionality will be implemented soon.',
+    });
+  };
+
+  const handleTransferMoney = (member: FamilyMember) => {
+    setSelectedMember(member);
+    setShowTransferDialog(true);
   };
 
   if (isLoading) {
@@ -114,9 +132,11 @@ const FamilyControls = () => {
           {familyMembers && familyMembers.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {familyMembers.map((member) => (
-                <FamilyMemberCard 
+                <ChildAccountCard 
                   key={member.id} 
                   member={member}
+                  onEdit={handleEditMember}
+                  onTransfer={handleTransferMoney}
                 />
               ))}
             </div>
@@ -173,6 +193,12 @@ const FamilyControls = () => {
       <AddFamilyMemberDialog 
         open={showAddDialog}
         onClose={() => setShowAddDialog(false)}
+      />
+      
+      <TransferMoneyDialog 
+        open={showTransferDialog}
+        onClose={() => setShowTransferDialog(false)}
+        member={selectedMember}
       />
       </div>
     </div>

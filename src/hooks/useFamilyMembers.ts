@@ -50,42 +50,65 @@ export const useAddFamilyMember = () => {
       relationship_type: string;
       spending_limit?: number;
       daily_limit?: number;
+      create_account?: boolean;
     }) => {
       if (!user) throw new Error('User not authenticated');
       
-      // For now, we'll need the child to already have an account
-      // In a real app, this would involve sending an invitation
-      const { data: existingProfile, error: profileError } = await supabase
-        .from('profiles')
-        .select('user_id')
-        .eq('email', memberData.email)
-        .maybeSingle();
-      
-      if (profileError) throw profileError;
-      if (!existingProfile) {
-        throw new Error('Child profile not found. Child must create an account first.');
+      if (memberData.create_account) {
+        // Use the new function to create child account automatically
+        const { data, error } = await supabase.rpc('create_child_account', {
+          p_parent_id: user.id,
+          p_child_email: memberData.email,
+          p_first_name: memberData.first_name,
+          p_last_name: memberData.last_name,
+          p_relationship_type: memberData.relationship_type,
+          p_spending_limit: memberData.spending_limit,
+          p_transaction_limit: memberData.daily_limit,
+        });
+        
+        if (error) throw error;
+        
+        const result = data as { success: boolean; message?: string; [key: string]: any };
+        if (!result.success) {
+          throw new Error(result.message || 'Failed to create child account');
+        }
+        
+        return data;
+      } else {
+        // Original logic for existing accounts
+        const { data: existingProfile, error: profileError } = await supabase
+          .from('profiles')
+          .select('user_id')
+          .eq('email', memberData.email)
+          .maybeSingle();
+        
+        if (profileError) throw profileError;
+        if (!existingProfile) {
+          throw new Error('Child profile not found. Child must create an account first.');
+        }
+        
+        const childId = existingProfile.user_id;
+        
+        // Create family control relationship
+        const { data, error } = await supabase
+          .from('family_controls')
+          .insert({
+            parent_id: user.id,
+            child_id: childId,
+            relationship_type: memberData.relationship_type,
+            spending_limit: memberData.spending_limit,
+            transaction_limit: memberData.daily_limit,
+          })
+          .select()
+          .single();
+        
+        if (error) throw error;
+        return data;
       }
-      
-      const childId = existingProfile.user_id;
-      
-      // Create family control relationship
-      const { data, error } = await supabase
-        .from('family_controls')
-        .insert({
-          parent_id: user.id,
-          child_id: childId,
-          relationship_type: memberData.relationship_type,
-          spending_limit: memberData.spending_limit,
-          transaction_limit: memberData.daily_limit,
-        })
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['family-members'] });
+      queryClient.invalidateQueries({ queryKey: ['accounts'] });
     },
   });
 };
