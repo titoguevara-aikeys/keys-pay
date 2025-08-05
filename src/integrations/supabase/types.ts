@@ -14,7 +14,204 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      accounts: {
+        Row: {
+          account_number: string
+          account_type: string
+          balance: number
+          created_at: string
+          currency: string
+          id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_number: string
+          account_type?: string
+          balance?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_number?: string
+          account_type?: string
+          balance?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      cards: {
+        Row: {
+          account_id: string
+          card_number: string
+          card_status: string
+          card_type: string
+          created_at: string
+          id: string
+          spending_limit: number | null
+          updated_at: string
+        }
+        Insert: {
+          account_id: string
+          card_number: string
+          card_status?: string
+          card_type?: string
+          created_at?: string
+          id?: string
+          spending_limit?: number | null
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string
+          card_number?: string
+          card_status?: string
+          card_type?: string
+          created_at?: string
+          id?: string
+          spending_limit?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cards_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_controls: {
+        Row: {
+          child_id: string
+          created_at: string
+          id: string
+          parent_id: string
+          relationship_type: string
+          spending_limit: number | null
+          status: string
+          transaction_limit: number | null
+          updated_at: string
+        }
+        Insert: {
+          child_id: string
+          created_at?: string
+          id?: string
+          parent_id: string
+          relationship_type?: string
+          spending_limit?: number | null
+          status?: string
+          transaction_limit?: number | null
+          updated_at?: string
+        }
+        Update: {
+          child_id?: string
+          created_at?: string
+          id?: string
+          parent_id?: string
+          relationship_type?: string
+          spending_limit?: number | null
+          status?: string
+          transaction_limit?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_controls_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          account_id: string
+          amount: number
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          recipient: string | null
+          status: string
+          transaction_type: string
+        }
+        Insert: {
+          account_id: string
+          amount: number
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          recipient?: string | null
+          status?: string
+          transaction_type: string
+        }
+        Update: {
+          account_id?: string
+          amount?: number
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          recipient?: string | null
+          status?: string
+          transaction_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
