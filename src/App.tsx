@@ -13,6 +13,7 @@ import Cards from "./pages/Cards";
 import Analytics from "./pages/Analytics";
 import Security from "./pages/Security";
 import SuperApp from "./pages/SuperApp";
+import CryptoHub from "./pages/CryptoHub";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,11 @@ const App = () => (
             <Route path="/super-app" element={
               <ProtectedRoute>
                 <SuperApp />
+              </ProtectedRoute>
+            } />
+            <Route path="/crypto" element={
+              <ProtectedRoute>
+                <CryptoHub />
               </ProtectedRoute>
             } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

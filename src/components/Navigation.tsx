@@ -8,12 +8,14 @@ import {
   BarChart3, 
   Shield,
   Wallet,
-  Zap
+  Zap,
+  Bitcoin
 } from 'lucide-react';
 
 const Navigation = () => {
   const navItems = [
     { to: '/', icon: Home, label: 'Dashboard' },
+    { to: '/crypto', icon: Bitcoin, label: 'Crypto Hub' },
     { to: '/super-app', icon: Zap, label: 'Super App' },
     { to: '/cards', icon: CreditCard, label: 'Cards' },
     { to: '/family', icon: Users, label: 'Family' },
