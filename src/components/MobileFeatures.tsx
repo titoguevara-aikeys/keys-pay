@@ -8,13 +8,29 @@ import { Label } from '@/components/ui/label';
 import { useMobile } from '@/contexts/MobileContext';
 import { useToast } from '@/hooks/use-toast';
 
+// Temporary mobile capabilities for demonstration
+const useMobileDemo = () => ({
+  isMobile: false,
+  deviceInfo: null,
+  appInfo: null,
+  sendNotification: async (title: string, body: string) => {
+    console.log('Demo notification:', title, body);
+  },
+  hapticFeedback: async (style?: 'light' | 'medium' | 'heavy') => {
+    console.log('Demo haptic feedback:', style);
+  },
+  biometricAuth: async (): Promise<boolean> => {
+    return new Promise(resolve => setTimeout(() => resolve(true), 1000));
+  },
+});
+
 const MobileFeatures = () => {
   const [biometricEnabled, setBiometricEnabled] = useState(false);
   const [hapticEnabled, setHapticEnabled] = useState(true);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [offlineMode, setOfflineMode] = useState(false);
 
-  const { isMobile, deviceInfo, appInfo, sendNotification, hapticFeedback, biometricAuth } = useMobile();
+  const { isMobile, deviceInfo, appInfo, sendNotification, hapticFeedback, biometricAuth } = useMobileDemo();
   const { toast } = useToast();
 
   const handleBiometricToggle = async (enabled: boolean) => {

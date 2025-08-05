@@ -1,8 +1,25 @@
-import { Device } from '@capacitor/device';
-import { App } from '@capacitor/app';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
-import { LocalNotifications } from '@capacitor/local-notifications';
-import { PushNotifications } from '@capacitor/push-notifications';
+// Safe imports that check for Capacitor environment
+let Device: any = null;
+let App: any = null;
+let Haptics: any = null;
+let ImpactStyle: any = null;
+let LocalNotifications: any = null;
+let PushNotifications: any = null;
+
+// Only import Capacitor modules if running in Capacitor environment
+if (typeof window !== 'undefined' && (window as any).Capacitor) {
+  try {
+    Device = require('@capacitor/device').Device;
+    App = require('@capacitor/app').App;
+    const haptics = require('@capacitor/haptics');
+    Haptics = haptics.Haptics;
+    ImpactStyle = haptics.ImpactStyle;
+    LocalNotifications = require('@capacitor/local-notifications').LocalNotifications;
+    PushNotifications = require('@capacitor/push-notifications').PushNotifications;
+  } catch (error) {
+    console.warn('Capacitor modules not available:', error);
+  }
+}
 
 export class MobileCapabilities {
   static async initializeApp() {
@@ -13,11 +30,11 @@ export class MobileCapabilities {
   }
 
   static isMobile(): boolean {
-    return typeof (window as any).Capacitor !== 'undefined';
+    return typeof window !== 'undefined' && !!(window as any).Capacitor;
   }
 
   static async getDeviceInfo() {
-    if (!this.isMobile()) return null;
+    if (!this.isMobile() || !Device) return null;
     
     try {
       const info = await Device.getInfo();
@@ -35,10 +52,10 @@ export class MobileCapabilities {
   }
 
   static async hapticFeedback(style: 'light' | 'medium' | 'heavy' = 'light') {
-    if (!this.isMobile()) return;
+    if (!this.isMobile() || !Haptics || !ImpactStyle) return;
     
     try {
-      let impactStyle: ImpactStyle;
+      let impactStyle: any;
       switch (style) {
         case 'light':
           impactStyle = ImpactStyle.Light;
@@ -59,7 +76,7 @@ export class MobileCapabilities {
   }
 
   static async setupNotifications() {
-    if (!this.isMobile()) return;
+    if (!this.isMobile() || !LocalNotifications || !PushNotifications) return;
 
     try {
       // Request permission for local notifications
@@ -100,7 +117,7 @@ export class MobileCapabilities {
   }
 
   static async setupAppListeners() {
-    if (!this.isMobile()) return;
+    if (!this.isMobile() || !App) return;
 
     try {
       App.addListener('appStateChange', ({ isActive }) => {
@@ -124,7 +141,7 @@ export class MobileCapabilities {
   }
 
   static async sendLocalNotification(title: string, body: string, id?: number) {
-    if (!this.isMobile()) {
+    if (!this.isMobile() || !LocalNotifications) {
       // Fallback for web
       if ('Notification' in window && Notification.permission === 'granted') {
         new Notification(title, { body });
@@ -173,7 +190,7 @@ export class MobileCapabilities {
   }
 
   static async getAppInfo() {
-    if (!this.isMobile()) return null;
+    if (!this.isMobile() || !App) return null;
 
     try {
       const info = await App.getInfo();
@@ -190,7 +207,7 @@ export class MobileCapabilities {
   }
 
   static async exitApp() {
-    if (!this.isMobile()) return;
+    if (!this.isMobile() || !App) return;
 
     try {
       await App.exitApp();
