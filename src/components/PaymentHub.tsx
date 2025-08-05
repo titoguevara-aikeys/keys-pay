@@ -23,6 +23,14 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+// Import wallet logos
+import metamaskLogo from '@/assets/metamask-logo.svg';
+import trustwalletLogo from '@/assets/trustwallet-logo.png';
+import coinbaseLogo from '@/assets/coinbase-logo.png';
+import walletconnectLogo from '@/assets/walletconnect-logo.png';
+import phantomLogo from '@/assets/phantom-logo.png';
+import solflareLogo from '@/assets/solflare-logo.png';
+
 console.log('PaymentHub component loading...');
 
 interface VirtualCardData {
@@ -409,17 +417,59 @@ export const PaymentHub = () => {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {['MetaMask', 'Trust Wallet', 'Coinbase Wallet', 'WalletConnect', 'Phantom', 'Solflare'].map((wallet) => (
-                  <Button
-                    key={wallet}
-                    variant="outline"
-                    className="h-20 flex flex-col gap-2"
-                    onClick={handleWalletConnect}
-                  >
-                    <Wallet className="h-6 w-6" />
-                    <span className="text-sm">{wallet}</span>
-                  </Button>
-                ))}
+                <Button
+                  variant="outline"
+                  className="h-20 flex flex-col gap-2"
+                  onClick={handleWalletConnect}
+                >
+                  <img src={metamaskLogo} alt="MetaMask" className="h-8 w-8" />
+                  <span className="text-sm">MetaMask</span>
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  className="h-20 flex flex-col gap-2"
+                  onClick={handleWalletConnect}
+                >
+                  <img src={trustwalletLogo} alt="Trust Wallet" className="h-8 w-8" />
+                  <span className="text-sm">Trust Wallet</span>
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  className="h-20 flex flex-col gap-2"
+                  onClick={handleWalletConnect}
+                >
+                  <img src={coinbaseLogo} alt="Coinbase Wallet" className="h-8 w-8" />
+                  <span className="text-sm">Coinbase Wallet</span>
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  className="h-20 flex flex-col gap-2"
+                  onClick={handleWalletConnect}
+                >
+                  <img src={walletconnectLogo} alt="WalletConnect" className="h-8 w-8" />
+                  <span className="text-sm">WalletConnect</span>
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  className="h-20 flex flex-col gap-2"
+                  onClick={handleWalletConnect}
+                >
+                  <img src={phantomLogo} alt="Phantom" className="h-8 w-8" />
+                  <span className="text-sm">Phantom</span>
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  className="h-20 flex flex-col gap-2"
+                  onClick={handleWalletConnect}
+                >
+                  <img src={solflareLogo} alt="Solflare" className="h-8 w-8" />
+                  <span className="text-sm">Solflare</span>
+                </Button>
               </div>
               
               <div className="p-4 bg-muted/50 rounded-lg">
