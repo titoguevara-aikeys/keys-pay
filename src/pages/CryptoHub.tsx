@@ -3,7 +3,7 @@ import { CryptoWallet } from '@/components/CryptoWallet';
 import { InternationalTransfer } from '@/components/InternationalTransfer';
 import { MerchantPayments } from '@/components/MerchantPayments';
 import { PaymentHub } from '@/components/PaymentHub';
-import { NebeusHub } from '@/components/NebeusHub';
+import { AIKEYSFinancial } from '@/components/AIKEYSFinancial';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -123,9 +123,9 @@ export default function CryptoHub() {
               <Store className="h-4 w-4" />
               Merchants
             </TabsTrigger>
-            <TabsTrigger value="nebeus" className="flex items-center gap-2">
+            <TabsTrigger value="financial" className="flex items-center gap-2">
               <Building className="h-4 w-4" />
-              Nebeus
+              Financial
             </TabsTrigger>
           </TabsList>
 
@@ -145,8 +145,8 @@ export default function CryptoHub() {
             <MerchantPayments />
           </TabsContent>
 
-          <TabsContent value="nebeus">
-            <NebeusHub />
+          <TabsContent value="financial">
+            <AIKEYSFinancial />
           </TabsContent>
         </Tabs>
 

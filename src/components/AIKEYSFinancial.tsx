@@ -78,7 +78,7 @@ const stakingPools: StakingPool[] = [
   },
   {
     id: '4',
-    name: 'NBT Token Pool',
+    name: 'AIKEYS Token Pool',
     apy: 13.0,
     minAmount: 1000,
     lockPeriod: '90 days',
@@ -114,7 +114,7 @@ const loanOptions: LoanOption[] = [
   }
 ];
 
-export const NebeusHub = () => {
+export const AIKEYSFinancial = () => {
   const { toast } = useToast();
   const [stakingAmount, setStakingAmount] = useState('');
   const [selectedPool, setSelectedPool] = useState<StakingPool>(stakingPools[0]);
@@ -181,10 +181,10 @@ export const NebeusHub = () => {
       {/* Hero Section */}
       <div className="text-center space-y-4 py-8">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-          NEBEUS FINANCIAL ECOSYSTEM
+          AIKEYS FINANCIAL ECOSYSTEM
         </h1>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-          Merge money and crypto in one app. Comprehensive financial services for freelancers, businesses, and crypto enthusiasts.
+          Advanced financial services integrated into your AIKEYS WALLET. Comprehensive solutions for earning, lending, business operations, and more.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
           <Badge variant="secondary" className="px-4 py-2">
@@ -208,7 +208,7 @@ export const NebeusHub = () => {
           <TabsTrigger value="earning">Earning</TabsTrigger>
           <TabsTrigger value="loans">Crypto Loans</TabsTrigger>
           <TabsTrigger value="business">Business</TabsTrigger>
-          <TabsTrigger value="cards">Nebeus Card</TabsTrigger>
+          <TabsTrigger value="cards">AIKEYS Card</TabsTrigger>
           <TabsTrigger value="exchange">Exchange</TabsTrigger>
         </TabsList>
 
@@ -552,7 +552,7 @@ export const NebeusHub = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CreditCard className="h-5 w-5" />
-                Nebeus Mastercard
+                AIKEYS Premium Card
               </CardTitle>
               <CardDescription>
                 Spend with crypto and fiat worldwide - Physical and Virtual cards available
@@ -615,7 +615,7 @@ export const NebeusHub = () => {
                       <div className="space-y-4">
                         <div className="flex items-center gap-2">
                           <CreditCard className="h-6 w-6" />
-                          <span className="text-sm opacity-75">NEBEUS</span>
+                          <span className="text-sm opacity-75">AIKEYS</span>
                         </div>
                         
                         <div className="text-xl font-mono tracking-wider">
