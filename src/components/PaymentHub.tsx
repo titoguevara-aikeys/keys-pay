@@ -23,6 +23,8 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+console.log('PaymentHub component loading...');
+
 interface VirtualCardData {
   id: string;
   number: string;
@@ -66,6 +68,7 @@ const merchants = [
 ];
 
 export const PaymentHub = () => {
+  console.log('PaymentHub component rendering...');
   const { toast } = useToast();
   const [selectedCard, setSelectedCard] = useState<VirtualCardData>(mockCards[0]);
   const [showCardDetails, setShowCardDetails] = useState(false);

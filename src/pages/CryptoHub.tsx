@@ -103,7 +103,7 @@ export default function CryptoHub() {
         </div>
 
         {/* Main Content Tabs */}
-        <Tabs defaultValue="payments" className="space-y-6" key="crypto-hub-tabs">
+        <Tabs defaultValue="payments" className="space-y-6" key="crypto-hub-tabs" onValueChange={(value) => console.log('Tab changed to:', value)}>
           <TabsList className="grid w-full grid-cols-4 h-12">
             <TabsTrigger value="payments" className="flex items-center gap-2">
               <CreditCard className="h-4 w-4" />
