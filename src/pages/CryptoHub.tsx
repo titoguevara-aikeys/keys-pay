@@ -4,6 +4,7 @@ import { InternationalTransfer } from '@/components/InternationalTransfer';
 import { MerchantPayments } from '@/components/MerchantPayments';
 import { PaymentHub } from '@/components/PaymentHub';
 import { AIKEYSFinancial } from '@/components/AIKEYSFinancial';
+import { AIKEYSWealth } from '@/components/AIKEYSWealth';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -17,7 +18,8 @@ import {
   Users,
   DollarSign,
   CreditCard,
-  Building
+  Building,
+  Crown
 } from 'lucide-react';
 
 export default function CryptoHub() {
@@ -106,7 +108,7 @@ export default function CryptoHub() {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="payments" className="space-y-6" key="crypto-hub-tabs" onValueChange={(value) => console.log('Tab changed to:', value)}>
-          <TabsList className="grid w-full grid-cols-5 h-12">
+          <TabsList className="grid w-full grid-cols-6 h-12">
             <TabsTrigger value="payments" className="flex items-center gap-2">
               <CreditCard className="h-4 w-4" />
               Payment Hub
@@ -126,6 +128,10 @@ export default function CryptoHub() {
             <TabsTrigger value="financial" className="flex items-center gap-2">
               <Building className="h-4 w-4" />
               Financial
+            </TabsTrigger>
+            <TabsTrigger value="wealth" className="flex items-center gap-2">
+              <Crown className="h-4 w-4" />
+              Wealth
             </TabsTrigger>
           </TabsList>
 
@@ -147,6 +153,10 @@ export default function CryptoHub() {
 
           <TabsContent value="financial">
             <AIKEYSFinancial />
+          </TabsContent>
+
+          <TabsContent value="wealth">
+            <AIKEYSWealth />
           </TabsContent>
         </Tabs>
 
