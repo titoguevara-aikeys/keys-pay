@@ -1,18 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import type { Database } from '@/integrations/supabase/types';
 
-export interface Account {
-  id: string;
-  user_id: string;
-  account_number: string;
-  account_type: string;
-  balance: number;
-  currency: string;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-}
+export type Account = Database['public']['Tables']['accounts']['Row'];
 
 export const useAccounts = () => {
   const { user } = useAuth();
@@ -26,11 +17,11 @@ export const useAccounts = () => {
         .from('accounts')
         .select('*')
         .eq('user_id', user.id)
-        .eq('is_active', true)
+        .eq('status', 'active')
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as Account[];
+      return data;
     },
     enabled: !!user,
   });
@@ -84,9 +75,10 @@ export const useUpdateAccountBalance = () => {
         .from('accounts')
         .select('balance')
         .eq('id', accountId)
-        .single();
+        .maybeSingle();
       
       if (fetchError) throw fetchError;
+      if (!account) throw new Error('Account not found');
       
       const newBalance = type === 'add' 
         ? account.balance + amount 

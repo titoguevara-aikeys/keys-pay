@@ -1,21 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import type { Database } from '@/integrations/supabase/types';
 
-export interface Transaction {
-  id: string;
-  account_id: string;
-  card_id?: string;
-  transaction_type: string;
-  amount: number;
-  currency: string;
-  description: string;
-  merchant_name?: string;
-  category?: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
-}
+export type Transaction = Database['public']['Tables']['transactions']['Row'];
 
 export const useTransactions = (accountId?: string, limit: number = 20) => {
   const { user } = useAuth();
@@ -42,7 +30,7 @@ export const useTransactions = (accountId?: string, limit: number = 20) => {
       const { data, error } = await query;
       
       if (error) throw error;
-      return data as Transaction[];
+      return data;
     },
     enabled: !!user,
   });
@@ -56,16 +44,14 @@ export const useCreateTransaction = () => {
       account_id: string;
       transaction_type: string;
       amount: number;
-      description: string;
-      merchant_name?: string;
+      description?: string;
+      recipient?: string;
       category?: string;
-      card_id?: string;
     }) => {
       const { data, error } = await supabase
         .from('transactions')
         .insert({
           ...transactionData,
-          currency: 'USD',
           status: 'completed',
         })
         .select()

@@ -68,7 +68,7 @@ const AddMoney: React.FC<AddMoneyProps> = ({ trigger }) => {
         transaction_type: 'deposit',
         amount: numericAmount,
         description: `Deposit from ${sourceName}`,
-        merchant_name: sourceName,
+        recipient: sourceName,
         category: 'Income',
       });
       

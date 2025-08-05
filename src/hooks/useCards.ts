@@ -1,17 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import type { Database } from '@/integrations/supabase/types';
 
-export interface Card {
-  id: string;
-  account_id: string;
-  card_number: string;
-  card_type: string;
-  card_status: string;
-  spending_limit?: number;
-  created_at: string;
-  updated_at: string;
-}
+export type Card = Database['public']['Tables']['cards']['Row'];
 
 export const useCards = () => {
   const { user } = useAuth();
@@ -32,7 +24,7 @@ export const useCards = () => {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as Card[];
+      return data;
     },
     enabled: !!user,
   });

@@ -1,22 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import type { Database } from '@/integrations/supabase/types';
 
-export interface FamilyMember {
-  id: string;
-  parent_id: string;
-  child_id: string;
-  relationship_type: string;
-  spending_limit?: number;
-  daily_limit?: number;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
+export type FamilyMember = Database['public']['Tables']['family_controls']['Row'] & {
   child_profile?: {
-    first_name?: string;
-    last_name?: string;
+    first_name?: string | null;
+    last_name?: string | null;
   };
-}
+};
 
 export const useFamilyMembers = () => {
   const { user } = useAuth();
@@ -36,11 +28,11 @@ export const useFamilyMembers = () => {
           )
         `)
         .eq('parent_id', user.id)
-        .eq('is_active', true)
+        .eq('status', 'active')
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as FamilyMember[];
+      return data;
     },
     enabled: !!user,
   });
@@ -61,32 +53,20 @@ export const useAddFamilyMember = () => {
     }) => {
       if (!user) throw new Error('User not authenticated');
       
-      // First, create or find the child user profile
+      // For now, we'll need the child to already have an account
+      // In a real app, this would involve sending an invitation
       const { data: existingProfile, error: profileError } = await supabase
         .from('profiles')
-        .select('id')
+        .select('user_id')
         .eq('email', memberData.email)
-        .single();
+        .maybeSingle();
       
-      let childId;
-      
-      if (existingProfile) {
-        childId = existingProfile.id;
-      } else {
-        // Create new profile for the child
-        const { data: newProfile, error: createError } = await supabase
-          .from('profiles')
-          .insert({
-            email: memberData.email,
-            first_name: memberData.first_name,
-            last_name: memberData.last_name,
-          })
-          .select('id')
-          .single();
-        
-        if (createError) throw createError;
-        childId = newProfile.id;
+      if (profileError) throw profileError;
+      if (!existingProfile) {
+        throw new Error('Child profile not found. Child must create an account first.');
       }
+      
+      const childId = existingProfile.user_id;
       
       // Create family control relationship
       const { data, error } = await supabase
@@ -96,7 +76,7 @@ export const useAddFamilyMember = () => {
           child_id: childId,
           relationship_type: memberData.relationship_type,
           spending_limit: memberData.spending_limit,
-          daily_limit: memberData.daily_limit,
+          transaction_limit: memberData.daily_limit,
         })
         .select()
         .single();

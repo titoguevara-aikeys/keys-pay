@@ -62,7 +62,7 @@ const SendMoney: React.FC<SendMoneyProps> = ({ trigger }) => {
         transaction_type: 'transfer_out',
         amount: -numericAmount,
         description: `Transfer to ${recipient}: ${description}`,
-        merchant_name: recipient,
+        recipient: recipient,
         category: 'Transfer',
       });
       
