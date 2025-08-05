@@ -8,6 +8,7 @@ import { CreateCardDialog } from '@/components/CreateCardDialog';
 import { VirtualCard } from '@/components/VirtualCard';
 import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
+import { Footer } from '@/components/Footer';
 
 const Cards = () => {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
@@ -205,11 +206,14 @@ const Cards = () => {
         </Card>
       </div>
 
-      <CreateCardDialog 
-        open={showCreateDialog}
-        onClose={() => setShowCreateDialog(false)}
-      />
+        <CreateCardDialog 
+          open={showCreateDialog}
+          onClose={() => setShowCreateDialog(false)}
+        />
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

@@ -14,6 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Navigation from '@/components/Navigation';
+import { Footer } from '@/components/Footer';
 import NotificationCenter from '@/components/NotificationCenter';
 import QRPaymentGenerator from '@/components/QRPaymentGenerator';
 import BillPaySystem from '@/components/BillPaySystem';
@@ -238,6 +239,9 @@ const SuperApp = () => {
           </Tabs>
         </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

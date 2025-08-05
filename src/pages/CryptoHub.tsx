@@ -1,4 +1,5 @@
 import Navigation from '@/components/Navigation';
+import { Footer } from '@/components/Footer';
 import { CryptoWallet } from '@/components/CryptoWallet';
 import { InternationalTransfer } from '@/components/InternationalTransfer';
 import { MerchantPayments } from '@/components/MerchantPayments';
@@ -245,6 +246,9 @@ export default function CryptoHub() {
           </CardContent>
         </Card>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

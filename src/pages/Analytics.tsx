@@ -15,6 +15,7 @@ import { SpendingChart } from '@/components/SpendingChart';
 import { CategoryBreakdown } from '@/components/CategoryBreakdown';
 import { MonthlyTrends } from '@/components/MonthlyTrends';
 import Navigation from '@/components/Navigation';
+import { Footer } from '@/components/Footer';
 
 const Analytics = () => {
   const [timeRange, setTimeRange] = useState('30d');
@@ -256,6 +257,9 @@ const Analytics = () => {
         </Tabs>
       </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

@@ -12,6 +12,7 @@ import { TrustedDevices } from '@/components/TrustedDevices';
 import { SendAppLink } from '@/components/SendAppLink';
 import { useSecuritySettings, useUpdateSecuritySettings } from '@/hooks/useSecuritySettings';
 import Navigation from '@/components/Navigation';
+import { Footer } from '@/components/Footer';
 
 const Security = () => {
   const { data: settings, isLoading } = useSecuritySettings();
@@ -319,6 +320,9 @@ const Security = () => {
         </Tabs>
       </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

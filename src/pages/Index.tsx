@@ -18,6 +18,7 @@ import {
 import { useState } from 'react';
 import { SendAppLink } from '@/components/SendAppLink';
 import Navigation from '@/components/Navigation';
+import { Footer } from '@/components/Footer';
 
 const Index = () => {
   const { user, signOut } = useAuth();
@@ -253,6 +254,9 @@ const Index = () => {
           </div>
         </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

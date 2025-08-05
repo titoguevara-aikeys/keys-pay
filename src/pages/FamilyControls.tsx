@@ -9,6 +9,7 @@ import { ChildAccountCard } from '@/components/ChildAccountCard';
 import { TransferMoneyDialog } from '@/components/TransferMoneyDialog';
 import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
+import { Footer } from '@/components/Footer';
 import type { FamilyMember } from '@/hooks/useFamilyMembers';
 
 const FamilyControls = () => {
@@ -201,6 +202,9 @@ const FamilyControls = () => {
         member={selectedMember}
       />
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
