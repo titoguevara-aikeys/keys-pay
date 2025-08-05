@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CryptoToFiatConverter } from './CryptoToFiatConverter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -110,8 +111,15 @@ export const CryptoWallet = () => {
 
   const handleConvert = () => {
     toast({
-      title: "Conversion Successful",
+      title: "Conversion Successful", 
       description: "Your crypto has been converted to USDT",
+    });
+  };
+
+  const handleCryptoToFiat = (fromCrypto: string, toFiat: string, amount: string) => {
+    toast({
+      title: "Fiat Conversion Completed",
+      description: `Converted ${amount} ${fromCrypto} to ${toFiat}. Funds available in your wallet.`,
     });
   };
 
@@ -197,12 +205,17 @@ export const CryptoWallet = () => {
       </Card>
 
       {/* Crypto Operations */}
-      <Tabs defaultValue="deposit" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
+        <Tabs defaultValue="convert-fiat" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="convert-fiat">Crypto → Fiat</TabsTrigger>
           <TabsTrigger value="deposit">Deposit</TabsTrigger>
           <TabsTrigger value="withdraw">Withdraw</TabsTrigger>
-          <TabsTrigger value="convert">Convert</TabsTrigger>
+          <TabsTrigger value="convert">Swap Crypto</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="convert-fiat" className="space-y-4">
+          <CryptoToFiatConverter onConvert={handleCryptoToFiat} />
+        </TabsContent>
 
         <TabsContent value="deposit" className="space-y-4">
           <Card>
