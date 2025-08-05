@@ -9,6 +9,7 @@ import { TwoFactorSetup } from '@/components/TwoFactorSetup';
 import { BiometricSetup } from '@/components/BiometricSetup';
 import { SecurityAudit } from '@/components/SecurityAudit';
 import { TrustedDevices } from '@/components/TrustedDevices';
+import { SendAppLink } from '@/components/SendAppLink';
 import { useSecuritySettings, useUpdateSecuritySettings } from '@/hooks/useSecuritySettings';
 import Navigation from '@/components/Navigation';
 
@@ -134,10 +135,11 @@ const Security = () => {
 
         {/* Security Configuration Tabs */}
         <Tabs defaultValue="authentication" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="authentication">Authentication</TabsTrigger>
             <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
             <TabsTrigger value="devices">Devices</TabsTrigger>
+            <TabsTrigger value="testing">Testing</TabsTrigger>
             <TabsTrigger value="audit">Audit Log</TabsTrigger>
           </TabsList>
 
@@ -305,6 +307,10 @@ const Security = () => {
 
           <TabsContent value="devices" className="space-y-6">
             <TrustedDevices />
+          </TabsContent>
+
+          <TabsContent value="testing" className="space-y-6">
+            <SendAppLink />
           </TabsContent>
 
           <TabsContent value="audit" className="space-y-6">
