@@ -17,6 +17,7 @@ import {
   EyeOff
 } from 'lucide-react';
 import { useState } from 'react';
+import { SendAppLink } from '@/components/SendAppLink';
 
 const Index = () => {
   const { user, signOut } = useAuth();
@@ -228,6 +229,9 @@ const Index = () => {
                 </Button>
               </CardContent>
             </Card>
+
+            {/* Send App Link */}
+            <SendAppLink />
 
             {/* Family Controls */}
             <Card>
