@@ -135,6 +135,45 @@ export type Database = {
           },
         ]
       }
+      login_sessions: {
+        Row: {
+          created_at: string
+          device_fingerprint: string | null
+          expires_at: string
+          id: string
+          ip_address: unknown | null
+          location: string | null
+          revoked_at: string | null
+          session_token: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_fingerprint?: string | null
+          expires_at: string
+          id?: string
+          ip_address?: unknown | null
+          location?: string | null
+          revoked_at?: string | null
+          session_token: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_fingerprint?: string | null
+          expires_at?: string
+          id?: string
+          ip_address?: unknown | null
+          location?: string | null
+          revoked_at?: string | null
+          session_token?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -163,6 +202,93 @@ export type Database = {
           id?: string
           last_name?: string | null
           phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      security_events: {
+        Row: {
+          blocked: boolean | null
+          created_at: string
+          device_fingerprint: string | null
+          event_description: string
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          location: string | null
+          risk_score: number | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          blocked?: boolean | null
+          created_at?: string
+          device_fingerprint?: string | null
+          event_description: string
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          location?: string | null
+          risk_score?: number | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          blocked?: boolean | null
+          created_at?: string
+          device_fingerprint?: string | null
+          event_description?: string
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          location?: string | null
+          risk_score?: number | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      security_settings: {
+        Row: {
+          biometric_enabled: boolean | null
+          created_at: string
+          device_verification_required: boolean | null
+          fraud_monitoring_enabled: boolean | null
+          id: string
+          login_notifications: boolean | null
+          max_concurrent_sessions: number | null
+          session_timeout_minutes: number | null
+          suspicious_activity_alerts: boolean | null
+          two_factor_enabled: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          biometric_enabled?: boolean | null
+          created_at?: string
+          device_verification_required?: boolean | null
+          fraud_monitoring_enabled?: boolean | null
+          id?: string
+          login_notifications?: boolean | null
+          max_concurrent_sessions?: number | null
+          session_timeout_minutes?: number | null
+          suspicious_activity_alerts?: boolean | null
+          two_factor_enabled?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          biometric_enabled?: boolean | null
+          created_at?: string
+          device_verification_required?: boolean | null
+          fraud_monitoring_enabled?: boolean | null
+          id?: string
+          login_notifications?: boolean | null
+          max_concurrent_sessions?: number | null
+          session_timeout_minutes?: number | null
+          suspicious_activity_alerts?: boolean | null
+          two_factor_enabled?: boolean | null
           updated_at?: string
           user_id?: string
         }
@@ -212,12 +338,94 @@ export type Database = {
           },
         ]
       }
+      trusted_devices: {
+        Row: {
+          created_at: string
+          device_fingerprint: string
+          device_name: string
+          device_type: string
+          id: string
+          is_current: boolean | null
+          last_seen_at: string
+          trusted_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_fingerprint: string
+          device_name: string
+          device_type: string
+          id?: string
+          is_current?: boolean | null
+          last_seen_at?: string
+          trusted_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_fingerprint?: string
+          device_name?: string
+          device_type?: string
+          id?: string
+          is_current?: boolean | null
+          last_seen_at?: string
+          trusted_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_2fa: {
+        Row: {
+          backup_codes: string[] | null
+          created_at: string
+          enabled: boolean | null
+          id: string
+          last_used_at: string | null
+          secret: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          backup_codes?: string[] | null
+          created_at?: string
+          enabled?: boolean | null
+          id?: string
+          last_used_at?: string | null
+          secret: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          backup_codes?: string[] | null
+          created_at?: string
+          enabled?: boolean | null
+          id?: string
+          last_used_at?: string | null
+          secret?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      log_security_event: {
+        Args: {
+          p_user_id: string
+          p_event_type: string
+          p_event_description: string
+          p_ip_address?: unknown
+          p_user_agent?: string
+          p_device_fingerprint?: string
+          p_location?: string
+          p_risk_score?: number
+          p_blocked?: boolean
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
