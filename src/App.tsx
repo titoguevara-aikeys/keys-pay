@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { MobileProvider } from "@/contexts/MobileContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -12,13 +13,15 @@ import FamilyControls from "./pages/FamilyControls";
 import Cards from "./pages/Cards";
 import Analytics from "./pages/Analytics";
 import Security from "./pages/Security";
+import SuperApp from "./pages/SuperApp";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <TooltipProvider>
+      <MobileProvider>
+        <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
@@ -49,11 +52,17 @@ const App = () => (
                 <Security />
               </ProtectedRoute>
             } />
+            <Route path="/super-app" element={
+              <ProtectedRoute>
+                <SuperApp />
+              </ProtectedRoute>
+            } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
+      </MobileProvider>
     </AuthProvider>
   </QueryClientProvider>
 );

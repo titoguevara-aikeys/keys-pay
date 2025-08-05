@@ -7,12 +7,14 @@ import {
   Users, 
   BarChart3, 
   Shield,
-  Wallet
+  Wallet,
+  Zap
 } from 'lucide-react';
 
 const Navigation = () => {
   const navItems = [
     { to: '/', icon: Home, label: 'Dashboard' },
+    { to: '/super-app', icon: Zap, label: 'Super App' },
     { to: '/cards', icon: CreditCard, label: 'Cards' },
     { to: '/family', icon: Users, label: 'Family' },
     { to: '/analytics', icon: BarChart3, label: 'Analytics' },

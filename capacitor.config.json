@@ -1,0 +1,19 @@
+{
+  "appId": "app.lovable.f44c23a166a84cd09d92d6761abf4d0a",
+  "appName": "aikey-mena-hub",
+  "webDir": "dist",
+  "server": {
+    "url": "https://f44c23a1-66a8-4cd0-9d92-d6761abf4d0a.lovableproject.com?forceHideBadge=true",
+    "cleartext": true
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon_config_sample",
+      "iconColor": "#488AFF",
+      "sound": "beep.wav"
+    },
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    }
+  }
+}
