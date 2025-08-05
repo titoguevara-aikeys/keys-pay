@@ -3,6 +3,7 @@ import { CryptoWallet } from '@/components/CryptoWallet';
 import { InternationalTransfer } from '@/components/InternationalTransfer';
 import { MerchantPayments } from '@/components/MerchantPayments';
 import { PaymentHub } from '@/components/PaymentHub';
+import { NebeusHub } from '@/components/NebeusHub';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -15,7 +16,8 @@ import {
   Zap,
   Users,
   DollarSign,
-  CreditCard
+  CreditCard,
+  Building
 } from 'lucide-react';
 
 export default function CryptoHub() {
@@ -104,7 +106,7 @@ export default function CryptoHub() {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="payments" className="space-y-6" key="crypto-hub-tabs" onValueChange={(value) => console.log('Tab changed to:', value)}>
-          <TabsList className="grid w-full grid-cols-4 h-12">
+          <TabsList className="grid w-full grid-cols-5 h-12">
             <TabsTrigger value="payments" className="flex items-center gap-2">
               <CreditCard className="h-4 w-4" />
               Payment Hub
@@ -120,6 +122,10 @@ export default function CryptoHub() {
             <TabsTrigger value="merchants" className="flex items-center gap-2">
               <Store className="h-4 w-4" />
               Merchants
+            </TabsTrigger>
+            <TabsTrigger value="nebeus" className="flex items-center gap-2">
+              <Building className="h-4 w-4" />
+              Nebeus
             </TabsTrigger>
           </TabsList>
 
@@ -137,6 +143,10 @@ export default function CryptoHub() {
 
           <TabsContent value="merchants">
             <MerchantPayments />
+          </TabsContent>
+
+          <TabsContent value="nebeus">
+            <NebeusHub />
           </TabsContent>
         </Tabs>
 
