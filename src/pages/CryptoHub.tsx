@@ -2,6 +2,7 @@ import Navigation from '@/components/Navigation';
 import { CryptoWallet } from '@/components/CryptoWallet';
 import { InternationalTransfer } from '@/components/InternationalTransfer';
 import { MerchantPayments } from '@/components/MerchantPayments';
+import { PaymentHub } from '@/components/PaymentHub';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -13,7 +14,8 @@ import {
   Shield, 
   Zap,
   Users,
-  DollarSign
+  DollarSign,
+  CreditCard
 } from 'lucide-react';
 
 export default function CryptoHub() {
@@ -101,8 +103,12 @@ export default function CryptoHub() {
         </div>
 
         {/* Main Content Tabs */}
-        <Tabs defaultValue="wallet" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 h-12">
+        <Tabs defaultValue="payments" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4 h-12">
+            <TabsTrigger value="payments" className="flex items-center gap-2">
+              <CreditCard className="h-4 w-4" />
+              Payment Hub
+            </TabsTrigger>
             <TabsTrigger value="wallet" className="flex items-center gap-2">
               <Bitcoin className="h-4 w-4" />
               Crypto Wallet
@@ -116,6 +122,10 @@ export default function CryptoHub() {
               Merchants
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="payments">
+            <PaymentHub />
+          </TabsContent>
 
           <TabsContent value="wallet">
             <CryptoWallet />
