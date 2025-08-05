@@ -26,7 +26,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`Sending app link to: ${email}`);
 
     const emailResponse = await resend.emails.send({
-      from: "AIKEYS Wallet <onboarding@resend.dev>",
+      from: "AIKEYS Wallet <security@aikeys-hub.com>",
       to: [email],
       subject: "AIKEYS Wallet - Test Advanced Security Features",
       html: `
