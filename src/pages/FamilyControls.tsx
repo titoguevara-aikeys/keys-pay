@@ -7,6 +7,7 @@ import { useFamilyMembers, useAddFamilyMember, useUpdateFamilyMember } from '@/h
 import { AddFamilyMemberDialog } from '@/components/AddFamilyMemberDialog';
 import { FamilyMemberCard } from '@/components/FamilyMemberCard';
 import { useToast } from '@/hooks/use-toast';
+import Navigation from '@/components/Navigation';
 
 const FamilyControls = () => {
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -37,9 +38,10 @@ const FamilyControls = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      <Navigation />
+      <div className="p-6">
+        <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Family Controls</h1>
@@ -172,6 +174,7 @@ const FamilyControls = () => {
         open={showAddDialog}
         onClose={() => setShowAddDialog(false)}
       />
+      </div>
     </div>
   );
 };

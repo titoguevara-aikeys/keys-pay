@@ -14,6 +14,7 @@ import {
 import { SpendingChart } from '@/components/SpendingChart';
 import { CategoryBreakdown } from '@/components/CategoryBreakdown';
 import { MonthlyTrends } from '@/components/MonthlyTrends';
+import Navigation from '@/components/Navigation';
 
 const Analytics = () => {
   const [timeRange, setTimeRange] = useState('30d');
@@ -53,9 +54,10 @@ const Analytics = () => {
   const netIncome = analytics.totalIncome - analytics.totalSpent;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      <Navigation />
+      <div className="p-6">
+        <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Analytics</h1>
@@ -252,6 +254,7 @@ const Analytics = () => {
             </Card>
           </TabsContent>
         </Tabs>
+      </div>
       </div>
     </div>
   );

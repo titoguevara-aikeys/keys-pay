@@ -7,6 +7,7 @@ import { useCards, useCreateCard, useUpdateCard } from '@/hooks/useCards';
 import { CreateCardDialog } from '@/components/CreateCardDialog';
 import { VirtualCard } from '@/components/VirtualCard';
 import { useToast } from '@/hooks/use-toast';
+import Navigation from '@/components/Navigation';
 
 const Cards = () => {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
@@ -54,9 +55,10 @@ const Cards = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      <Navigation />
+      <div className="p-6">
+        <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Virtual Cards</h1>
@@ -207,6 +209,7 @@ const Cards = () => {
         open={showCreateDialog}
         onClose={() => setShowCreateDialog(false)}
       />
+      </div>
     </div>
   );
 };

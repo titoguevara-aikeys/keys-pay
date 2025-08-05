@@ -10,6 +10,7 @@ import { BiometricSetup } from '@/components/BiometricSetup';
 import { SecurityAudit } from '@/components/SecurityAudit';
 import { TrustedDevices } from '@/components/TrustedDevices';
 import { useSecuritySettings, useUpdateSecuritySettings } from '@/hooks/useSecuritySettings';
+import Navigation from '@/components/Navigation';
 
 const Security = () => {
   const { data: settings, isLoading } = useSecuritySettings();
@@ -60,9 +61,10 @@ const Security = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-6">
-      <div className="max-w-4xl mx-auto space-y-8">
-        {/* Header */}
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      <Navigation />
+      <div className="p-6">
+        <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center space-y-4">
           <div className="flex items-center justify-center gap-3">
             <div className="p-3 bg-primary/10 rounded-full">
@@ -309,6 +311,7 @@ const Security = () => {
             <SecurityAudit />
           </TabsContent>
         </Tabs>
+      </div>
       </div>
     </div>
   );
