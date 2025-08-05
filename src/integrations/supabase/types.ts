@@ -50,6 +50,110 @@ export type Database = {
         }
         Relationships: []
       }
+      bills: {
+        Row: {
+          account_id: string | null
+          amount: number | null
+          category: string | null
+          created_at: string
+          currency: string | null
+          due_date: string | null
+          id: string
+          is_recurring: boolean | null
+          payee_account: string
+          payee_name: string
+          recurring_frequency: string | null
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_id?: string | null
+          amount?: number | null
+          category?: string | null
+          created_at?: string
+          currency?: string | null
+          due_date?: string | null
+          id?: string
+          is_recurring?: boolean | null
+          payee_account: string
+          payee_name: string
+          recurring_frequency?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string | null
+          amount?: number | null
+          category?: string | null
+          created_at?: string
+          currency?: string | null
+          due_date?: string | null
+          id?: string
+          is_recurring?: boolean | null
+          payee_account?: string
+          payee_name?: string
+          recurring_frequency?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bills_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      budgets: {
+        Row: {
+          alert_threshold: number | null
+          amount: number
+          category: string
+          created_at: string
+          end_date: string | null
+          id: string
+          name: string
+          period: string
+          start_date: string
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          alert_threshold?: number | null
+          amount: number
+          category: string
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          name: string
+          period?: string
+          start_date: string
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          alert_threshold?: number | null
+          amount?: number
+          category?: string
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          name?: string
+          period?: string
+          start_date?: string
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       cards: {
         Row: {
           account_id: string
@@ -174,6 +278,171 @@ export type Database = {
         }
         Relationships: []
       }
+      merchants: {
+        Row: {
+          business_address: string | null
+          business_email: string
+          business_name: string
+          business_phone: string | null
+          created_at: string
+          id: string
+          merchant_id: string | null
+          settings: Json | null
+          status: string | null
+          updated_at: string
+          user_id: string
+          verification_status: string | null
+        }
+        Insert: {
+          business_address?: string | null
+          business_email: string
+          business_name: string
+          business_phone?: string | null
+          created_at?: string
+          id?: string
+          merchant_id?: string | null
+          settings?: Json | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+          verification_status?: string | null
+        }
+        Update: {
+          business_address?: string | null
+          business_email?: string
+          business_name?: string
+          business_phone?: string | null
+          created_at?: string
+          id?: string
+          merchant_id?: string | null
+          settings?: Json | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+          verification_status?: string | null
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          action_url: string | null
+          category: string
+          created_at: string
+          data: Json | null
+          expires_at: string | null
+          id: string
+          message: string
+          read: boolean | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          action_url?: string | null
+          category?: string
+          created_at?: string
+          data?: Json | null
+          expires_at?: string | null
+          id?: string
+          message: string
+          read?: boolean | null
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          action_url?: string | null
+          category?: string
+          created_at?: string
+          data?: Json | null
+          expires_at?: string | null
+          id?: string
+          message?: string
+          read?: boolean | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      payment_methods: {
+        Row: {
+          created_at: string
+          external_id: string
+          id: string
+          is_default: boolean | null
+          metadata: Json | null
+          provider: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          external_id: string
+          id?: string
+          is_default?: boolean | null
+          metadata?: Json | null
+          provider: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          external_id?: string
+          id?: string
+          is_default?: boolean | null
+          metadata?: Json | null
+          provider?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      payment_requests: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string | null
+          description: string | null
+          expires_at: string | null
+          from_user_id: string
+          id: string
+          paid_at: string | null
+          status: string | null
+          to_email: string | null
+          to_user_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          expires_at?: string | null
+          from_user_id: string
+          id?: string
+          paid_at?: string | null
+          status?: string | null
+          to_email?: string | null
+          to_user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          expires_at?: string | null
+          from_user_id?: string
+          id?: string
+          paid_at?: string | null
+          status?: string | null
+          to_email?: string | null
+          to_user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -206,6 +475,128 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      qr_payments: {
+        Row: {
+          account_id: string
+          amount: number | null
+          created_at: string
+          currency: string | null
+          current_uses: number | null
+          description: string | null
+          expires_at: string | null
+          id: string
+          is_reusable: boolean | null
+          max_uses: number | null
+          qr_code: string
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          amount?: number | null
+          created_at?: string
+          currency?: string | null
+          current_uses?: number | null
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          is_reusable?: boolean | null
+          max_uses?: number | null
+          qr_code: string
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          amount?: number | null
+          created_at?: string
+          currency?: string | null
+          current_uses?: number | null
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          is_reusable?: boolean | null
+          max_uses?: number | null
+          qr_code?: string
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qr_payments_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scheduled_transfers: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string | null
+          description: string | null
+          end_date: string | null
+          external_recipient: string | null
+          frequency: string
+          from_account_id: string
+          id: string
+          next_execution: string
+          status: string | null
+          to_account_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          end_date?: string | null
+          external_recipient?: string | null
+          frequency: string
+          from_account_id: string
+          id?: string
+          next_execution: string
+          status?: string | null
+          to_account_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          end_date?: string | null
+          external_recipient?: string | null
+          frequency?: string
+          from_account_id?: string
+          id?: string
+          next_execution?: string
+          status?: string | null
+          to_account_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduled_transfers_from_account_id_fkey"
+            columns: ["from_account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scheduled_transfers_to_account_id_fkey"
+            columns: ["to_account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       security_events: {
         Row: {
@@ -293,6 +684,53 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      spending_insights: {
+        Row: {
+          avg_transaction: number
+          budget_id: string | null
+          category: string
+          created_at: string
+          id: string
+          period_end: string
+          period_start: string
+          total_amount: number
+          transaction_count: number
+          user_id: string
+        }
+        Insert: {
+          avg_transaction: number
+          budget_id?: string | null
+          category: string
+          created_at?: string
+          id?: string
+          period_end: string
+          period_start: string
+          total_amount: number
+          transaction_count: number
+          user_id: string
+        }
+        Update: {
+          avg_transaction?: number
+          budget_id?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          period_end?: string
+          period_start?: string
+          total_amount?: number
+          transaction_count?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "spending_insights_budget_id_fkey"
+            columns: ["budget_id"]
+            isOneToOne: false
+            referencedRelation: "budgets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       transactions: {
         Row: {
@@ -435,6 +873,19 @@ export type Database = {
           p_location?: string
           p_risk_score?: number
           p_blocked?: boolean
+        }
+        Returns: string
+      }
+      send_notification: {
+        Args: {
+          p_user_id: string
+          p_title: string
+          p_message: string
+          p_type?: string
+          p_category?: string
+          p_data?: Json
+          p_action_url?: string
+          p_expires_hours?: number
         }
         Returns: string
       }
