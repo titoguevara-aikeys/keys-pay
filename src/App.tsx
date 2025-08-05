@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import FamilyControls from "./pages/FamilyControls";
 import Cards from "./pages/Cards";
 import Analytics from "./pages/Analytics";
+import Security from "./pages/Security";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,11 @@ const App = () => (
             <Route path="/analytics" element={
               <ProtectedRoute>
                 <Analytics />
+              </ProtectedRoute>
+            } />
+            <Route path="/security" element={
+              <ProtectedRoute>
+                <Security />
               </ProtectedRoute>
             } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
