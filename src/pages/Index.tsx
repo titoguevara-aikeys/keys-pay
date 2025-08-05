@@ -106,7 +106,11 @@ const Index = () => {
                 <Plus className="h-5 w-5" />
                 Add Money
               </Button>
-              <Button variant="outline" className="h-16 flex-col gap-2">
+              <Button 
+                variant="outline" 
+                className="h-16 flex-col gap-2"
+                onClick={() => window.location.href = '/cards'}
+              >
                 <CreditCard className="h-5 w-5" />
                 Cards
               </Button>
@@ -207,9 +211,13 @@ const Index = () => {
                   <p className="text-lg font-semibold">$2,456.78</p>
                 </div>
                 
-                <Button variant="outline" className="w-full">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => window.location.href = '/cards'}
+                >
                   <Plus className="h-4 w-4 mr-2" />
-                  Create New Card
+                  Manage Cards
                 </Button>
               </CardContent>
             </Card>
@@ -232,9 +240,13 @@ const Index = () => {
                     </div>
                   </div>
                   
-                  <Button variant="outline" className="w-full">
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => window.location.href = '/family'}
+                  >
                     <Plus className="h-4 w-4 mr-2" />
-                    Add Family Member
+                    Manage Family
                   </Button>
                 </div>
               </CardContent>

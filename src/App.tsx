@@ -8,6 +8,9 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import FamilyControls from "./pages/FamilyControls";
+import Cards from "./pages/Cards";
+import Analytics from "./pages/Analytics";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +26,21 @@ const App = () => (
             <Route path="/" element={
               <ProtectedRoute>
                 <Index />
+              </ProtectedRoute>
+            } />
+            <Route path="/family" element={
+              <ProtectedRoute>
+                <FamilyControls />
+              </ProtectedRoute>
+            } />
+            <Route path="/cards" element={
+              <ProtectedRoute>
+                <Cards />
+              </ProtectedRoute>
+            } />
+            <Route path="/analytics" element={
+              <ProtectedRoute>
+                <Analytics />
               </ProtectedRoute>
             } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

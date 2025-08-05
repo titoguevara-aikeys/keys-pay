@@ -1,0 +1,238 @@
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useAddFamilyMember } from '@/hooks/useFamilyMembers';
+import { useToast } from '@/hooks/use-toast';
+
+const formSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+  first_name: z.string().min(1, 'First name is required'),
+  last_name: z.string().min(1, 'Last name is required'),
+  relationship_type: z.string().min(1, 'Please select a relationship'),
+  spending_limit: z.string().optional(),
+  daily_limit: z.string().optional(),
+});
+
+type FormData = z.infer<typeof formSchema>;
+
+interface AddFamilyMemberDialogProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({
+  open,
+  onClose,
+}) => {
+  const { toast } = useToast();
+  const addFamilyMember = useAddFamilyMember();
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      first_name: '',
+      last_name: '',
+      relationship_type: '',
+      spending_limit: '',
+      daily_limit: '',
+    },
+  });
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      await addFamilyMember.mutateAsync({
+        email: data.email,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        relationship_type: data.relationship_type,
+        spending_limit: data.spending_limit ? parseFloat(data.spending_limit) : undefined,
+        daily_limit: data.daily_limit ? parseFloat(data.daily_limit) : undefined,
+      });
+
+      toast({
+        title: 'Family member added!',
+        description: `${data.first_name} ${data.last_name} has been added to your family controls.`,
+      });
+
+      form.reset();
+      onClose();
+    } catch (error: any) {
+      toast({
+        title: 'Error adding family member',
+        description: error.message || 'Please try again.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleClose = () => {
+    form.reset();
+    onClose();
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle>Add Family Member</DialogTitle>
+          <DialogDescription>
+            Add a family member to manage their spending and set controls. The person must already have an account.
+          </DialogDescription>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="first_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="last_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email Address</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="john.doe@example.com" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    The email address of their existing account
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="relationship_type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Relationship</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select relationship" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="child">Child</SelectItem>
+                      <SelectItem value="teen">Teen</SelectItem>
+                      <SelectItem value="dependent">Dependent</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="spending_limit"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Monthly Spending Limit</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="number" 
+                        step="0.01" 
+                        placeholder="500.00" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormDescription>Optional</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="daily_limit"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Daily Transaction Limit</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="number" 
+                        step="0.01" 
+                        placeholder="100.00" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormDescription>Optional</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={addFamilyMember.isPending}>
+                {addFamilyMember.isPending ? 'Adding...' : 'Add Family Member'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+};
