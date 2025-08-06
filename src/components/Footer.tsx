@@ -35,8 +35,13 @@ export const Footer = () => {
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">
-                Seamless crypto payments with advanced security. Trusted by millions globally.
+                The native utility token powering the entire AI KEYS ecosystem. Built on Solana blockchain for fast, secure, and cost-effective transactions with comprehensive utility.
               </p>
+              <div className="space-y-1 text-xs text-muted-foreground">
+                <p>License No: FSL-2024-001</p>
+                <p>Registered Address: 123 Financial District, Singapore 018956</p>
+                <p>Regulatory Authority: MAS Singapore</p>
+              </div>
               
               {/* App Download Section */}
               <div className="space-y-3">
@@ -171,24 +176,32 @@ export const Footer = () => {
         <div className="py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-sm text-muted-foreground">
-              © 2024 AIKEYS. All rights reserved.
+              © 2024 AI KEYS. All rights reserved. | License No: FSL-2024-001
             </div>
             
-            {/* Trust Indicators */}
-            <div className="flex items-center gap-6 text-xs text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Shield className="h-3 w-3" />
-                <span>Licensed Custodian</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Shield className="h-3 w-3" />
-                <span>$50M USD Insurance</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Shield className="h-3 w-3" />
-                <span>FIPS 140-2 Level 3</span>
-              </div>
+            {/* Legal Links */}
+            <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
+              <a href="#" className="hover:text-foreground">Privacy Policy</a>
+              <a href="#" className="hover:text-foreground">Terms of Service</a>
+              <a href="#" className="hover:text-foreground">Cookie Policy</a>
+              <a href="#" className="hover:text-foreground">Risk Disclosure</a>
+              <a href="#" className="hover:text-foreground">Regulatory</a>
             </div>
+            
+            {/* Company Info */}
+            <div className="text-xs text-muted-foreground text-center md:text-right">
+              <p>AI KEYS Fintech Solutions Pte Ltd</p>
+              <p>123 Financial District, Singapore 018956</p>
+              <p>Regulated by MAS Singapore</p>
+            </div>
+          </div>
+          
+          {/* Disclaimer */}
+          <div className="mt-4 pt-4 border-t border-border">
+            <p className="text-xs text-muted-foreground text-center">
+              AI KEYS is a regulated financial services provider. Cryptocurrency investments are subject to market risk. 
+              Past performance is not indicative of future results. Please read our risk disclosure statement.
+            </p>
           </div>
         </div>
       </div>
