@@ -67,12 +67,13 @@ const Auth = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="p-3 bg-primary/10 rounded-full">
-              <div className="relative p-2 bg-gradient-to-br from-primary via-primary/90 to-primary/70 rounded-xl shadow-glow">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent rounded-xl"></div>
-                <div className="relative flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold text-xl leading-none">AI</span>
-                </div>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-orange-500 transform rotate-45 rounded-sm flex items-center justify-center">
+                <span className="text-white font-bold text-lg transform -rotate-45">⬥</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold text-foreground">AI KEYS</span>
+                <span className="text-sm text-muted-foreground -mt-1">Fintech Solutions</span>
               </div>
             </div>
           </div>

@@ -29,13 +29,15 @@ const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="relative p-2 bg-gradient-to-br from-primary via-primary/90 to-primary/70 rounded-xl shadow-glow">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent rounded-xl"></div>
-              <div className="relative flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg leading-none">AI</span>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-orange-500 transform rotate-45 rounded-sm flex items-center justify-center">
+                <span className="text-white font-bold text-xs transform -rotate-45">⬥</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xl font-bold text-white">AI KEYS</span>
+                <span className="text-xs text-gray-400 -mt-1">Fintech Solutions</span>
               </div>
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">AIKEYS</span>
           </div>
 
           {/* Navigation Links */}

@@ -26,13 +26,13 @@ export const Footer = () => {
             {/* Company Info */}
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="relative p-1.5 bg-gradient-to-br from-primary via-primary/90 to-primary/70 rounded-lg shadow-glow">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent rounded-lg"></div>
-                  <div className="relative flex items-center justify-center">
-                    <span className="text-primary-foreground font-bold text-sm leading-none">AI</span>
-                  </div>
+                <div className="w-8 h-8 bg-orange-500 transform rotate-45 rounded-sm flex items-center justify-center">
+                  <span className="text-white font-bold text-xs transform -rotate-45">⬥</span>
                 </div>
-                <h3 className="text-lg font-semibold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">AIKEYS</h3>
+                <div className="flex flex-col">
+                  <h3 className="text-lg font-semibold text-white">AI KEYS</h3>
+                  <span className="text-xs text-gray-400 -mt-1">Fintech Solutions</span>
+                </div>
               </div>
               <p className="text-sm text-muted-foreground">
                 Seamless crypto payments with advanced security. Trusted by millions globally.
