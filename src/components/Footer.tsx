@@ -25,7 +25,15 @@ export const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Company Info */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-foreground">AIKEYS Wallet</h3>
+              <div className="flex items-center gap-3">
+                <div className="relative p-1.5 bg-gradient-to-br from-primary via-primary/90 to-primary/70 rounded-lg shadow-glow">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent rounded-lg"></div>
+                  <div className="relative flex items-center justify-center">
+                    <span className="text-primary-foreground font-bold text-sm leading-none">AI</span>
+                  </div>
+                </div>
+                <h3 className="text-lg font-semibold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">AIKEYS</h3>
+              </div>
               <p className="text-sm text-muted-foreground">
                 Seamless crypto payments with advanced security. Trusted by millions globally.
               </p>
@@ -163,7 +171,7 @@ export const Footer = () => {
         <div className="py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-sm text-muted-foreground">
-              © 2024 AIKEYS Wallet. All rights reserved.
+              © 2024 AIKEYS. All rights reserved.
             </div>
             
             {/* Trust Indicators */}

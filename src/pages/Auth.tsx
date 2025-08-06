@@ -68,10 +68,15 @@ const Auth = () => {
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <div className="p-3 bg-primary/10 rounded-full">
-              <Wallet className="h-8 w-8 text-primary" />
+              <div className="relative p-2 bg-gradient-to-br from-primary via-primary/90 to-primary/70 rounded-xl shadow-glow">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent rounded-xl"></div>
+                <div className="relative flex items-center justify-center">
+                  <span className="text-primary-foreground font-bold text-xl leading-none">AI</span>
+                </div>
+              </div>
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold">AIKEYS Wallet</CardTitle>
+          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">AIKEYS</CardTitle>
           <CardDescription>
             Secure digital payments and family controls
           </CardDescription>

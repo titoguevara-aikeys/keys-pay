@@ -29,10 +29,13 @@ const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Wallet className="h-6 w-6 text-primary" />
+            <div className="relative p-2 bg-gradient-to-br from-primary via-primary/90 to-primary/70 rounded-xl shadow-glow">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent rounded-xl"></div>
+              <div className="relative flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-lg leading-none">AI</span>
+              </div>
             </div>
-            <span className="text-xl font-bold">AIKEYS Wallet</span>
+            <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">AIKEYS</span>
           </div>
 
           {/* Navigation Links */}
