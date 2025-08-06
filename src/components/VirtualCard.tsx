@@ -75,19 +75,20 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
       <div className="relative rounded-xl shadow-lg overflow-hidden">
         {/* Card Image Background */}
         <div 
-          className="relative w-full h-56 bg-contain bg-center bg-no-repeat"
+          className="relative w-full bg-cover bg-center"
           style={{
             backgroundImage: `url('/lovable-uploads/eeab292b-99eb-449c-a828-8cf2c55b6ef1.png')`,
-            aspectRatio: '1.6/1'
+            aspectRatio: '1.586/1',
+            minHeight: '200px'
           }}
         >
           {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-black/20"></div>
+          <div className="absolute inset-0 bg-black/10"></div>
           
           {/* Card Content */}
           <div className="relative p-6 h-full flex flex-col justify-between text-white">
             <div className="flex justify-between items-start">
-              <div>
+              <div className="ml-20">
                 <p className="text-white/90 text-sm font-medium uppercase tracking-wider">
                   {card.card_type} Card
                 </p>
@@ -102,7 +103,7 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
 
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <div>
+                <div className="ml-4">
                   <p className="text-white/80 text-xs uppercase tracking-wide">Card Number</p>
                   <p className="text-lg font-mono font-medium">
                     {formatCardNumber(card.card_number)}
@@ -120,12 +121,12 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
                 )}
               </div>
 
-              <div className="flex justify-between">
-                <div>
+              <div className="flex justify-between items-end">
+                <div className="ml-4">
                   <p className="text-white/80 text-xs uppercase tracking-wide">Expires</p>
                   <p className="text-sm font-medium">{getExpiryDate()}</p>
                 </div>
-                <div>
+                <div className="mr-20">
                   <p className="text-white/80 text-xs uppercase tracking-wide">CVV</p>
                   <p className="text-sm font-medium">{showNumber ? '123' : '•••'}</p>
                 </div>
