@@ -60,10 +60,10 @@ const popularMerchants: Merchant[] = [
     featured: true
   },
   {
-    id: 'airbnb',
-    name: 'Airbnb',
+    id: 'keys-travel',
+    name: 'Keys Travel',
     category: 'Travel',
-    logo: '🏠',
+    logo: '✈️',
     description: 'Travel accommodations',
     acceptedPayments: ['BTC', 'ETH', 'USDT', 'USDC'],
     discount: 3,
