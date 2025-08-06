@@ -56,7 +56,7 @@ export const Footer = () => {
                     <img 
                       src={appStoreBadge} 
                       alt="Download on the App Store" 
-                      className="h-10 w-auto"
+                      className="h-12 w-auto"
                     />
                   </button>
                   <button
@@ -66,7 +66,7 @@ export const Footer = () => {
                     <img 
                       src={googlePlayBadge} 
                       alt="Get it on Google Play" 
-                      className="h-10 w-auto"
+                      className="h-12 w-auto"
                     />
                   </button>
                 </div>
