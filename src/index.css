@@ -4,29 +4,29 @@
 
 @layer base {
   :root {
-    --background: 240 15% 97%;
-    --foreground: 240 12% 9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 262 83% 58%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 220 9% 46%;
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
-    --accent: 216 100% 95%;
-    --accent-foreground: 216 100% 15%;
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --card: 224 71% 4%;
+    --card-foreground: 210 40% 98%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 200 100% 70%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 215 28% 17%;
+    --muted-foreground: 217 11% 65%;
+    --accent: 200 100% 70%;
+    --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 262 83% 58%;
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 200 100% 70%;
     --radius: 0.75rem;
     
-    --gradient-primary: linear-gradient(135deg, hsl(262, 83%, 58%), hsl(271, 81%, 56%));
-    --shadow-glow: 0 0 40px hsl(262 83% 58% / 0.3);
+    --gradient-primary: linear-gradient(135deg, hsl(200, 100%, 70%), hsl(210, 100%, 65%));
+    --shadow-glow: 0 0 40px hsl(200 100% 70% / 0.3);
 
     --sidebar-background: 0 0% 98%;
 
