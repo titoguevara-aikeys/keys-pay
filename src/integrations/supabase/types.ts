@@ -195,6 +195,145 @@ export type Database = {
           },
         ]
       }
+      crypto_assets: {
+        Row: {
+          created_at: string
+          current_price: number
+          icon_url: string | null
+          id: string
+          is_active: boolean
+          market_cap: number | null
+          name: string
+          price_change_24h: number | null
+          symbol: string
+          updated_at: string
+          volume_24h: number | null
+        }
+        Insert: {
+          created_at?: string
+          current_price?: number
+          icon_url?: string | null
+          id?: string
+          is_active?: boolean
+          market_cap?: number | null
+          name: string
+          price_change_24h?: number | null
+          symbol: string
+          updated_at?: string
+          volume_24h?: number | null
+        }
+        Update: {
+          created_at?: string
+          current_price?: number
+          icon_url?: string | null
+          id?: string
+          is_active?: boolean
+          market_cap?: number | null
+          name?: string
+          price_change_24h?: number | null
+          symbol?: string
+          updated_at?: string
+          volume_24h?: number | null
+        }
+        Relationships: []
+      }
+      crypto_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          fee: number | null
+          from_address: string | null
+          id: string
+          status: string
+          to_address: string | null
+          transaction_hash: string | null
+          transaction_type: string
+          usd_value: number | null
+          user_id: string
+          wallet_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string | null
+          fee?: number | null
+          from_address?: string | null
+          id?: string
+          status?: string
+          to_address?: string | null
+          transaction_hash?: string | null
+          transaction_type: string
+          usd_value?: number | null
+          user_id: string
+          wallet_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          fee?: number | null
+          from_address?: string | null
+          id?: string
+          status?: string
+          to_address?: string | null
+          transaction_hash?: string | null
+          transaction_type?: string
+          usd_value?: number | null
+          user_id?: string
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crypto_transactions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "crypto_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crypto_wallets: {
+        Row: {
+          asset_id: string
+          balance: number
+          created_at: string
+          id: string
+          is_active: boolean
+          updated_at: string
+          user_id: string
+          wallet_address: string | null
+        }
+        Insert: {
+          asset_id: string
+          balance?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+          user_id: string
+          wallet_address?: string | null
+        }
+        Update: {
+          asset_id?: string
+          balance?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+          user_id?: string
+          wallet_address?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crypto_wallets_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "crypto_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       family_controls: {
         Row: {
           child_id: string
