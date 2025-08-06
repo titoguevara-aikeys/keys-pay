@@ -88,7 +88,7 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
           {/* Card Content */}
           <div className="relative p-6 h-full flex flex-col justify-between text-white">
             <div className="flex justify-between items-start">
-              <div className="ml-20">
+              <div className="ml-32">
                 <p className="text-white/90 text-sm font-medium uppercase tracking-wider">
                   {card.card_type} Card
                 </p>
@@ -126,7 +126,7 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
                   <p className="text-white/80 text-xs uppercase tracking-wide">Expires</p>
                   <p className="text-sm font-medium">{getExpiryDate()}</p>
                 </div>
-                <div className="mr-20">
+                <div className="mr-32">
                   <p className="text-white/80 text-xs uppercase tracking-wide">CVV</p>
                   <p className="text-sm font-medium">{showNumber ? '123' : '•••'}</p>
                 </div>
