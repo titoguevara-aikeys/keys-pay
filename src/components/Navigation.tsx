@@ -31,7 +31,7 @@ const Navigation = () => {
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <img 
-                src="/lovable-uploads/107af263-79b6-4204-bf68-06310789087b.png" 
+                src="/lovable-uploads/b6efed41-589b-41e2-9e81-f591fc7f9369.png" 
                 alt="Keys Logo" 
                 className="h-8 w-auto"
               />
