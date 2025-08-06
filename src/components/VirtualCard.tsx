@@ -77,7 +77,7 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
         <div 
           className="relative w-full h-48 bg-cover bg-center"
           style={{
-            backgroundImage: `url('/lovable-uploads/e4a11dbf-f835-4a26-a4f9-d52425516d4b.png')`
+            backgroundImage: `url('/lovable-uploads/eeab292b-99eb-449c-a828-8cf2c55b6ef1.png')`
           }}
         >
           {/* Overlay for better text readability */}
