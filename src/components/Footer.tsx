@@ -14,6 +14,8 @@ import {
   HelpCircle,
   MapPin
 } from 'lucide-react';
+import appStoreBadge from '@/assets/app-store-badge.svg';
+import googlePlayBadge from '@/assets/google-play-badge.png';
 
 
 export const Footer = () => {
@@ -47,30 +49,26 @@ export const Footer = () => {
               <div className="space-y-3">
                 <p className="text-sm font-medium text-foreground">Get the app</p>
                 <div className="flex items-center gap-3">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="h-12 px-4"
+                  <button
                     onClick={() => window.open('https://apps.apple.com', '_blank')}
+                    className="transition-transform hover:scale-105"
                   >
-                    <Download className="h-4 w-4 mr-2" />
-                    <div className="text-left">
-                      <div className="text-xs text-muted-foreground">Download on the</div>
-                      <div className="text-sm font-medium">App Store</div>
-                    </div>
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="h-12 px-4"
+                    <img 
+                      src={appStoreBadge} 
+                      alt="Download on the App Store" 
+                      className="h-10 w-auto"
+                    />
+                  </button>
+                  <button
                     onClick={() => window.open('https://play.google.com', '_blank')}
+                    className="transition-transform hover:scale-105"
                   >
-                    <Download className="h-4 w-4 mr-2" />
-                    <div className="text-left">
-                      <div className="text-xs text-muted-foreground">Get it on</div>
-                      <div className="text-sm font-medium">Google Play</div>
-                    </div>
-                  </Button>
+                    <img 
+                      src={googlePlayBadge} 
+                      alt="Get it on Google Play" 
+                      className="h-10 w-auto"
+                    />
+                  </button>
                 </div>
               </div>
             </div>
