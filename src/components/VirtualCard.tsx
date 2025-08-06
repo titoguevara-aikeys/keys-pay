@@ -72,55 +72,66 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
   return (
     <div className="space-y-4">
       {/* Virtual Card */}
-      <div className={`relative p-6 rounded-xl text-white shadow-lg ${getCardGradient(card.card_type)}`}>
-        <div className="flex justify-between items-start mb-8">
-          <div>
-            <p className="text-white/80 text-sm font-medium uppercase tracking-wider">
-              {card.card_type} Card
-            </p>
-          </div>
-          <Badge 
-            className={`${getStatusColor(card.card_status)}`}
-            variant="outline"
-          >
-            {card.card_status}
-          </Badge>
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-white/80 text-xs uppercase tracking-wide">Card Number</p>
-              <p className="text-lg font-mono font-medium">
-                {formatCardNumber(card.card_number)}
-              </p>
-            </div>
-            {showNumber && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={copyCardNumber}
-                className="text-white/80 hover:text-white hover:bg-white/10"
+      <div className="relative rounded-xl shadow-lg overflow-hidden">
+        {/* Card Image Background */}
+        <div 
+          className="relative w-full h-48 bg-cover bg-center"
+          style={{
+            backgroundImage: `url('/lovable-uploads/e4a11dbf-f835-4a26-a4f9-d52425516d4b.png')`
+          }}
+        >
+          {/* Overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/20"></div>
+          
+          {/* Card Content */}
+          <div className="relative p-6 h-full flex flex-col justify-between text-white">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-white/90 text-sm font-medium uppercase tracking-wider">
+                  {card.card_type} Card
+                </p>
+              </div>
+              <Badge 
+                className="bg-white/20 text-white border-white/30"
+                variant="outline"
               >
-                <Copy className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-
-          <div className="flex justify-between">
-            <div>
-              <p className="text-white/80 text-xs uppercase tracking-wide">Expires</p>
-              <p className="text-sm font-medium">{getExpiryDate()}</p>
+                {card.card_status}
+              </Badge>
             </div>
-            <div>
-              <p className="text-white/80 text-xs uppercase tracking-wide">CVV</p>
-              <p className="text-sm font-medium">{showNumber ? '123' : '•••'}</p>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white/80 text-xs uppercase tracking-wide">Card Number</p>
+                  <p className="text-lg font-mono font-medium">
+                    {formatCardNumber(card.card_number)}
+                  </p>
+                </div>
+                {showNumber && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={copyCardNumber}
+                    className="text-white/80 hover:text-white hover:bg-white/10"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+
+              <div className="flex justify-between">
+                <div>
+                  <p className="text-white/80 text-xs uppercase tracking-wide">Expires</p>
+                  <p className="text-sm font-medium">{getExpiryDate()}</p>
+                </div>
+                <div>
+                  <p className="text-white/80 text-xs uppercase tracking-wide">CVV</p>
+                  <p className="text-sm font-medium">{showNumber ? '123' : '•••'}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Card chip visual element */}
-        <div className="absolute top-16 left-6 w-8 h-6 bg-yellow-400 rounded opacity-80"></div>
       </div>
 
       {/* Card Controls */}
