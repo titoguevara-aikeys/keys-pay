@@ -56,7 +56,7 @@ export const Footer = () => {
                     <img 
                       src={appStoreBadge} 
                       alt="Download on the App Store" 
-                      className="h-12 w-36 object-contain"
+                      className="h-12 w-32 object-contain"
                     />
                   </button>
                   <button
