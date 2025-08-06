@@ -139,11 +139,19 @@ export const MerchantPayments = () => {
   const featuredMerchants = popularMerchants.filter(m => m.featured);
 
   const handlePayment = (merchant: Merchant) => {
-    setSelectedMerchant(merchant);
-    toast({
-      title: "Payment Initiated",
-      description: `Redirecting to ${merchant.name} payment page...`,
-    });
+    if (merchant.id === 'keys-travel') {
+      window.open('https://lovable.dev/projects/e3ec21cf-4580-4c05-8f63-7c563759371b', '_blank');
+      toast({
+        title: "Redirecting to Keys Travel",
+        description: "Opening Keys Travel Platform in new tab...",
+      });
+    } else {
+      setSelectedMerchant(merchant);
+      toast({
+        title: "Payment Initiated",
+        description: `Redirecting to ${merchant.name} payment page...`,
+      });
+    }
   };
 
   const handleQuickPay = (amount: string, merchant: string) => {
