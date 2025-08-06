@@ -44,9 +44,36 @@ const Index = () => {
   const totalBalance = accounts.reduce((sum, account) => sum + account.balance, 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
-      {/* Navigation */}
-      <Navigation />
+    <div className="min-h-screen relative overflow-hidden">
+      {/* RedotPay-style Background Graphics */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-primary/5">
+        {/* Large geometric shapes */}
+        <div className="absolute top-20 -right-32 w-96 h-96 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full blur-3xl"></div>
+        <div className="absolute -top-20 -left-32 w-80 h-80 bg-gradient-to-br from-accent/20 to-primary/10 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-gradient-to-tr from-primary/8 to-accent/15 rounded-full blur-xl"></div>
+        
+        {/* Floating geometric elements */}
+        <div className="absolute top-1/3 right-1/4 w-32 h-32 border border-primary/20 rounded-lg rotate-45 animate-pulse"></div>
+        <div className="absolute bottom-1/3 left-1/3 w-24 h-24 border border-accent/30 rounded-full animate-bounce" style={{animationDuration: '3s'}}></div>
+        <div className="absolute top-1/2 right-1/3 w-16 h-16 bg-primary/10 rounded-full animate-ping" style={{animationDuration: '4s'}}></div>
+        
+        {/* Grid pattern overlay */}
+        <div 
+          className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage: `radial-gradient(circle at 2px 2px, hsl(var(--primary)) 1px, transparent 0)`,
+            backgroundSize: '40px 40px'
+          }}
+        ></div>
+        
+        {/* Subtle wave pattern */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-primary/5 to-transparent"></div>
+      </div>
+
+      {/* Content overlay */}
+      <div className="relative z-10">
+        {/* Navigation */}
+        <Navigation />
       
       {/* User Info Header */}
       <header className="bg-background/50 border-b">
@@ -255,8 +282,9 @@ const Index = () => {
         </div>
       </div>
       
-      {/* Footer */}
-      <Footer />
+        {/* Footer */}
+        <Footer />
+      </div>
     </div>
   );
 };
