@@ -30,13 +30,11 @@ const Navigation = () => {
           {/* Logo */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-orange-500 transform rotate-45 rounded-sm flex items-center justify-center">
-                <span className="text-white font-bold text-xs transform -rotate-45">⬥</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-white">AI KEYS</span>
-                <span className="text-xs text-gray-400 -mt-1">Fintech Solutions</span>
-              </div>
+              <img 
+                src="/lovable-uploads/107af263-79b6-4204-bf68-06310789087b.png" 
+                alt="Keys Logo" 
+                className="h-8 w-auto"
+              />
             </div>
           </div>
 
