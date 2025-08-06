@@ -75,9 +75,10 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
       <div className="relative rounded-xl shadow-lg overflow-hidden">
         {/* Card Image Background */}
         <div 
-          className="relative w-full h-48 bg-cover bg-center"
+          className="relative w-full h-56 bg-contain bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url('/lovable-uploads/eeab292b-99eb-449c-a828-8cf2c55b6ef1.png')`
+            backgroundImage: `url('/lovable-uploads/eeab292b-99eb-449c-a828-8cf2c55b6ef1.png')`,
+            aspectRatio: '1.6/1'
           }}
         >
           {/* Overlay for better text readability */}
