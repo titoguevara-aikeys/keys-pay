@@ -14,6 +14,7 @@ import Analytics from "./pages/Analytics";
 import Security from "./pages/Security";
 import SuperApp from "./pages/SuperApp";
 import CryptoHub from "./pages/CryptoHub";
+import AdminPortal from "./pages/AdminPortal";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +60,11 @@ const App = () => (
             <Route path="/crypto" element={
               <ProtectedRoute>
                 <CryptoHub />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <AdminPortal />
               </ProtectedRoute>
             } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
