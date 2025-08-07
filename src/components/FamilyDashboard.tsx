@@ -19,16 +19,20 @@ import {
   AlertCircle,
   Plus
 } from 'lucide-react';
-import { useFamilyMembers } from '@/hooks/useFamilyMembers';
+import { useFamilyMembers, useRemoveFamilyMember } from '@/hooks/useFamilyMembers';
 import { AddFamilyMemberDialog } from './AddFamilyMemberDialog';
 import { TransferMoneyDialog } from './TransferMoneyDialog';
+import { useToast } from '@/hooks/use-toast';
+
 import type { FamilyMember } from '@/hooks/useFamilyMembers';
 
 export const FamilyDashboard = () => {
+  const { toast } = useToast();
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showTransferDialog, setShowTransferDialog] = useState(false);
   const [selectedMember, setSelectedMember] = useState<FamilyMember | null>(null);
   const { data: familyMembers, isLoading } = useFamilyMembers();
+  const removeFamilyMember = useRemoveFamilyMember();
 
   // Sample data for demo
   const dashboardStats = {
@@ -54,6 +58,26 @@ export const FamilyDashboard = () => {
     { id: 2, type: 'chore_due', description: 'Alex: "Clean room" due', date: '2024-12-09', amount: 8 },
     { id: 3, type: 'goal_target', description: 'Jamie\'s "Gaming Console" target date', date: '2024-12-25', amount: 350 }
   ];
+
+  const handleRemoveMember = async (member: FamilyMember) => {
+    if (!confirm(`Are you sure you want to remove ${member.child_profile?.first_name} ${member.child_profile?.last_name} from your family controls? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      await removeFamilyMember.mutateAsync(member.id);
+      toast({
+        title: 'Family member removed',
+        description: `${member.child_profile?.first_name} ${member.child_profile?.last_name} has been removed from your family controls.`,
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Error removing family member',
+        description: error.message || 'Please try again.',
+        variant: 'destructive',
+      });
+    }
+  };
 
   const handleEditMember = (member: FamilyMember) => {
     setSelectedMember(member);
@@ -292,6 +316,7 @@ export const FamilyDashboard = () => {
                   member={member}
                   onEdit={handleEditMember}
                   onTransfer={handleTransferMoney}
+                  onRemove={handleRemoveMember}
                 />
               ))}
             </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CreditCard, DollarSign, Shield, Clock, MoreHorizontal } from 'lucide-react';
+import { CreditCard, DollarSign, Shield, Clock, MoreHorizontal, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -17,12 +17,14 @@ interface ChildAccountCardProps {
   member: FamilyMember;
   onEdit: (member: FamilyMember) => void;
   onTransfer: (member: FamilyMember) => void;
+  onRemove: (member: FamilyMember) => void;
 }
 
 export const ChildAccountCard: React.FC<ChildAccountCardProps> = ({
   member,
   onEdit,
   onTransfer,
+  onRemove,
 }) => {
   const { data: accounts } = useAccounts();
   
@@ -86,6 +88,13 @@ export const ChildAccountCard: React.FC<ChildAccountCardProps> = ({
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onTransfer(member)}>
               Send Money
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => onRemove(member)}
+              className="text-destructive focus:text-destructive"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Remove Member
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -139,3 +139,24 @@ export const useUpdateFamilyMember = () => {
     },
   });
 };
+
+export const useRemoveFamilyMember = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (memberId: string) => {
+      const { data, error } = await supabase
+        .from('family_controls')
+        .update({ status: 'inactive' })
+        .eq('id', memberId)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['family-members'] });
+    },
+  });
+};
