@@ -28,7 +28,7 @@ export const Footer = () => {
             {/* Company Info */}
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <img src="/lovable-uploads/34c15126-3d01-4b5a-8fd3-f56ab14cac9f.png" alt="Keys Logo" className="h-8 w-8" />
+                <img src="/lovable-uploads/ad78c06f-06c1-4a99-b7fc-aefe5def66cc.png" alt="Keys Logo" className="h-8 w-8" />
                 <div className="flex flex-col">
                   <h3 className="text-lg font-semibold text-white">KEYS</h3>
                   <span className="text-xs text-gray-400 -mt-1">Fintech Solutions</span>

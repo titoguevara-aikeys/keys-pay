@@ -139,7 +139,7 @@ const Cards = () => {
         {/* Cards Grid */}
         <div className="space-y-6">
           <div className="flex items-center gap-3">
-            <img src="/lovable-uploads/34c15126-3d01-4b5a-8fd3-f56ab14cac9f.png" alt="Keys Logo" className="h-6 w-6" />
+            <img src="/lovable-uploads/ad78c06f-06c1-4a99-b7fc-aefe5def66cc.png" alt="Keys Logo" className="h-6 w-6" />
             <h2 className="text-xl font-semibold">Your Cards</h2>
           </div>
           
