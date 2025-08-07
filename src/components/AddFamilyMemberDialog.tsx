@@ -255,21 +255,28 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({
               )}
             />
 
-            <DialogFooter className="flex gap-3">
+            <DialogFooter className="flex gap-3 pt-6">
               <Button 
                 type="button" 
                 variant="outline" 
                 onClick={handleClose}
-                className="flex-1"
+                className="flex-1 h-11"
               >
                 Cancel
               </Button>
               <Button 
                 type="submit" 
                 disabled={addFamilyMember.isPending}
-                className="flex-1 bg-primary hover:bg-primary/90"
+                className="flex-1 h-11 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium shadow-lg hover:shadow-xl transition-all duration-200"
               >
-                {addFamilyMember.isPending ? 'Adding...' : 'Add Family Member'}
+                {addFamilyMember.isPending ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Adding...
+                  </div>
+                ) : (
+                  'Add Family Member'
+                )}
               </Button>
             </DialogFooter>
           </form>
