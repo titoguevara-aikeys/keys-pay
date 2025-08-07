@@ -35,7 +35,7 @@ const SuperApp = () => {
           {/* Header */}
           <div className="text-center space-y-4">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              AIKEYS Super App
+              Keys Super App
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Complete financial ecosystem with payments, analytics, mobile features, and merchant services
