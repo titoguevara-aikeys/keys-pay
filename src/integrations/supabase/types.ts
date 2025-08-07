@@ -918,6 +918,230 @@ export type Database = {
           },
         ]
       }
+      travel_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          destination_id: string | null
+          id: string
+          message: string
+          read: boolean | null
+          severity: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          destination_id?: string | null
+          id?: string
+          message: string
+          read?: boolean | null
+          severity?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          destination_id?: string | null
+          id?: string
+          message?: string
+          read?: boolean | null
+          severity?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      travel_bookings: {
+        Row: {
+          account_id: string
+          booking_date: string
+          booking_reference: string | null
+          booking_type: string
+          created_at: string
+          currency: string
+          departure_date: string
+          destination_id: string
+          id: string
+          metadata: Json | null
+          payment_status: string
+          return_date: string | null
+          status: string
+          total_amount: number
+          travelers_count: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          booking_date: string
+          booking_reference?: string | null
+          booking_type: string
+          created_at?: string
+          currency?: string
+          departure_date: string
+          destination_id: string
+          id?: string
+          metadata?: Json | null
+          payment_status?: string
+          return_date?: string | null
+          status?: string
+          total_amount: number
+          travelers_count?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          booking_date?: string
+          booking_reference?: string | null
+          booking_type?: string
+          created_at?: string
+          currency?: string
+          departure_date?: string
+          destination_id?: string
+          id?: string
+          metadata?: Json | null
+          payment_status?: string
+          return_date?: string | null
+          status?: string
+          total_amount?: number
+          travelers_count?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_travel_bookings_destination"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "travel_destinations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      travel_destinations: {
+        Row: {
+          average_cost_per_day: number | null
+          category: string | null
+          city: string
+          country: string
+          created_at: string
+          currency: string
+          description: string | null
+          featured: boolean | null
+          id: string
+          image_url: string | null
+          name: string
+          rating: number | null
+          updated_at: string
+        }
+        Insert: {
+          average_cost_per_day?: number | null
+          category?: string | null
+          city: string
+          country: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          featured?: boolean | null
+          id?: string
+          image_url?: string | null
+          name: string
+          rating?: number | null
+          updated_at?: string
+        }
+        Update: {
+          average_cost_per_day?: number | null
+          category?: string | null
+          city?: string
+          country?: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          featured?: boolean | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          rating?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      travel_documents: {
+        Row: {
+          country_issued: string
+          created_at: string
+          document_number: string
+          document_type: string
+          expiry_date: string | null
+          id: string
+          issue_date: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          country_issued: string
+          created_at?: string
+          document_number: string
+          document_type: string
+          expiry_date?: string | null
+          id?: string
+          issue_date?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          country_issued?: string
+          created_at?: string
+          document_number?: string
+          document_type?: string
+          expiry_date?: string | null
+          id?: string
+          issue_date?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      travel_itineraries: {
+        Row: {
+          booking_id: string
+          created_at: string
+          description: string | null
+          id: string
+          schedule: Json
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          booking_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          schedule?: Json
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          booking_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          schedule?: Json
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       trusted_devices: {
         Row: {
           created_at: string
@@ -992,6 +1216,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_spending_insights: {
+        Args: { user_id_param: string; period_days?: number }
+        Returns: {
+          category: string
+          total_amount: number
+          transaction_count: number
+          avg_transaction: number
+          period_start: string
+          period_end: string
+        }[]
+      }
       create_child_account: {
         Args: {
           p_parent_id: string
@@ -1001,6 +1236,19 @@ export type Database = {
           p_relationship_type: string
           p_spending_limit?: number
           p_transaction_limit?: number
+        }
+        Returns: Json
+      }
+      create_travel_booking: {
+        Args: {
+          p_user_id: string
+          p_destination_id: string
+          p_account_id: string
+          p_booking_type: string
+          p_total_amount: number
+          p_departure_date: string
+          p_return_date?: string
+          p_travelers_count?: number
         }
         Returns: Json
       }
@@ -1042,6 +1290,15 @@ export type Database = {
           p_expires_hours?: number
         }
         Returns: string
+      }
+      transfer_between_accounts: {
+        Args: {
+          p_from_account_id: string
+          p_to_account_id: string
+          p_amount: number
+          p_description?: string
+        }
+        Returns: Json
       }
     }
     Enums: {
