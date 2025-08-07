@@ -88,10 +88,13 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
           {/* Card Content */}
           <div className="relative p-6 h-full flex flex-col justify-between text-white">
             <div className="flex justify-between items-start">
-              <div className="ml-32">
-                <p className="text-white/90 text-sm font-medium uppercase tracking-wider">
-                  {card.card_type} Card
-                </p>
+              <div className="flex items-start">
+                <img src="/lovable-uploads/34c15126-3d01-4b5a-8fd3-f56ab14cac9f.png" alt="Keys Logo" className="h-8 w-8 mr-24" />
+                <div>
+                  <p className="text-white/90 text-sm font-medium uppercase tracking-wider">
+                    {card.card_type} Card
+                  </p>
+                </div>
               </div>
               <Badge 
                 className="bg-white/20 text-white border-white/30"
