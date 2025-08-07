@@ -32,7 +32,7 @@ export default function CryptoHub() {
         {/* Hero Section */}
         <div className="text-center space-y-4">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <img src="/lovable-uploads/061e0c8f-6588-4ca9-a5c8-c6747f2e178f.png" alt="Keys Logo" className="h-4 w-4" />
+            <img src="/lovable-uploads/061e0c8f-6588-4ca9-a5c8-c6747f2e178f.png" alt="Keys Logo" className="h-8 w-8" />
             <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
               Keys Crypto Hub
             </h1>
