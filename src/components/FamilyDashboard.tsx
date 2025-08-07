@@ -36,30 +36,23 @@ export const FamilyDashboard = () => {
   const { data: familyMembers, isLoading } = useFamilyMembers();
   const removeFamilyMember = useRemoveFamilyMember();
 
-  // Sample data for demo
+  // Calculate real stats from actual data
   const dashboardStats = {
-    totalChildren: 3,
-    activeChores: 12,
-    pendingApprovals: 4,
-    totalSavings: 855,
-    weeklyAllowances: 75,
-    completedGoals: 2,
-    interestEarned: 12.45,
-    avgProgressPercentage: 68
+    totalChildren: familyMembers?.length || 0,
+    activeChores: 0, // No chores implemented yet
+    pendingApprovals: 0, // No approvals implemented yet
+    totalSavings: 0, // No savings implemented yet
+    weeklyAllowances: 0, // No allowances implemented yet
+    completedGoals: 0, // No goals implemented yet
+    interestEarned: 0, // No interest implemented yet
+    avgProgressPercentage: 0 // No progress implemented yet
   };
 
-  const recentActivity = [
-    { id: 1, type: 'chore_completed', child: 'Sarah', description: 'Completed "Take out trash"', amount: 5, time: '2 hours ago' },
-    { id: 2, type: 'allowance_paid', child: 'Alex', description: 'Weekly allowance deposited', amount: 15, time: '1 day ago' },
-    { id: 3, type: 'goal_progress', child: 'Jamie', description: 'Added to "New Bicycle" savings', amount: 20, time: '2 days ago' },
-    { id: 4, type: 'interest_earned', child: 'Sarah', description: 'Interest earned on savings', amount: 2.15, time: '3 days ago' }
-  ];
+  // No sample activity data - will be empty until features are implemented
+  const recentActivity: any[] = [];
 
-  const upcomingEvents = [
-    { id: 1, type: 'allowance', description: 'Sarah\'s weekly allowance', date: '2024-12-08', amount: 20 },
-    { id: 2, type: 'chore_due', description: 'Alex: "Clean room" due', date: '2024-12-09', amount: 8 },
-    { id: 3, type: 'goal_target', description: 'Jamie\'s "Gaming Console" target date', date: '2024-12-25', amount: 350 }
-  ];
+  // No sample events data - will be empty until features are implemented
+  const upcomingEvents: any[] = [];
 
   const handleRemoveMember = async (member: FamilyMember) => {
     if (!confirm(`Are you sure you want to remove ${member.child_profile?.first_name} ${member.child_profile?.last_name} from your family controls? This action cannot be undone.`)) {
@@ -205,51 +198,69 @@ export const FamilyDashboard = () => {
             {/* Recent Activity */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
+                <CardTitle className="flex items-center gap-2">
                   <Clock className="h-5 w-5" />
-                  <span>Recent Activity</span>
+                  Recent Activity
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {recentActivity.map((activity) => (
-                  <div key={activity.id} className="flex items-center space-x-3 p-3 rounded-lg bg-muted/50">
-                    {getActivityIcon(activity.type)}
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{activity.child}</p>
-                      <p className="text-xs text-muted-foreground">{activity.description}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-bold text-green-600">+${activity.amount}</p>
-                      <p className="text-xs text-muted-foreground">{activity.time}</p>
-                    </div>
+              <CardContent>
+                {recentActivity.length === 0 ? (
+                  <div className="text-center py-6 text-muted-foreground">
+                    <Clock className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                    <p>No recent activity</p>
+                    <p className="text-sm">Activity will appear here as family members use the app</p>
                   </div>
-                ))}
+                ) : (
+                  <div className="space-y-3">
+                    {recentActivity.map((activity) => (
+                      <div key={activity.id} className="flex items-start gap-3 p-3 border rounded-lg">
+                        {getActivityIcon(activity.type)}
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm">{activity.child}</p>
+                          <p className="text-sm text-muted-foreground truncate">{activity.description}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-medium text-green-600">+${activity.amount}</p>
+                          <p className="text-xs text-muted-foreground">{activity.time}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
 
             {/* Upcoming Events */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
+                <CardTitle className="flex items-center gap-2">
                   <Calendar className="h-5 w-5" />
-                  <span>Upcoming Events</span>
+                  Upcoming Events
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {upcomingEvents.map((event) => (
-                  <div key={event.id} className="flex items-center space-x-3 p-3 rounded-lg bg-muted/50">
-                    {getEventIcon(event.type)}
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{event.description}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {new Date(event.date).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <Badge variant="outline">
-                      ${event.amount}
-                    </Badge>
+              <CardContent>
+                {upcomingEvents.length === 0 ? (
+                  <div className="text-center py-6 text-muted-foreground">
+                    <Calendar className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                    <p>No upcoming events</p>
+                    <p className="text-sm">Scheduled allowances and chores will appear here</p>
                   </div>
-                ))}
+                ) : (
+                  <div className="space-y-3">
+                    {upcomingEvents.map((event) => (
+                      <div key={event.id} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="flex items-center gap-3">
+                          {getEventIcon(event.type)}
+                          <div>
+                            <p className="font-medium text-sm">{event.description}</p>
+                            <p className="text-xs text-muted-foreground">{event.date}</p>
+                          </div>
+                        </div>
+                        <Badge variant="secondary">${event.amount}</Badge>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
