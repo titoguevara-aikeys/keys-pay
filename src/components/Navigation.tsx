@@ -15,7 +15,7 @@ import {
 const Navigation = () => {
   const navItems = [
     { to: '/', icon: Home, label: 'Dashboard' },
-    { to: '/crypto', icon: () => <img src="/lovable-uploads/f90e4085-4c59-4872-9955-14e5aa8b7243.png" alt="Crypto Logo" className="h-4 w-4" />, label: 'Crypto Hub' },
+    { to: '/crypto', icon: (props: any) => <img src="/lovable-uploads/f90e4085-4c59-4872-9955-14e5aa8b7243.png" alt="Crypto Logo" className={props.className || "h-4 w-4"} />, label: 'Crypto Hub' },
     { to: '/super-app', icon: Zap, label: 'Super App' },
     { to: '/cards', icon: CreditCard, label: 'Cards' },
     { to: '/family', icon: Users, label: 'Family' },
