@@ -5,6 +5,7 @@ import { ChoreManager } from './ChoreManager';
 import { AllowanceManager } from './AllowanceManager';
 import { SavingsGoals } from './SavingsGoals';
 import { ChildAccountCard } from './ChildAccountCard';
+import { EditFamilyMemberDialog } from './EditFamilyMemberDialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -29,6 +30,7 @@ import type { FamilyMember } from '@/hooks/useFamilyMembers';
 export const FamilyDashboard = () => {
   const { toast } = useToast();
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
   const [showTransferDialog, setShowTransferDialog] = useState(false);
   const [selectedMember, setSelectedMember] = useState<FamilyMember | null>(null);
   const { data: familyMembers, isLoading } = useFamilyMembers();
@@ -81,7 +83,7 @@ export const FamilyDashboard = () => {
 
   const handleEditMember = (member: FamilyMember) => {
     setSelectedMember(member);
-    // Edit functionality would be implemented here
+    setShowEditDialog(true);
   };
 
   const handleTransferMoney = (member: FamilyMember) => {
@@ -344,6 +346,12 @@ export const FamilyDashboard = () => {
       <AddFamilyMemberDialog 
         open={showAddDialog}
         onClose={() => setShowAddDialog(false)}
+      />
+      
+      <EditFamilyMemberDialog 
+        open={showEditDialog}
+        onClose={() => setShowEditDialog(false)}
+        member={selectedMember}
       />
       
       <TransferMoneyDialog 

@@ -119,20 +119,37 @@ export const useUpdateFamilyMember = () => {
   return useMutation({
     mutationFn: async ({ 
       memberId, 
-      updates 
+      updates,
+      profileUpdates
     }: { 
       memberId: string; 
-      updates: Partial<FamilyMember> 
+      updates: Partial<FamilyMember>;
+      profileUpdates?: {
+        first_name?: string;
+        last_name?: string;
+      };
     }) => {
-      const { data, error } = await supabase
+      // Update family controls
+      const { data: familyData, error: familyError } = await supabase
         .from('family_controls')
         .update(updates)
         .eq('id', memberId)
         .select()
         .single();
       
-      if (error) throw error;
-      return data;
+      if (familyError) throw familyError;
+
+      // Update profile if profile updates are provided
+      if (profileUpdates && familyData) {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update(profileUpdates)
+          .eq('user_id', familyData.child_id);
+        
+        if (profileError) throw profileError;
+      }
+      
+      return familyData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['family-members'] });
