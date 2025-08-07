@@ -28,16 +28,14 @@ export const Footer = () => {
             {/* Company Info */}
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-orange-500 transform rotate-45 rounded-sm flex items-center justify-center">
-                  <span className="text-white font-bold text-xs transform -rotate-45">⬥</span>
-                </div>
+                <img src="/lovable-uploads/34c15126-3d01-4b5a-8fd3-f56ab14cac9f.png" alt="Keys Logo" className="h-8 w-8" />
                 <div className="flex flex-col">
-                  <h3 className="text-lg font-semibold text-white">AI KEYS</h3>
+                  <h3 className="text-lg font-semibold text-white">KEYS</h3>
                   <span className="text-xs text-gray-400 -mt-1">Fintech Solutions</span>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">
-                The native utility token powering the entire AI KEYS ecosystem. Built on Solana blockchain for fast, secure, and cost-effective transactions with comprehensive utility.
+                The native utility token powering the entire KEYS ecosystem. Built on Solana blockchain for fast, secure, and cost-effective transactions with comprehensive utility.
               </p>
               <div className="space-y-1 text-xs text-muted-foreground">
                 <p>License No: VARA-VAS-001-2024</p>
@@ -174,7 +172,7 @@ export const Footer = () => {
         <div className="py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-sm text-muted-foreground">
-              © 2024 AI KEYS. All rights reserved. | VARA License No: VARA-VAS-001-2024
+              © 2024 KEYS. All rights reserved. | VARA License No: VARA-VAS-001-2024
             </div>
             
             {/* Legal Links */}
@@ -188,7 +186,7 @@ export const Footer = () => {
             
             {/* Company Info */}
             <div className="text-xs text-muted-foreground text-center md:text-right">
-              <p>AI KEYS Fintech Solutions DMCC</p>
+              <p>KEYS Fintech Solutions DMCC</p>
               <p>Gate Village 10, Level 2, DIFC, Dubai, UAE</p>
               <p>Regulated by UAE Virtual Asset Regulatory Authority (VARA)</p>
             </div>
@@ -197,7 +195,7 @@ export const Footer = () => {
           {/* Disclaimer */}
           <div className="mt-4 pt-4 border-t border-border">
             <p className="text-xs text-muted-foreground text-center">
-              AI KEYS is a VARA-compliant virtual asset service provider in the UAE. Cryptocurrency investments are subject to market risk. 
+              KEYS is a VARA-compliant virtual asset service provider in the UAE. Cryptocurrency investments are subject to market risk. 
               Past performance is not indicative of future results. Please read our risk disclosure statement.
             </p>
           </div>
