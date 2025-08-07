@@ -34,7 +34,7 @@ export default function CryptoHub() {
           <div className="flex items-center justify-center gap-2 mb-4">
             <Bitcoin className="h-8 w-8 text-primary" />
             <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-              AIKEYS Crypto Hub
+              Keys Crypto Hub
             </h1>
           </div>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -164,7 +164,7 @@ export default function CryptoHub() {
         {/* Features Grid */}
         <Card>
           <CardHeader>
-            <CardTitle>Why Choose AIKEYS Crypto?</CardTitle>
+            <CardTitle>Why Choose Keys Crypto?</CardTitle>
             <CardDescription>
               Advanced features inspired by the best crypto payment platforms
             </CardDescription>
