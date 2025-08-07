@@ -234,7 +234,7 @@ export const ChoreManager = () => {
               <Clock className="h-4 w-4 text-yellow-500" />
               <div>
                 <p className="text-sm text-muted-foreground">Pending</p>
-                <p className="text-xl font-bold">12</p>
+                <p className="text-xl font-bold">0</p>
               </div>
             </div>
           </CardContent>
@@ -246,7 +246,7 @@ export const ChoreManager = () => {
               <CheckCircle className="h-4 w-4 text-green-500" />
               <div>
                 <p className="text-sm text-muted-foreground">Completed</p>
-                <p className="text-xl font-bold">8</p>
+                <p className="text-xl font-bold">0</p>
               </div>
             </div>
           </CardContent>
@@ -258,7 +258,7 @@ export const ChoreManager = () => {
               <DollarSign className="h-4 w-4 text-blue-500" />
               <div>
                 <p className="text-sm text-muted-foreground">Total Rewards</p>
-                <p className="text-xl font-bold">$45.50</p>
+                <p className="text-xl font-bold">$0.00</p>
               </div>
             </div>
           </CardContent>
@@ -270,7 +270,7 @@ export const ChoreManager = () => {
               <Star className="h-4 w-4 text-purple-500" />
               <div>
                 <p className="text-sm text-muted-foreground">This Week</p>
-                <p className="text-xl font-bold">15</p>
+                <p className="text-xl font-bold">0</p>
               </div>
             </div>
           </CardContent>
@@ -278,121 +278,17 @@ export const ChoreManager = () => {
       </div>
 
       {/* Chore List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* Sample chores for demo */}
-        {[
-          {
-            id: '1',
-            title: 'Take out trash',
-            description: 'Empty all trash cans and take to curb',
-            reward_amount: 5,
-            status: 'pending' as const,
-            frequency: 'weekly' as const,
-            category: 'household',
-            difficulty: 2,
-            due_date: '2024-12-08',
-            assigned_to: 'Sarah'
-          },
-          {
-            id: '2',
-            title: 'Wash dishes',
-            description: 'Load dishwasher and hand wash pots',
-            reward_amount: 3,
-            status: 'completed' as const,
-            frequency: 'daily' as const,
-            category: 'household',
-            difficulty: 1,
-            assigned_to: 'Alex'
-          },
-          {
-            id: '3',
-            title: 'Walk the dog',
-            description: '30 minute walk around the neighborhood',
-            reward_amount: 8,
-            status: 'approved' as const,
-            frequency: 'daily' as const,
-            category: 'pets',
-            difficulty: 3,
-            assigned_to: 'Jamie'
-          }
-        ].map((chore) => (
-          <Card key={chore.id} className="hover:shadow-md transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <CardTitle className="text-lg">{chore.title}</CardTitle>
-                  <p className="text-sm text-muted-foreground">Assigned to {chore.assigned_to}</p>
-                </div>
-                <Badge className={getStatusColor(chore.status)}>
-                  {chore.status.charAt(0).toUpperCase() + chore.status.slice(1)}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {chore.description && (
-                <p className="text-sm text-muted-foreground">{chore.description}</p>
-              )}
-              
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center space-x-1">
-                  <DollarSign className="h-3 w-3" />
-                  <span className="font-medium">${chore.reward_amount}</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  {getDifficultyStars(chore.difficulty)}
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span className="capitalize">{chore.frequency}</span>
-                <span className="capitalize">{chore.category}</span>
-              </div>
-              
-              {chore.due_date && (
-                <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                  <Calendar className="h-3 w-3" />
-                  <span>Due {new Date(chore.due_date).toLocaleDateString()}</span>
-                </div>
-              )}
-              
-              <div className="flex space-x-2">
-                {chore.status === 'pending' && (
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => handleChoreAction(chore.id, 'complete')}
-                    className="flex-1"
-                  >
-                    Mark Complete
-                  </Button>
-                )}
-                {chore.status === 'completed' && (
-                  <>
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      onClick={() => handleChoreAction(chore.id, 'approve')}
-                      className="flex-1"
-                    >
-                      <CheckCircle className="h-3 w-3 mr-1" />
-                      Approve
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      onClick={() => handleChoreAction(chore.id, 'reject')}
-                      className="flex-1"
-                    >
-                      <XCircle className="h-3 w-3 mr-1" />
-                      Reject
-                    </Button>
-                  </>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <Card className="text-center py-12">
+        <CardContent>
+          <CheckCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2">No Chores Yet</h3>
+          <p className="text-muted-foreground mb-4">Create your first chore to get started!</p>
+          <Button onClick={() => setShowCreateDialog(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add First Chore
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 };

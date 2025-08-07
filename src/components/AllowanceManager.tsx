@@ -38,39 +38,8 @@ export const AllowanceManager = () => {
     give_percent: 10
   });
 
-  // Sample allowance rules for demo
-  const allowanceRules: AllowanceRule[] = [
-    {
-      id: '1',
-      child_name: 'Sarah',
-      amount: 20,
-      frequency: 'weekly',
-      splits: { spend: 12, save: 6, give: 2 },
-      auto_pay: true,
-      next_payment: '2024-12-08',
-      status: 'active'
-    },
-    {
-      id: '2',
-      child_name: 'Alex',
-      amount: 15,
-      frequency: 'weekly',
-      splits: { spend: 9, save: 4.5, give: 1.5 },
-      auto_pay: false,
-      next_payment: '2024-12-08',
-      status: 'active'
-    },
-    {
-      id: '3',
-      child_name: 'Jamie',
-      amount: 40,
-      frequency: 'monthly',
-      splits: { spend: 24, save: 12, give: 4 },
-      auto_pay: true,
-      next_payment: '2024-12-15',
-      status: 'paused'
-    }
-  ];
+  // No sample allowance rules - will be empty until functionality is implemented
+  const allowanceRules: AllowanceRule[] = [];
 
   const handleCreateAllowance = () => {
     const spendAmount = (newAllowance.amount * newAllowance.spend_percent) / 100;
@@ -272,7 +241,7 @@ export const AllowanceManager = () => {
               <DollarSign className="h-4 w-4 text-green-500" />
               <div>
                 <p className="text-sm text-muted-foreground">Total Weekly</p>
-                <p className="text-xl font-bold">$55</p>
+                <p className="text-xl font-bold">$0</p>
               </div>
             </div>
           </CardContent>
@@ -284,7 +253,7 @@ export const AllowanceManager = () => {
               <Calendar className="h-4 w-4 text-blue-500" />
               <div>
                 <p className="text-sm text-muted-foreground">Next Payment</p>
-                <p className="text-xl font-bold">Dec 8</p>
+                <p className="text-xl font-bold">None</p>
               </div>
             </div>
           </CardContent>
@@ -296,7 +265,7 @@ export const AllowanceManager = () => {
               <Clock className="h-4 w-4 text-purple-500" />
               <div>
                 <p className="text-sm text-muted-foreground">Auto Rules</p>
-                <p className="text-xl font-bold">2/3</p>
+                <p className="text-xl font-bold">0</p>
               </div>
             </div>
           </CardContent>
@@ -308,7 +277,7 @@ export const AllowanceManager = () => {
               <PiggyBank className="h-4 w-4 text-orange-500" />
               <div>
                 <p className="text-sm text-muted-foreground">Total Saved</p>
-                <p className="text-xl font-bold">$156</p>
+                <p className="text-xl font-bold">$0</p>
               </div>
             </div>
           </CardContent>
@@ -316,88 +285,102 @@ export const AllowanceManager = () => {
       </div>
 
       {/* Allowance Rules */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {allowanceRules.map((rule) => (
-          <Card key={rule.id} className="hover:shadow-md transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="text-lg">{rule.child_name}</CardTitle>
-                  <div className="flex items-center space-x-2 mt-1">
-                    {getFrequencyIcon(rule.frequency)}
-                    <span className="text-sm text-muted-foreground capitalize">
-                      ${rule.amount} {rule.frequency}
-                    </span>
+      {allowanceRules.length === 0 ? (
+        <Card className="text-center py-12">
+          <CardContent>
+            <DollarSign className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No Allowance Rules Set</h3>
+            <p className="text-muted-foreground mb-4">Create your first allowance rule to get started!</p>
+            <Button onClick={() => setShowCreateDialog(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Set Up First Allowance
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {allowanceRules.map((rule) => (
+            <Card key={rule.id} className="hover:shadow-md transition-shadow">
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-lg">{rule.child_name}</CardTitle>
+                    <div className="flex items-center space-x-2 mt-1">
+                      {getFrequencyIcon(rule.frequency)}
+                      <span className="text-sm text-muted-foreground capitalize">
+                        ${rule.amount} {rule.frequency}
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col items-end space-y-1">
-                  <Badge variant={rule.status === 'active' ? 'default' : 'secondary'}>
-                    {rule.status}
-                  </Badge>
-                  {rule.auto_pay && (
-                    <Badge variant="outline" className="text-xs">
-                      Auto-pay
+                  <div className="flex flex-col items-end space-y-1">
+                    <Badge variant={rule.status === 'active' ? 'default' : 'secondary'}>
+                      {rule.status}
                     </Badge>
-                  )}
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Money Split Visualization */}
-              <div className="space-y-2">
-                <p className="text-sm font-medium">Money Split</p>
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <div className="flex items-center space-x-1">
-                      <ShoppingCart className="h-3 w-3 text-green-500" />
-                      <span>Spend</span>
-                    </div>
-                    <span className="font-medium">${rule.splits.spend}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <div className="flex items-center space-x-1">
-                      <PiggyBank className="h-3 w-3 text-blue-500" />
-                      <span>Save</span>
-                    </div>
-                    <span className="font-medium">${rule.splits.save}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <div className="flex items-center space-x-1">
-                      <Heart className="h-3 w-3 text-red-500" />
-                      <span>Give</span>
-                    </div>
-                    <span className="font-medium">${rule.splits.give}</span>
+                    {rule.auto_pay && (
+                      <Badge variant="outline" className="text-xs">
+                        Auto-pay
+                      </Badge>
+                    )}
                   </div>
                 </div>
-              </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Money Split Visualization */}
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Money Split</p>
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center space-x-1">
+                        <ShoppingCart className="h-3 w-3 text-green-500" />
+                        <span>Spend</span>
+                      </div>
+                      <span className="font-medium">${rule.splits.spend}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center space-x-1">
+                        <PiggyBank className="h-3 w-3 text-blue-500" />
+                        <span>Save</span>
+                      </div>
+                      <span className="font-medium">${rule.splits.save}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center space-x-1">
+                        <Heart className="h-3 w-3 text-red-500" />
+                        <span>Give</span>
+                      </div>
+                      <span className="font-medium">${rule.splits.give}</span>
+                    </div>
+                  </div>
+                </div>
 
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Next payment:</span>
-                <span className="font-medium">{new Date(rule.next_payment).toLocaleDateString()}</span>
-              </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Next payment:</span>
+                  <span className="font-medium">{new Date(rule.next_payment).toLocaleDateString()}</span>
+                </div>
 
-              <div className="flex space-x-2">
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => handlePayNow(rule)}
-                  className="flex-1"
-                >
-                  Pay Now
-                </Button>
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => handleToggleAutoPay(rule.id)}
-                  className="flex-1"
-                >
-                  {rule.auto_pay ? 'Disable Auto' : 'Enable Auto'}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                <div className="flex space-x-2">
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => handlePayNow(rule)}
+                    className="flex-1"
+                  >
+                    Pay Now
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => handleToggleAutoPay(rule.id)}
+                    className="flex-1"
+                  >
+                    {rule.auto_pay ? 'Disable Auto' : 'Enable Auto'}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
