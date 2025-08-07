@@ -177,9 +177,17 @@ export const EditFamilyMemberDialog: React.FC<EditFamilyMemberDialogProps> = ({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
+                        <SelectItem value="spouse">Spouse</SelectItem>
+                        <SelectItem value="wife">Wife</SelectItem>
+                        <SelectItem value="husband">Husband</SelectItem>
                         <SelectItem value="child">Child</SelectItem>
                         <SelectItem value="teen">Teen</SelectItem>
                         <SelectItem value="dependent">Dependent</SelectItem>
+                        <SelectItem value="parent">Parent</SelectItem>
+                        <SelectItem value="sibling">Sibling</SelectItem>
+                        <SelectItem value="grandparent">Grandparent</SelectItem>
+                        <SelectItem value="grandchild">Grandchild</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
