@@ -115,7 +115,7 @@ export default function CryptoHub() {
               Payment Hub
             </TabsTrigger>
             <TabsTrigger value="wallet" className="flex items-center gap-2">
-              <Bitcoin className="h-4 w-4" />
+              <img src="/lovable-uploads/c2d7b020-f7fa-415d-a443-acc98fb6d19e.png" alt="Crypto Logo" className="h-4 w-4" />
               Crypto Wallet
             </TabsTrigger>
             <TabsTrigger value="transfers" className="flex items-center gap-2">
