@@ -89,7 +89,7 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
           <div className="relative p-6 h-full flex flex-col justify-between text-white">
             <div className="flex justify-between items-start">
               <div className="flex items-center">
-                <img src="/lovable-uploads/34c15126-3d01-4b5a-8fd3-f56ab14cac9f.png" alt="Keys Logo" className="h-12 w-12 ml-8 mr-8" />
+                <img src="/lovable-uploads/34c15126-3d01-4b5a-8fd3-f56ab14cac9f.png" alt="Keys Logo" className="h-12 w-12 ml-4 mr-8 -mt-2" />
                 <div>
                   <p className="text-white/90 text-sm font-medium uppercase tracking-wider">
                     {card.card_type} Card
