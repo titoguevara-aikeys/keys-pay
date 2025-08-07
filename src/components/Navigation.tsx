@@ -52,7 +52,11 @@ const Navigation = () => {
                   }`
                 }
               >
-                {React.createElement(item.icon, { className: "h-4 w-4" })}
+                {item.to === '/crypto' ? (
+                  <img src="/lovable-uploads/f90e4085-4c59-4872-9955-14e5aa8b7243.png" alt="Crypto Logo" className="h-4 w-4" />
+                ) : (
+                  React.createElement(item.icon, { className: "h-4 w-4" })
+                )}
                 {item.label}
               </NavLink>
             ))}
