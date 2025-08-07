@@ -37,47 +37,8 @@ export const SavingsGoals = () => {
     category: 'toy'
   });
 
-  // Sample goals for demo
-  const savingsGoals: SavingsGoal[] = [
-    {
-      id: '1',
-      child_name: 'Sarah',
-      title: 'New Bicycle',
-      description: 'Mountain bike for weekend rides',
-      target_amount: 300,
-      current_amount: 125,
-      target_date: '2025-03-15',
-      interest_rate: 5,
-      category: 'sports',
-      status: 'active',
-      created_at: '2024-11-01'
-    },
-    {
-      id: '2',
-      child_name: 'Alex',
-      title: 'Gaming Console',
-      description: 'Nintendo Switch for birthday',
-      target_amount: 350,
-      current_amount: 280,
-      target_date: '2024-12-25',
-      interest_rate: 3,
-      category: 'electronics',
-      status: 'active',
-      created_at: '2024-10-15'
-    },
-    {
-      id: '3',
-      child_name: 'Jamie',
-      title: 'College Fund',
-      description: 'Starting early for future education',
-      target_amount: 2000,
-      current_amount: 450,
-      interest_rate: 8,
-      category: 'education',
-      status: 'active',
-      created_at: '2024-09-01'
-    }
-  ];
+  // No sample goals - will be empty until functionality is implemented
+  const savingsGoals: SavingsGoal[] = [];
 
   const goalCategories = [
     { value: 'toy', label: 'Toys & Games', icon: Gamepad2 },
@@ -245,7 +206,7 @@ export const SavingsGoals = () => {
               <Target className="h-4 w-4 text-blue-500" />
               <div>
                 <p className="text-sm text-muted-foreground">Active Goals</p>
-                <p className="text-xl font-bold">3</p>
+                <p className="text-xl font-bold">{savingsGoals.length}</p>
               </div>
             </div>
           </CardContent>
@@ -257,7 +218,7 @@ export const SavingsGoals = () => {
               <DollarSign className="h-4 w-4 text-green-500" />
               <div>
                 <p className="text-sm text-muted-foreground">Total Saved</p>
-                <p className="text-xl font-bold">$855</p>
+                <p className="text-xl font-bold">${savingsGoals.reduce((total, goal) => total + goal.current_amount, 0).toFixed(2)}</p>
               </div>
             </div>
           </CardContent>
@@ -269,7 +230,7 @@ export const SavingsGoals = () => {
               <TrendingUp className="h-4 w-4 text-purple-500" />
               <div>
                 <p className="text-sm text-muted-foreground">Interest Earned</p>
-                <p className="text-xl font-bold">$12.45</p>
+                <p className="text-xl font-bold">$0.00</p>
               </div>
             </div>
           </CardContent>
@@ -281,7 +242,7 @@ export const SavingsGoals = () => {
               <Calendar className="h-4 w-4 text-orange-500" />
               <div>
                 <p className="text-sm text-muted-foreground">Avg. Progress</p>
-                <p className="text-xl font-bold">62%</p>
+                <p className="text-xl font-bold">0%</p>
               </div>
             </div>
           </CardContent>
@@ -289,112 +250,126 @@ export const SavingsGoals = () => {
       </div>
 
       {/* Savings Goals */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {savingsGoals.map((goal) => {
-          const progressPercentage = (goal.current_amount / goal.target_amount) * 100;
-          const monthlyNeeded = calculateMonthlyNeeded(goal);
-          const interestEarned = calculateInterestEarnings(goal);
+      {savingsGoals.length === 0 ? (
+        <Card className="text-center py-12">
+          <CardContent>
+            <Target className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No Savings Goals Yet</h3>
+            <p className="text-muted-foreground mb-4">Create your first savings goal to get started!</p>
+            <Button onClick={() => setShowCreateDialog(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Create First Goal
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {savingsGoals.map((goal) => {
+            const progressPercentage = (goal.current_amount / goal.target_amount) * 100;
+            const monthlyNeeded = calculateMonthlyNeeded(goal);
+            const interestEarned = calculateInterestEarnings(goal);
 
-          return (
-            <Card key={goal.id} className="hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="text-lg flex items-center space-x-2">
-                      {getCategoryIcon(goal.category)}
-                      <span>{goal.title}</span>
-                    </CardTitle>
-                    <p className="text-sm text-muted-foreground">{goal.child_name}</p>
-                  </div>
-                  <Badge variant="outline">
-                    {progressPercentage.toFixed(0)}%
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {goal.description && (
-                  <p className="text-sm text-muted-foreground">{goal.description}</p>
-                )}
-                
-                {/* Progress Bar */}
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Progress</span>
-                    <span className="font-medium">
-                      ${goal.current_amount.toFixed(2)} of ${goal.target_amount.toFixed(2)}
-                    </span>
-                  </div>
-                  <Progress 
-                    value={Math.min(progressPercentage, 100)} 
-                    className="h-2"
-                  />
-                </div>
-
-                {/* Goal Details */}
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <p className="text-muted-foreground">Interest Rate</p>
-                    <p className="font-medium flex items-center">
-                      <TrendingUp className="h-3 w-3 mr-1" />
-                      {goal.interest_rate}% APY
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">Interest Earned</p>
-                    <p className="font-medium text-green-600">+${interestEarned.toFixed(2)}</p>
-                  </div>
-                </div>
-
-                {goal.target_date && (
-                  <div className="text-sm">
-                    <p className="text-muted-foreground">Target Date</p>
-                    <p className="font-medium">{new Date(goal.target_date).toLocaleDateString()}</p>
-                    {monthlyNeeded > 0 && (
-                      <p className="text-xs text-muted-foreground">
-                        Need ${monthlyNeeded.toFixed(2)}/month to reach goal
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                <div className="flex space-x-2">
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => handleAddMoney(goal.id, 10)}
-                    className="flex-1"
-                  >
-                    Add $10
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => handleAddMoney(goal.id, 25)}
-                    className="flex-1"
-                  >
-                    Add $25
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    variant="default"
-                    className="flex-1"
-                  >
-                    Add Custom
-                  </Button>
-                </div>
-
-                {progressPercentage >= 100 && (
-                  <div className="text-center">
-                    <Badge className="bg-green-500/10 text-green-700 dark:text-green-300">
-                      🎉 Goal Completed!
+            return (
+              <Card key={goal.id} className="hover:shadow-md transition-shadow">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <CardTitle className="text-lg flex items-center space-x-2">
+                        {getCategoryIcon(goal.category)}
+                        <span>{goal.title}</span>
+                      </CardTitle>
+                      <p className="text-sm text-muted-foreground">{goal.child_name}</p>
+                    </div>
+                    <Badge variant="outline">
+                      {progressPercentage.toFixed(0)}%
                     </Badge>
                   </div>
-                )}
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {goal.description && (
+                    <p className="text-sm text-muted-foreground">{goal.description}</p>
+                  )}
+                  
+                  {/* Progress Bar */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Progress</span>
+                      <span className="font-medium">
+                        ${goal.current_amount.toFixed(2)} of ${goal.target_amount.toFixed(2)}
+                      </span>
+                    </div>
+                    <Progress 
+                      value={Math.min(progressPercentage, 100)} 
+                      className="h-2"
+                    />
+                  </div>
+
+                  {/* Goal Details */}
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-muted-foreground">Interest Rate</p>
+                      <p className="font-medium flex items-center">
+                        <TrendingUp className="h-3 w-3 mr-1" />
+                        {goal.interest_rate}% APY
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Interest Earned</p>
+                      <p className="font-medium text-green-600">+${interestEarned.toFixed(2)}</p>
+                    </div>
+                  </div>
+
+                  {goal.target_date && (
+                    <div className="text-sm">
+                      <p className="text-muted-foreground">Target Date</p>
+                      <p className="font-medium">{new Date(goal.target_date).toLocaleDateString()}</p>
+                      {monthlyNeeded > 0 && (
+                        <p className="text-xs text-muted-foreground">
+                          Need ${monthlyNeeded.toFixed(2)}/month to reach goal
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="flex space-x-2">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => handleAddMoney(goal.id, 10)}
+                      className="flex-1"
+                    >
+                      Add $10
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => handleAddMoney(goal.id, 25)}
+                      className="flex-1"
+                    >
+                      Add $25
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="default"
+                      className="flex-1"
+                    >
+                      Add Custom
+                    </Button>
+                  </div>
+
+                  {progressPercentage >= 100 && (
+                    <div className="text-center">
+                      <Badge className="bg-green-500/10 text-green-700 dark:text-green-300">
+                        🎉 Goal Completed!
+                      </Badge>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
