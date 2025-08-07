@@ -105,7 +105,7 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
             </div>
 
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mt-2">
                 <div className="ml-4">
                   <p className="text-white/80 text-xs uppercase tracking-wide">Card Number</p>
                   <p className="text-lg font-mono font-medium">
