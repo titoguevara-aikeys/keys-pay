@@ -74,12 +74,12 @@ const Auth = () => {
                 className="w-12 h-12"
               />
               <div className="flex flex-col">
-                <span className="text-2xl font-bold text-foreground">AI KEYS</span>
+                <span className="text-2xl font-bold text-foreground">Keys Pay</span>
                 <span className="text-sm text-muted-foreground -mt-1">Fintech Solutions</span>
               </div>
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">AIKEYS</CardTitle>
+          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">Keys Pay</CardTitle>
           <CardDescription>
             Secure digital payments and family controls
           </CardDescription>
