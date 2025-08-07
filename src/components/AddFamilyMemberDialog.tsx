@@ -71,6 +71,8 @@ export const AddFamilyMemberDialog: React.FC<AddFamilyMemberDialogProps> = ({
 
   const onSubmit = async (data: FormData) => {
     try {
+      console.log('Form submission data:', data);
+      
       await addFamilyMember.mutateAsync({
         email: data.email,
         first_name: data.first_name,
