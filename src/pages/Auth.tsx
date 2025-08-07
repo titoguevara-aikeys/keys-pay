@@ -68,9 +68,11 @@ const Auth = () => {
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-orange-500 transform rotate-45 rounded-sm flex items-center justify-center">
-                <span className="text-white font-bold text-lg transform -rotate-45">⬥</span>
-              </div>
+              <img 
+                src="/lovable-uploads/843ed379-ac78-482c-af6c-58de07f9638c.png" 
+                alt="AIKEYS Logo" 
+                className="w-12 h-12"
+              />
               <div className="flex flex-col">
                 <span className="text-2xl font-bold text-foreground">AI KEYS</span>
                 <span className="text-sm text-muted-foreground -mt-1">Fintech Solutions</span>
