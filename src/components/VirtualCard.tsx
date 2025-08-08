@@ -59,8 +59,17 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
   };
 
   const getCardBackground = (type: string) => {
-    // All cards now use the same blue design for consistency
-    return '/lovable-uploads/eeab292b-99eb-449c-a828-8cf2c55b6ef1.png'; // Keys Pay blue card for all types
+    const tier = getMembershipTier(type);
+    switch (tier) {
+      case 'platinum':
+        return platinumCardBg; // Elegant platinum design
+      case 'gold':
+        return goldCardBg;
+      case 'silver':
+        return silverCardBg;
+      default:
+        return '/lovable-uploads/eeab292b-99eb-449c-a828-8cf2c55b6ef1.png'; // Keys Pay blue card
+    }
   };
 
   const getStatusColor = (status: string) => {
