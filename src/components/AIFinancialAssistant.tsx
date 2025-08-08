@@ -18,6 +18,7 @@ import {
   useChatMessages,
   useSendChatMessage
 } from '@/hooks/useAIAssistant';
+import { useInsertDemoData } from '@/hooks/useDemoData';
 
 export const AIFinancialAssistant = () => {
   const [chatMessage, setChatMessage] = useState('');
@@ -33,6 +34,7 @@ export const AIFinancialAssistant = () => {
   const dismissInsight = useDismissInsight();
   const markAsRead = useMarkInsightAsRead();
   const sendMessage = useSendChatMessage();
+  const insertDemoData = useInsertDemoData();
 
   const handleGenerateInsights = async () => {
     try {
@@ -116,6 +118,14 @@ export const AIFinancialAssistant = () => {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button
+            onClick={() => insertDemoData.mutate()}
+            disabled={insertDemoData.isPending}
+            variant="outline"
+            className="bg-primary/5 text-primary border-primary/20 hover:bg-primary/10"
+          >
+            {insertDemoData.isPending ? 'Loading...' : 'Load Demo Data'}
+          </Button>
           <Button
             onClick={handleGenerateInsights}
             disabled={generateInsights.isPending}
