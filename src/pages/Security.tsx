@@ -10,6 +10,7 @@ import { BiometricSetup } from '@/components/BiometricSetup';
 import { SecurityAudit } from '@/components/SecurityAudit';
 import { TrustedDevices } from '@/components/TrustedDevices';
 import { SendAppLink } from '@/components/SendAppLink';
+import { BiometricAuth } from '@/components/security/BiometricAuth';
 import { SecurityDashboard } from '@/components/security/SecurityDashboard';
 import { useSecuritySettings, useUpdateSecuritySettings } from '@/hooks/useSecuritySettings';
 import Navigation from '@/components/Navigation';
@@ -187,48 +188,7 @@ const Security = () => {
               </Card>
 
               {/* Biometric Authentication */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Fingerprint className="h-5 w-5 text-primary" />
-                      <div>
-                        <CardTitle className="text-lg">Biometric Authentication</CardTitle>
-                        <CardDescription>Use fingerprint or face recognition</CardDescription>
-                      </div>
-                    </div>
-                    <Switch
-                      checked={settings?.biometric_enabled || false}
-                      onCheckedChange={(checked) => handleSettingToggle('biometric_enabled', checked)}
-                      disabled={!deviceSupport.webauthn}
-                    />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {deviceSupport.webauthn ? (
-                    settings?.biometric_enabled ? (
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium">Available Methods</span>
-                          <div className="flex gap-2">
-                            {deviceSupport.touchid && <Badge variant="outline">Touch ID</Badge>}
-                            {deviceSupport.faceid && <Badge variant="outline">Face ID</Badge>}
-                          </div>
-                        </div>
-                        <Button variant="outline" size="sm" className="w-full">
-                          Manage Biometrics
-                        </Button>
-                      </div>
-                    ) : (
-                      <BiometricSetup />
-                    )
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      Biometric authentication is not supported on this device
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
+              <BiometricAuth />
             </div>
           </TabsContent>
 

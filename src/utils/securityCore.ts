@@ -553,7 +553,7 @@ export class EnterpriseSecurityCore {
       severity: 'low',
       source: 'core',
       timestamp: new Date().toISOString(),
-      metadata: { version: '1.0.0' },
+      metadata: { version: '1.0.0', networkSecurity: true },
       blocked: false
     });
   }
@@ -583,6 +583,9 @@ export class EnterpriseSecurityCore {
     setInterval(() => {
       this.performContinuousMonitoring();
     }, 30000); // Every 30 seconds
+    
+    // Initialize network security layer
+    this.setupNetworkSecurity();
   }
 
   private async performContinuousMonitoring(): Promise<void> {
@@ -598,20 +601,13 @@ export class EnterpriseSecurityCore {
   }
 
   private setupNetworkSecurity(): void {
-    // Monitor fetch requests for suspicious patterns
-    const originalFetch = window.fetch;
-    window.fetch = async (...args) => {
-      this.sessionMetrics.apiCalls++;
-      
-      // Rate limiting check
-      if (this.sessionMetrics.apiCalls > 100) {
-        this.handleSecurityViolation('RATE_LIMIT_EXCEEDED', {
-          apiCalls: this.sessionMetrics.apiCalls
-        });
-      }
-      
-      return originalFetch.apply(window, args);
-    };
+    // Import network security dynamically to avoid circular dependency
+    import('./networkSecurity').then(({ NetworkSecurity }) => {
+      // Network security is already initialized automatically
+      console.log('🌐 Network security layer activated');
+    }).catch(error => {
+      console.error('Failed to initialize network security:', error);
+    });
   }
 }
 
