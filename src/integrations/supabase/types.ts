@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_control_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          metadata: Json | null
+          reason: string | null
+          resource: string
+          success: boolean
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          reason?: string | null
+          resource: string
+          success: boolean
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          metadata?: Json | null
+          reason?: string | null
+          resource?: string
+          success?: boolean
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       accounts: {
         Row: {
           account_number: string
@@ -641,15 +677,84 @@ export type Database = {
           },
         ]
       }
+      platform_config: {
+        Row: {
+          checksum: string
+          config_key: string
+          created_at: string | null
+          encrypted_value: string
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          checksum: string
+          config_key: string
+          created_at?: string | null
+          encrypted_value: string
+          id?: string
+          updated_at?: string | null
+        }
+        Update: {
+          checksum?: string
+          config_key?: string
+          created_at?: string | null
+          encrypted_value?: string
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      platform_license: {
+        Row: {
+          created_at: string | null
+          digital_signature: string
+          domain_whitelist: string[] | null
+          expires_at: string | null
+          features: Json | null
+          id: string
+          is_active: boolean | null
+          license_key: string
+          max_users: number | null
+          owner_email: string
+        }
+        Insert: {
+          created_at?: string | null
+          digital_signature: string
+          domain_whitelist?: string[] | null
+          expires_at?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          license_key: string
+          max_users?: number | null
+          owner_email: string
+        }
+        Update: {
+          created_at?: string | null
+          digital_signature?: string
+          domain_whitelist?: string[] | null
+          expires_at?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          license_key?: string
+          max_users?: number | null
+          owner_email?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
           email: string | null
           first_name: string | null
           id: string
+          is_protected_owner: boolean | null
           last_name: string | null
           membership_tier: string | null
+          owner_since: string | null
           phone: string | null
+          platform_signature: string | null
           role: Database["public"]["Enums"]["app_role"]
           updated_at: string
           user_id: string
@@ -659,9 +764,12 @@ export type Database = {
           email?: string | null
           first_name?: string | null
           id?: string
+          is_protected_owner?: boolean | null
           last_name?: string | null
           membership_tier?: string | null
+          owner_since?: string | null
           phone?: string | null
+          platform_signature?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           updated_at?: string
           user_id: string
@@ -671,9 +779,12 @@ export type Database = {
           email?: string | null
           first_name?: string | null
           id?: string
+          is_protected_owner?: boolean | null
           last_name?: string | null
           membership_tier?: string | null
+          owner_since?: string | null
           phone?: string | null
+          platform_signature?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           updated_at?: string
           user_id?: string
@@ -802,6 +913,45 @@ export type Database = {
           },
         ]
       }
+      security_audit_log: {
+        Row: {
+          action: string
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          new_values: Json | null
+          old_values: Json | null
+          record_id: string | null
+          table_name: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          record_id?: string | null
+          table_name?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          record_id?: string | null
+          table_name?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       security_events: {
         Row: {
           blocked: boolean | null
@@ -886,6 +1036,48 @@ export type Database = {
           two_factor_enabled?: boolean | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      security_violations: {
+        Row: {
+          created_at: string | null
+          description: string
+          domain: string | null
+          evidence: Json | null
+          id: string
+          ip_address: unknown | null
+          severity: string
+          status: string | null
+          user_agent: string | null
+          user_id: string | null
+          violation_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          domain?: string | null
+          evidence?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          severity: string
+          status?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          violation_type: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          domain?: string | null
+          evidence?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          severity?: string
+          status?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          violation_type?: string
         }
         Relationships: []
       }
