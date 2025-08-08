@@ -135,16 +135,21 @@ const Security = () => {
         </Card>
 
         {/* Security Configuration Tabs */}
-        <Tabs defaultValue="authentication" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="authentication">Authentication</TabsTrigger>
-            <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
-            <TabsTrigger value="devices">Devices</TabsTrigger>
-            <TabsTrigger value="testing">Testing</TabsTrigger>
-            <TabsTrigger value="audit">Audit Log</TabsTrigger>
-          </TabsList>
+          <Tabs defaultValue="dashboard" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-6">
+              <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+              <TabsTrigger value="authentication">Authentication</TabsTrigger>
+              <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
+              <TabsTrigger value="devices">Devices</TabsTrigger>
+              <TabsTrigger value="testing">Testing</TabsTrigger>
+              <TabsTrigger value="audit">Audit Log</TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="authentication" className="space-y-6">
+            <TabsContent value="dashboard" className="space-y-6">
+              <SecurityDashboard />
+            </TabsContent>
+
+            <TabsContent value="authentication" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Two-Factor Authentication */}
               <Card>
