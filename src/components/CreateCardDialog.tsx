@@ -236,160 +236,20 @@ export const CreateCardDialog: React.FC<CreateCardDialogProps> = ({
                       </SelectTrigger>
                     </FormControl>
                      <SelectContent className="max-h-[400px]">
-                        {/* Existing User Accounts */}
-                        {accounts && accounts.length > 0 && (
-                          <>
-                            {accounts.map((account) => (
-                              <SelectItem key={account.id} value={account.id}>
-                                <div className="flex flex-col">
-                                  <span className="font-medium">{getAccountDisplayName(account.account_type)}</span>
-                                  <span className="text-sm text-muted-foreground">Balance: ${account.balance?.toLocaleString()}</span>
-                                </div>
-                              </SelectItem>
-                            ))}
-                            <div className="px-2 py-1">
-                              <div className="h-px bg-border my-1"></div>
-                            </div>
-                          </>
+                        {accounts && accounts.length > 0 ? (
+                          accounts.map((account) => (
+                            <SelectItem key={account.id} value={account.id}>
+                              <div className="flex flex-col">
+                                <span className="font-medium">{getAccountDisplayName(account.account_type)}</span>
+                                <span className="text-sm text-muted-foreground">Balance: ${account.balance?.toLocaleString()}</span>
+                              </div>
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <div className="px-2 py-4 text-center text-sm text-muted-foreground">
+                            No accounts available. Please create an account first.
+                          </div>
                         )}
-                        
-                        {/* Recommended Personal Banking */}
-                        <div className="px-2 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                          Personal Banking
-                        </div>
-                        <SelectItem value="checking">
-                          <div className="flex flex-col">
-                            <span className="font-medium">Personal Checking Account</span>
-                            <span className="text-sm text-muted-foreground">Everyday banking with debit access</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="savings">
-                          <div className="flex flex-col">
-                            <span className="font-medium">Personal Savings Account</span>
-                            <span className="text-sm text-muted-foreground">High-yield savings with earning potential</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="high_yield_savings">
-                          <div className="flex flex-col">
-                            <span className="font-medium">High-Yield Savings Account</span>
-                            <span className="text-sm text-muted-foreground">Premium rates for your savings</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="money_market">
-                          <div className="flex flex-col">
-                            <span className="font-medium">Money Market Account</span>
-                            <span className="text-sm text-muted-foreground">Higher interest with check writing</span>
-                          </div>
-                        </SelectItem>
-
-                        {/* Business Banking */}
-                        <div className="px-2 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wide mt-2">
-                          Business Banking
-                        </div>
-                        <SelectItem value="business">
-                          <div className="flex flex-col">
-                            <span className="font-medium">Business Checking Account</span>
-                            <span className="text-sm text-muted-foreground">Professional banking for businesses</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="business_savings">
-                          <div className="flex flex-col">
-                            <span className="font-medium">Business Savings Account</span>
-                            <span className="text-sm text-muted-foreground">Grow your business reserves</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="merchant">
-                          <div className="flex flex-col">
-                            <span className="font-medium">Merchant Payment Account</span>
-                            <span className="text-sm text-muted-foreground">Accept payments from customers</span>
-                          </div>
-                        </SelectItem>
-
-                        {/* Investment & Wealth */}
-                        <div className="px-2 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wide mt-2">
-                          Investment & Wealth
-                        </div>
-                        <SelectItem value="investment">
-                          <div className="flex flex-col">
-                            <span className="font-medium">Investment Portfolio Account</span>
-                            <span className="text-sm text-muted-foreground">Diversified investment management</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="brokerage">
-                          <div className="flex flex-col">
-                            <span className="font-medium">Brokerage Trading Account</span>
-                            <span className="text-sm text-muted-foreground">Active trading and portfolio management</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="robo_advisor">
-                          <div className="flex flex-col">
-                            <span className="font-medium">Robo-Advisor Investment Account</span>
-                            <span className="text-sm text-muted-foreground">Automated investment strategies</span>
-                          </div>
-                        </SelectItem>
-
-                        {/* Retirement Planning */}
-                        <div className="px-2 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wide mt-2">
-                          Retirement Planning
-                        </div>
-                        <SelectItem value="retirement_401k">
-                          <div className="flex flex-col">
-                            <span className="font-medium">401(k) Retirement Account</span>
-                            <span className="text-sm text-muted-foreground">Employer-sponsored retirement savings</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="retirement_ira">
-                          <div className="flex flex-col">
-                            <span className="font-medium">Traditional IRA Account</span>
-                            <span className="text-sm text-muted-foreground">Tax-deferred retirement planning</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="retirement_roth">
-                          <div className="flex flex-col">
-                            <span className="font-medium">Roth IRA Account</span>
-                            <span className="text-sm text-muted-foreground">Tax-free retirement growth</span>
-                          </div>
-                        </SelectItem>
-
-                        {/* Digital Assets */}
-                        <div className="px-2 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wide mt-2">
-                          Digital Assets
-                        </div>
-                        <SelectItem value="crypto">
-                          <div className="flex flex-col">
-                            <span className="font-medium">Cryptocurrency Wallet</span>
-                            <span className="text-sm text-muted-foreground">Bitcoin, Ethereum, and digital assets</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="defi">
-                          <div className="flex flex-col">
-                            <span className="font-medium">DeFi Staking Account</span>
-                            <span className="text-sm text-muted-foreground">Decentralized finance protocols</span>
-                          </div>
-                        </SelectItem>
-
-                        {/* Premium Services */}
-                        <div className="px-2 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wide mt-2">
-                          Premium Services
-                        </div>
-                        <SelectItem value="premium">
-                          <div className="flex flex-col">
-                            <span className="font-medium">Premium Banking Account</span>
-                            <span className="text-sm text-muted-foreground">Enhanced features and benefits</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="vip">
-                          <div className="flex flex-col">
-                            <span className="font-medium">VIP Private Banking</span>
-                            <span className="text-sm text-muted-foreground">Exclusive concierge banking services</span>
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="private_wealth">
-                          <div className="flex flex-col">
-                            <span className="font-medium">Private Wealth Management</span>
-                            <span className="text-sm text-muted-foreground">Personalized wealth strategies</span>
-                          </div>
-                        </SelectItem>
                       </SelectContent>
                   </Select>
                   <FormDescription>
