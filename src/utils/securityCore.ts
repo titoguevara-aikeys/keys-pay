@@ -462,7 +462,7 @@ export class EnterpriseSecurityCore {
 
   private async getWebGLFingerprint(): Promise<string> {
     const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl') as WebGLRenderingContext;
     if (!gl) return 'no-webgl';
 
     const renderer = gl.getParameter(gl.RENDERER);
