@@ -1,6 +1,13 @@
+/*
+ * AIKEYS FINANCIAL PLATFORM - SECURITY COMPONENT
+ * © 2025 AIKEYS Financial Technologies. All Rights Reserved.
+ * PROPRIETARY SOFTWARE - UNAUTHORIZED ACCESS PROHIBITED
+ */
+
 import React, { useEffect, useState } from 'react';
 import { Shield, AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { IntellectualPropertyProtection } from '@/utils/intellectualProperty';
 
 interface PlatformGuardProps {
   children: React.ReactNode;
@@ -24,6 +31,13 @@ export const PlatformGuard: React.FC<PlatformGuardProps> = ({ children }) => {
         ];
 
         if (!authorizedDomains.includes(currentDomain)) {
+          // Log IP violation for unauthorized domain access
+          IntellectualPropertyProtection.logIPViolation('UNAUTHORIZED_DOMAIN_ACCESS', {
+            attemptedDomain: currentDomain,
+            authorizedDomains: authorizedDomains,
+            timestamp: new Date().toISOString()
+          });
+          
           setIsAuthorized(false);
           setLoading(false);
           return;
@@ -41,10 +55,23 @@ export const PlatformGuard: React.FC<PlatformGuardProps> = ({ children }) => {
 
     validateAccess();
 
-    // Add runtime protection
+    // Runtime protection against domain changes
     const protectionInterval = setInterval(() => {
-      if (window.location.hostname !== 'localhost' && 
-          !window.location.hostname.includes('aikeys')) {
+      const currentHost = window.location.hostname;
+      const authorizedDomains = [
+        'www.aikeys.ai',
+        'www.aikeys-hub.com',
+        'aikeys.ai',
+        'aikeys-hub.com',
+        'localhost'
+      ];
+      
+      if (!authorizedDomains.includes(currentHost)) {
+        // Log attempted domain manipulation
+        IntellectualPropertyProtection.logIPViolation('DOMAIN_MANIPULATION', {
+          currentDomain: currentHost,
+          timestamp: new Date().toISOString()
+        });
         setIsAuthorized(false);
       }
     }, 5000);
@@ -80,11 +107,11 @@ export const PlatformGuard: React.FC<PlatformGuardProps> = ({ children }) => {
           </CardHeader>
           <CardContent className="text-center">
             <p className="text-muted-foreground mb-4">
-              This platform is licensed exclusively for AIKEYS Financial Platform.
+              {IntellectualPropertyProtection.getIPNotice()}
             </p>
-            <p className="text-sm text-muted-foreground">
-              Contact: tito.guevara@aikeys.ai or tito.guevara@gmail.com for authorization.
-            </p>
+            <div className="text-xs text-muted-foreground font-mono break-all">
+              {IntellectualPropertyProtection.getViolationContact()}
+            </div>
           </CardContent>
         </Card>
       </div>

@@ -1,3 +1,9 @@
+/*
+ * AIKEYS FINANCIAL PLATFORM - MAIN DASHBOARD
+ * © 2025 AIKEYS Financial Technologies. All Rights Reserved.
+ * PROPRIETARY SOFTWARE - UNAUTHORIZED USE PROHIBITED
+ */
+
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';

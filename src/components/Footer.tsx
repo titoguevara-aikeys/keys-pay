@@ -1,3 +1,8 @@
+/*
+ * AIKEYS FINANCIAL PLATFORM - FOOTER COMPONENT
+ * © 2025 AIKEYS Financial Technologies. All Rights Reserved.
+ */
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -16,6 +21,7 @@ import {
 } from 'lucide-react';
 import appStoreBadge from '@/assets/app-store-badge.svg';
 import googlePlayBadge from '@/assets/google-play-badge.png';
+import { CopyrightNotice, TrademarksNotice, PatentNotice } from '@/components/legal/CopyrightNotice';
 
 
 export const Footer = () => {
@@ -119,7 +125,7 @@ export const Footer = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:tito.guevara@aikeys.ai" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
+                  <a href="mailto:contact@aikeys.ai" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
                     <Mail className="h-4 w-4" />
                     Email Support
                   </a>
@@ -171,8 +177,11 @@ export const Footer = () => {
         {/* Bottom Footer */}
         <div className="py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-sm text-muted-foreground">
-              © 2024 KEYS. All rights reserved. | VARA License No: VARA-VAS-001-2024
+            <div className="space-y-1">
+              <CopyrightNotice />
+              <div className="text-xs text-muted-foreground">
+                VARA License No: VARA-VAS-001-2024 | Platform Version: 1.0.0
+              </div>
             </div>
             
             {/* Legal Links */}
@@ -199,6 +208,20 @@ export const Footer = () => {
               Past performance is not indicative of future results. Please read our risk disclosure statement.
             </p>
           </div>
+          
+          {/* IP Protection Notice */}
+          <div className="mt-4 pt-4 border-t border-border">
+            <div className="space-y-2">
+              <TrademarksNotice className="text-center" />
+              <PatentNotice className="text-center" />
+              <p className="text-xs text-muted-foreground text-center opacity-60">
+                Proprietary Software - Protected by Intellectual Property Laws
+              </p>
+            </div>
+          </div>
+          
+          {/* Hidden watermark for IP protection */}
+          <CopyrightNotice variant="watermark" />
         </div>
       </div>
     </footer>

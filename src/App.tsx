@@ -1,3 +1,15 @@
+/*
+ * AIKEYS FINANCIAL PLATFORM - MAIN APPLICATION
+ * © 2025 AIKEYS Financial Technologies. All Rights Reserved.
+ * 
+ * PROPRIETARY AND CONFIDENTIAL SOFTWARE
+ * Protected by Intellectual Property Laws
+ * Unauthorized reproduction, distribution, or reverse engineering prohibited
+ * 
+ * For licensing inquiries: legal@aikeys.ai
+ * Platform Version: 1.0.0
+ */
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
