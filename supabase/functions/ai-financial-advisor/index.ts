@@ -54,113 +54,232 @@ async function generateInsights(supabase: any, userId: string) {
   
   // Check if OpenAI API key is available
   if (!openAIApiKey) {
-    throw new Error('OpenAI API key not configured');
+    console.log('OpenAI API key not available, generating fallback insights');
+    return await generateFallbackInsights(supabase, userId);
   }
-  console.log('OpenAI API key available:', openAIApiKey ? 'Yes' : 'No');
   
-  // Fetch user's financial data
-  const [accountsResponse, transactionsResponse, budgetsResponse] = await Promise.all([
-    supabase.from('accounts').select('*').eq('user_id', userId),
-    supabase.from('transactions').select(`
-      *,
-      accounts!inner(user_id)
-    `).eq('accounts.user_id', userId).limit(100).order('created_at', { ascending: false }),
-    supabase.from('budgets').select('*').eq('user_id', userId)
-  ]);
+  try {
+    // Fetch user's financial data
+    const [accountsResponse, transactionsResponse, budgetsResponse] = await Promise.all([
+      supabase.from('accounts').select('*').eq('user_id', userId),
+      supabase.from('transactions').select(`
+        *,
+        accounts!inner(user_id)
+      `).eq('accounts.user_id', userId).limit(100).order('created_at', { ascending: false }),
+      supabase.from('budgets').select('*').eq('user_id', userId)
+    ]);
 
-  const accounts = accountsResponse.data || [];
-  const transactions = transactionsResponse.data || [];
-  const budgets = budgetsResponse.data || [];
+    const accounts = accountsResponse.data || [];
+    const transactions = transactionsResponse.data || [];
+    const budgets = budgetsResponse.data || [];
 
-  // Prepare financial context for AI
-  const financialContext = {
-    totalBalance: accounts.reduce((sum: number, acc: any) => sum + parseFloat(acc.balance), 0),
-    accountCount: accounts.length,
-    recentTransactions: transactions.slice(0, 20),
-    monthlySpending: calculateMonthlySpending(transactions),
-    categoryBreakdown: calculateCategoryBreakdown(transactions),
-    budgets: budgets,
-    budgetUtilization: calculateBudgetUtilization(transactions, budgets)
-  };
-
-  // Generate AI insights
-  const prompt = `
-    As a financial advisor AI, analyze this user's financial data and provide actionable insights:
-    
-    Financial Context:
-    - Total Balance: $${financialContext.totalBalance.toFixed(2)}
-    - Accounts: ${financialContext.accountCount}
-    - Monthly Spending: $${financialContext.monthlySpending.toFixed(2)}
-    - Category Breakdown: ${JSON.stringify(financialContext.categoryBreakdown)}
-    - Budget Utilization: ${JSON.stringify(financialContext.budgetUtilization)}
-    
-    Please provide 3-5 specific insights in this JSON format:
-    {
-      "insights": [
-        {
-          "type": "spending_pattern|budget_suggestion|saving_opportunity|investment_advice",
-          "title": "Brief title",
-          "description": "Detailed explanation",
-          "confidence": 0.8,
-          "actionItems": ["Action 1", "Action 2"],
-          "data": {"category": "food", "amount": 500}
-        }
-      ]
+    // If no financial data, provide general insights
+    if (accounts.length === 0 && transactions.length === 0) {
+      return await generateFallbackInsights(supabase, userId);
     }
-    
-    Focus on practical, actionable advice based on their actual spending patterns.
-  `;
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${openAIApiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: 'You are an expert financial advisor AI. Provide practical, data-driven financial advice.' },
-        { role: 'user', content: prompt }
-      ],
-      temperature: 0.7,
-      max_tokens: 2000
-    }),
+    // Prepare financial context for AI
+    const financialContext = {
+      totalBalance: accounts.reduce((sum: number, acc: any) => sum + parseFloat(acc.balance), 0),
+      accountCount: accounts.length,
+      recentTransactions: transactions.slice(0, 20),
+      monthlySpending: calculateMonthlySpending(transactions),
+      categoryBreakdown: calculateCategoryBreakdown(transactions),
+      budgets: budgets,
+      budgetUtilization: calculateBudgetUtilization(transactions, budgets)
+    };
+
+    // Generate AI insights
+    const prompt = `
+      As a financial advisor AI, analyze this user's financial data and provide actionable insights:
+      
+      Financial Context:
+      - Total Balance: $${financialContext.totalBalance.toFixed(2)}
+      - Accounts: ${financialContext.accountCount}
+      - Monthly Spending: $${financialContext.monthlySpending.toFixed(2)}
+      - Category Breakdown: ${JSON.stringify(financialContext.categoryBreakdown)}
+      - Budget Utilization: ${JSON.stringify(financialContext.budgetUtilization)}
+      
+      Please provide 3-5 specific insights in this JSON format:
+      {
+        "insights": [
+          {
+            "type": "spending_pattern|budget_suggestion|saving_opportunity|investment_advice",
+            "title": "Brief title",
+            "description": "Detailed explanation",
+            "confidence": 0.8,
+            "actionItems": ["Action 1", "Action 2"],
+            "data": {"category": "food", "amount": 500}
+          }
+        ]
+      }
+      
+      Focus on practical, actionable advice based on their actual spending patterns.
+    `;
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: 'You are an expert financial advisor AI. Provide practical, data-driven financial advice. Always respond with valid JSON format.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.7,
+        max_tokens: 2000
+      }),
+    });
+
+    console.log('OpenAI response status:', response.status);
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('OpenAI API error:', errorData);
+      
+      // If quota exceeded or other API errors, fall back to rule-based insights
+      if (response.status === 429 || response.status >= 500) {
+        return await generateFallbackInsights(supabase, userId);
+      }
+      
+      throw new Error(`OpenAI API error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
+    }
+
+    const aiResponse = await response.json();
+    console.log('OpenAI response received');
+
+    if (!aiResponse.choices || !aiResponse.choices[0] || !aiResponse.choices[0].message) {
+      throw new Error('Invalid OpenAI response format');
+    }
+
+    let insightsData;
+    try {
+      const content = aiResponse.choices[0].message.content.trim();
+      // Clean up the response in case it has markdown formatting
+      const cleanContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+      insightsData = JSON.parse(cleanContent);
+    } catch (parseError) {
+      console.error('Failed to parse AI response:', aiResponse.choices[0].message.content);
+      console.error('Parse error:', parseError);
+      return await generateFallbackInsights(supabase, userId);
+    }
+
+    if (!insightsData.insights || !Array.isArray(insightsData.insights)) {
+      console.error('AI response missing insights array');
+      return await generateFallbackInsights(supabase, userId);
+    }
+
+    // Store insights in database
+    const insightsToStore = insightsData.insights.map((insight: any) => ({
+      user_id: userId,
+      insight_type: insight.type || 'general',
+      title: insight.title || 'Financial Insight',
+      description: insight.description || 'AI-generated financial recommendation',
+      confidence_score: insight.confidence || 0.7,
+      data: insight.data || {},
+      action_items: insight.actionItems || [],
+      expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days
+    }));
+
+    const { error } = await supabase
+      .from('ai_insights')
+      .insert(insightsToStore);
+
+    if (error) {
+      console.error('Database insert error:', error);
+      throw error;
+    }
+
+    return new Response(
+      JSON.stringify({ success: true, insights: insightsData.insights }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+    
+  } catch (error) {
+    console.error('Error in generateInsights:', error);
+    // Fall back to rule-based insights if AI fails
+    return await generateFallbackInsights(supabase, userId);
+  }
+}
+
+// Fallback function for when OpenAI is not available
+async function generateFallbackInsights(supabase: any, userId: string) {
+  console.log('Generating fallback insights for user:', userId);
+  
+  // Get user data for rule-based insights
+  const { data: accounts } = await supabase.from('accounts').select('*').eq('user_id', userId);
+  const { data: transactions } = await supabase.from('transactions').select(`
+    *,
+    accounts!inner(user_id)
+  `).eq('accounts.user_id', userId).limit(50).order('created_at', { ascending: false });
+
+  const fallbackInsights = [];
+  const totalBalance = (accounts || []).reduce((sum: number, acc: any) => sum + parseFloat(acc.balance), 0);
+  const monthlySpending = calculateMonthlySpending(transactions || []);
+  const categoryBreakdown = calculateCategoryBreakdown(transactions || []);
+
+  // Rule-based insight generation
+  if (totalBalance > 0) {
+    if (totalBalance < monthlySpending * 3) {
+      fallbackInsights.push({
+        type: 'saving_opportunity',
+        title: 'Build Emergency Fund',
+        description: `Your current balance of $${totalBalance.toFixed(2)} is below the recommended 3-6 months of expenses. Consider building an emergency fund.`,
+        confidence: 0.85,
+        actionItems: [
+          'Set up automatic savings of 10% of income',
+          'Reduce non-essential spending',
+          'Consider a high-yield savings account'
+        ],
+        data: { current_balance: totalBalance, recommended_minimum: monthlySpending * 3 }
+      });
+    }
+  }
+
+  if (monthlySpending > 0) {
+    const highestCategory = Object.entries(categoryBreakdown).sort(([,a], [,b]) => b - a)[0];
+    if (highestCategory && highestCategory[1] > monthlySpending * 0.3) {
+      fallbackInsights.push({
+        type: 'spending_pattern',
+        title: `High ${highestCategory[0]} Spending`,
+        description: `You're spending $${highestCategory[1].toFixed(2)} on ${highestCategory[0]}, which is ${((highestCategory[1]/monthlySpending)*100).toFixed(1)}% of your monthly spending.`,
+        confidence: 0.8,
+        actionItems: [
+          `Set a monthly budget for ${highestCategory[0]}`,
+          'Track daily spending in this category',
+          'Look for alternatives to reduce costs'
+        ],
+        data: { category: highestCategory[0], amount: highestCategory[1], percentage: (highestCategory[1]/monthlySpending)*100 }
+      });
+    }
+  }
+
+  // Always include a general financial health insight
+  fallbackInsights.push({
+    type: 'investment_advice',
+    title: 'Investment Diversification',
+    description: 'Consider diversifying your investments across different asset classes to reduce risk and potentially increase returns.',
+    confidence: 0.75,
+    actionItems: [
+      'Review current investment portfolio',
+      'Consider index funds for diversification',
+      'Set up automatic investing'
+    ],
+    data: { recommendation: 'diversification', priority: 'medium' }
   });
 
-  console.log('OpenAI response status:', response.status);
-  const aiResponse = await response.json();
-  console.log('OpenAI response:', JSON.stringify(aiResponse, null, 2));
-
-  if (!response.ok) {
-    throw new Error(`OpenAI API error: ${response.status} - ${aiResponse.error?.message || 'Unknown error'}`);
-  }
-
-  if (!aiResponse.choices || !aiResponse.choices[0] || !aiResponse.choices[0].message) {
-    throw new Error('Invalid OpenAI response format');
-  }
-
-  let insightsData;
-  try {
-    insightsData = JSON.parse(aiResponse.choices[0].message.content);
-  } catch (parseError) {
-    console.error('Failed to parse AI response:', aiResponse.choices[0].message.content);
-    throw new Error('Invalid JSON in AI response');
-  }
-
-  if (!insightsData.insights || !Array.isArray(insightsData.insights)) {
-    throw new Error('AI response missing insights array');
-  }
-
   // Store insights in database
-  const insightsToStore = insightsData.insights.map((insight: any) => ({
+  const insightsToStore = fallbackInsights.map((insight: any) => ({
     user_id: userId,
     insight_type: insight.type,
     title: insight.title,
     description: insight.description,
     confidence_score: insight.confidence,
-    data: insight.data || {},
-    action_items: insight.actionItems || [],
+    data: insight.data,
+    action_items: insight.actionItems,
     expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days
   }));
 
@@ -171,7 +290,7 @@ async function generateInsights(supabase: any, userId: string) {
   if (error) throw error;
 
   return new Response(
-    JSON.stringify({ success: true, insights: insightsData.insights }),
+    JSON.stringify({ success: true, insights: fallbackInsights, fallback: true }),
     { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
   );
 }
@@ -187,8 +306,8 @@ async function handleChat(supabase: any, userId: string, chatData: any) {
       .from('ai_chat_sessions')
       .insert({
         user_id: userId,
-        title: message.substring(0, 50) + '...',
-        context: {}
+        title: message.length > 47 ? message.substring(0, 47) + '...' : message,
+        context: { topic: 'financial_chat', started_at: new Date().toISOString() }
       })
       .select()
       .single();
@@ -207,57 +326,79 @@ async function handleChat(supabase: any, userId: string, chatData: any) {
       content: message
     });
 
-  // Get user's financial context
-  const { data: accounts } = await supabase
-    .from('accounts')
-    .select('*')
-    .eq('user_id', userId);
+  let assistantMessage = '';
 
-  const { data: recentTransactions } = await supabase
-    .from('transactions')
-    .select(`*, accounts!inner(user_id)`)
-    .eq('accounts.user_id', userId)
-    .limit(20)
-    .order('created_at', { ascending: false });
+  // Try OpenAI first, fall back to rule-based responses
+  if (openAIApiKey) {
+    try {
+      // Get user's financial context
+      const { data: accounts } = await supabase
+        .from('accounts')
+        .select('*')
+        .eq('user_id', userId);
 
-  const financialSummary = {
-    totalBalance: accounts?.reduce((sum: number, acc: any) => sum + parseFloat(acc.balance), 0) || 0,
-    accountCount: accounts?.length || 0,
-    recentTransactionCount: recentTransactions?.length || 0
-  };
+      const { data: recentTransactions } = await supabase
+        .from('transactions')
+        .select(`*, accounts!inner(user_id)`)
+        .eq('accounts.user_id', userId)
+        .limit(20)
+        .order('created_at', { ascending: false });
 
-  // Generate AI response
-  const prompt = `
-    You are a knowledgeable financial advisor. The user has asked: "${message}"
-    
-    User's Financial Context:
-    - Total Balance: $${financialSummary.totalBalance.toFixed(2)}
-    - Number of Accounts: ${financialSummary.accountCount}
-    - Recent Transactions: ${financialSummary.recentTransactionCount}
-    
-    Provide helpful, personalized financial advice. Be conversational but professional.
-    Keep responses under 300 words and focus on actionable advice.
-  `;
+      const financialSummary = {
+        totalBalance: accounts?.reduce((sum: number, acc: any) => sum + parseFloat(acc.balance), 0) || 0,
+        accountCount: accounts?.length || 0,
+        recentTransactionCount: recentTransactions?.length || 0
+      };
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${openAIApiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: 'You are a helpful financial advisor AI assistant.' },
-        { role: 'user', content: prompt }
-      ],
-      temperature: 0.7,
-      max_tokens: 500
-    }),
-  });
+      // Generate AI response
+      const prompt = `
+        You are a knowledgeable financial advisor. The user has asked: "${message}"
+        
+        User's Financial Context:
+        - Total Balance: $${financialSummary.totalBalance.toFixed(2)}
+        - Number of Accounts: ${financialSummary.accountCount}
+        - Recent Transactions: ${financialSummary.recentTransactionCount}
+        
+        Provide helpful, personalized financial advice. Be conversational but professional.
+        Keep responses under 300 words and focus on actionable advice.
+      `;
 
-  const aiResponse = await response.json();
-  const assistantMessage = aiResponse.choices[0].message.content;
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openAIApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            { role: 'system', content: 'You are a helpful financial advisor AI assistant. Provide practical, actionable financial advice.' },
+            { role: 'user', content: prompt }
+          ],
+          temperature: 0.7,
+          max_tokens: 500
+        }),
+      });
+
+      if (response.ok) {
+        const aiResponse = await response.json();
+        assistantMessage = aiResponse.choices?.[0]?.message?.content || '';
+      } else {
+        console.log('OpenAI API error, falling back to rule-based response');
+        assistantMessage = generateRuleBasedChatResponse(message);
+      }
+    } catch (error) {
+      console.error('Chat OpenAI error:', error);
+      assistantMessage = generateRuleBasedChatResponse(message);
+    }
+  } else {
+    assistantMessage = generateRuleBasedChatResponse(message);
+  }
+
+  // Fallback if no response was generated
+  if (!assistantMessage) {
+    assistantMessage = "I'm here to help with your financial questions! Could you please rephrase your question or ask about budgeting, saving, investing, or debt management?";
+  }
 
   // Store AI response
   await supabase
@@ -277,6 +418,33 @@ async function handleChat(supabase: any, userId: string, chatData: any) {
     }),
     { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
   );
+}
+
+// Rule-based chat responses for fallback
+function generateRuleBasedChatResponse(userMessage: string): string {
+  const message = userMessage.toLowerCase();
+  
+  if (message.includes('budget') || message.includes('spending')) {
+    return "Creating a budget is a great first step! I recommend the 50/30/20 rule: 50% for needs, 30% for wants, and 20% for savings and debt repayment. Start by tracking your expenses for a month to see where your money goes, then set realistic limits for each category.";
+  }
+  
+  if (message.includes('save') || message.includes('emergency fund')) {
+    return "Building an emergency fund is crucial for financial security! Aim to save 3-6 months of expenses. Start small - even $25 per week adds up to $1,300 per year. Consider setting up automatic transfers to a high-yield savings account to make saving effortless.";
+  }
+  
+  if (message.includes('invest') || message.includes('stock') || message.includes('retirement')) {
+    return "Investing is key to building long-term wealth! Start with diversified index funds which offer broad market exposure with low fees. If your employer offers a 401(k) match, contribute at least enough to get the full match - it's free money! Consider opening an IRA for additional tax-advantaged retirement savings.";
+  }
+  
+  if (message.includes('debt') || message.includes('credit card') || message.includes('loan')) {
+    return "Tackling debt strategically can save you thousands! Consider the debt avalanche method (pay minimums on all debts, then focus extra payments on the highest interest rate debt) or the debt snowball method (pay off smallest debts first for psychological wins). Also, try to negotiate lower interest rates with your creditors.";
+  }
+  
+  if (message.includes('credit score') || message.includes('credit report')) {
+    return "Your credit score is important for loans and interest rates! Key factors include payment history (35%), credit utilization (30%), length of credit history (15%), credit mix (10%), and new credit (10%). Pay bills on time, keep credit utilization below 30%, and check your credit report annually for errors.";
+  }
+  
+  return "I'm here to help with your financial goals! I can provide advice on budgeting, saving, investing, debt management, credit scores, and more. What specific financial topic would you like to discuss?";
 }
 
 async function calculateHealthScore(supabase: any, userId: string) {
