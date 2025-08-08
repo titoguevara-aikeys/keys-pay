@@ -86,6 +86,119 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_chat_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          role: string
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          role: string
+          session_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          role?: string
+          session_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_chat_messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "ai_chat_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_chat_sessions: {
+        Row: {
+          context: Json | null
+          created_at: string
+          id: string
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          context?: Json | null
+          created_at?: string
+          id?: string
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          context?: Json | null
+          created_at?: string
+          id?: string
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_insights: {
+        Row: {
+          action_items: Json | null
+          confidence_score: number
+          created_at: string
+          data: Json
+          description: string
+          expires_at: string | null
+          id: string
+          insight_type: string
+          is_dismissed: boolean | null
+          is_read: boolean | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_items?: Json | null
+          confidence_score?: number
+          created_at?: string
+          data?: Json
+          description: string
+          expires_at?: string | null
+          id?: string
+          insight_type: string
+          is_dismissed?: boolean | null
+          is_read?: boolean | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_items?: Json | null
+          confidence_score?: number
+          created_at?: string
+          data?: Json
+          description?: string
+          expires_at?: string | null
+          id?: string
+          insight_type?: string
+          is_dismissed?: boolean | null
+          is_read?: boolean | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       bills: {
         Row: {
           account_id: string | null
@@ -413,6 +526,51 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
         ]
+      }
+      financial_health_scores: {
+        Row: {
+          created_at: string
+          debt_score: number
+          factors: Json
+          id: string
+          investment_score: number
+          overall_score: number
+          period_end: string
+          period_start: string
+          recommendations: Json | null
+          saving_score: number
+          spending_score: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          debt_score: number
+          factors?: Json
+          id?: string
+          investment_score: number
+          overall_score: number
+          period_end: string
+          period_start: string
+          recommendations?: Json | null
+          saving_score: number
+          spending_score: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          debt_score?: number
+          factors?: Json
+          id?: string
+          investment_score?: number
+          overall_score?: number
+          period_end?: string
+          period_start?: string
+          recommendations?: Json | null
+          saving_score?: number
+          spending_score?: number
+          user_id?: string
+        }
+        Relationships: []
       }
       login_sessions: {
         Row: {
