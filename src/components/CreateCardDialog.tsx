@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/select';
 import { useCreateCard, useCards } from '@/hooks/useCards';
 import { useAccounts } from '@/hooks/useAccounts';
+import { useProfile } from '@/hooks/useProfile';
 import { useToast } from '@/hooks/use-toast';
 
 const getAccountDisplayName = (accountType: string) => {
@@ -147,10 +148,10 @@ export const CreateCardDialog: React.FC<CreateCardDialogProps> = ({
   const createCard = useCreateCard();
   const { data: accounts } = useAccounts();
   const { data: existingCards } = useCards();
+  const { data: profile } = useProfile();
   
-  // For demo purposes, assuming user tier can be determined from profile or account type
-  // In real implementation, this would come from user profile/subscription data
-  const userTier = 'regular'; // This should be fetched from user profile
+  // Get user's membership tier and card limits
+  const userTier = profile?.membership_tier || 'regular';
   const cardLimits = getCardLimits(userTier);
 
   const form = useForm<FormData>({
@@ -210,9 +211,11 @@ export const CreateCardDialog: React.FC<CreateCardDialogProps> = ({
           <DialogDescription>
             Create a new virtual card for secure online payments and spending control.
             {existingCards && (
-              <span className="block mt-2 text-sm text-muted-foreground">
-                Cards created: {existingCards.length} / {cardLimits.max} 
-                ({userTier.charAt(0).toUpperCase() + userTier.slice(1)} Member)
+              <span className="block mt-2 text-sm">
+                <span className="text-muted-foreground">Cards created: {existingCards.length} / {cardLimits.max}</span>
+                <span className="ml-2 px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
+                  {userTier.charAt(0).toUpperCase() + userTier.slice(1)} Member
+                </span>
               </span>
             )}
           </DialogDescription>

@@ -8,6 +8,7 @@ import { CreateCardDialog } from '@/components/CreateCardDialog';
 import { VirtualCard } from '@/components/VirtualCard';
 import { MembershipManager } from '@/components/MembershipManager';
 import { useToast } from '@/hooks/use-toast';
+import { useProfile } from '@/hooks/useProfile';
 import Navigation from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 
@@ -15,6 +16,7 @@ const Cards = () => {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showCardNumbers, setShowCardNumbers] = useState(false);
   const { data: cards, isLoading } = useCards();
+  const { data: profile } = useProfile();
   const updateCard = useUpdateCard();
   const { toast } = useToast();
 
@@ -175,7 +177,7 @@ const Cards = () => {
         </div>
 
         {/* Membership Management */}
-        <MembershipManager currentTier="regular" />
+        <MembershipManager currentTier={profile?.membership_tier || 'regular'} />
 
         {/* Card Benefits */}
         <Card>
