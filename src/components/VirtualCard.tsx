@@ -59,17 +59,16 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
   };
 
   const getCardBackground = (type: string) => {
+    // All cards use the same blue card as the base design for consistency
+    return '/lovable-uploads/eeab292b-99eb-449c-a828-8cf2c55b6ef1.png'; // Keys Pay blue card as base
+  };
+
+  const getPlatinumOverlay = (type: string) => {
     const tier = getMembershipTier(type);
-    switch (tier) {
-      case 'platinum':
-        return platinumCardBg; // Elegant platinum design
-      case 'gold':
-        return goldCardBg;
-      case 'silver':
-        return silverCardBg;
-      default:
-        return '/lovable-uploads/eeab292b-99eb-449c-a828-8cf2c55b6ef1.png'; // Keys Pay blue card
+    if (tier === 'platinum') {
+      return 'bg-gradient-to-br from-gray-300 via-gray-200 to-gray-400';
     }
+    return '';
   };
 
   const getStatusColor = (status: string) => {
@@ -130,6 +129,11 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
             minHeight: '200px'
           }}
         >
+          {/* Platinum overlay for platinum cards */}
+          {getMembershipTier(card.card_type) === 'platinum' && (
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-300/90 via-gray-200/95 to-gray-400/90 mix-blend-multiply"></div>
+          )}
+          
           {/* Overlay for better text readability */}
           <div className="absolute inset-0 bg-black/10"></div>
           
