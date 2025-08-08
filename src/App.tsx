@@ -15,6 +15,7 @@ import Analytics from "./pages/Analytics";
 import Security from "./pages/Security";
 import SuperApp from "./pages/SuperApp";
 import CryptoHub from "./pages/CryptoHub";
+import AIAssistant from "./pages/AIAssistant";
 import AdminPortal from "./pages/AdminPortal";
 
 const queryClient = new QueryClient();
@@ -61,6 +62,11 @@ const App = () => (
             <Route path="/crypto" element={
               <ProtectedRoute>
                 <CryptoHub />
+              </ProtectedRoute>
+            } />
+            <Route path="/ai-assistant" element={
+              <ProtectedRoute>
+                <AIAssistant />
               </ProtectedRoute>
             } />
             <Route path="/admin" element={

@@ -2,3 +2,6 @@ project_id = "emolyyvmvvfjyxbguhyn"
 
 [functions.send-app-link]
 verify_jwt = false
+
+[functions.ai-financial-advisor]
+verify_jwt = true
