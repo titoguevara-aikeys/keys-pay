@@ -112,7 +112,7 @@ async function generateInsights(supabase: any, userId: string) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'gpt-4.1-2025-04-14',
+      model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: 'You are an expert financial advisor AI. Provide practical, data-driven financial advice.' },
         { role: 'user', content: prompt }
@@ -219,7 +219,7 @@ async function handleChat(supabase: any, userId: string, chatData: any) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'gpt-4.1-2025-04-14',
+      model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: 'You are a helpful financial advisor AI assistant.' },
         { role: 'user', content: prompt }
