@@ -27,6 +27,26 @@
     
     --gradient-primary: linear-gradient(135deg, hsl(200, 100%, 70%), hsl(210, 100%, 65%));
     --shadow-glow: 0 0 40px hsl(200 100% 70% / 0.3);
+    
+    /* AI Financial Assistant semantic colors */
+    --insight-spending: 210 100% 50%;
+    --insight-spending-bg: 210 100% 95%;
+    --insight-spending-border: 210 100% 85%;
+    --insight-budget: 45 100% 50%;
+    --insight-budget-bg: 45 100% 95%;
+    --insight-budget-border: 45 100% 85%;
+    --insight-saving: 120 100% 35%;
+    --insight-saving-bg: 120 100% 95%;
+    --insight-saving-border: 120 100% 85%;
+    --insight-investment: 270 100% 50%;
+    --insight-investment-bg: 270 100% 95%;
+    --insight-investment-border: 270 100% 85%;
+    
+    /* Financial health metrics */
+    --metric-excellent: 120 100% 35%;
+    --metric-good: 160 100% 40%;
+    --metric-warning: 45 100% 50%;
+    --metric-critical: 0 100% 50%;
 
     --sidebar-background: 0 0% 98%;
 
@@ -41,8 +61,21 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
 
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Light mode AI colors */
+    --insight-spending: 210 100% 45%;
+    --insight-spending-bg: 210 100% 97%;
+    --insight-spending-border: 210 50% 85%;
+    --insight-budget: 45 90% 45%;
+    --insight-budget-bg: 45 100% 97%;
+    --insight-budget-border: 45 50% 85%;
+    --insight-saving: 120 80% 35%;
+    --insight-saving-bg: 120 100% 97%;
+    --insight-saving-border: 120 50% 85%;
+    --insight-investment: 270 80% 45%;
+    --insight-investment-bg: 270 100% 97%;
+    --insight-investment-border: 270 50% 85%;
   }
 
   .dark {
@@ -81,6 +114,26 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Dark mode AI colors */
+    --insight-spending: 210 100% 65%;
+    --insight-spending-bg: 210 30% 15%;
+    --insight-spending-border: 210 30% 25%;
+    --insight-budget: 45 90% 60%;
+    --insight-budget-bg: 45 30% 15%;
+    --insight-budget-border: 45 30% 25%;
+    --insight-saving: 120 70% 50%;
+    --insight-saving-bg: 120 30% 15%;
+    --insight-saving-border: 120 30% 25%;
+    --insight-investment: 270 70% 60%;
+    --insight-investment-bg: 270 30% 15%;
+    --insight-investment-border: 270 30% 25%;
+    
+    /* Dark mode financial metrics */
+    --metric-excellent: 120 70% 50%;
+    --metric-good: 160 70% 55%;
+    --metric-warning: 45 90% 60%;
+    --metric-critical: 0 80% 60%;
   }
 }
 

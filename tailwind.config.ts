@@ -61,7 +61,31 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				'insight-spending': {
+					DEFAULT: 'hsl(var(--insight-spending))',
+					bg: 'hsl(var(--insight-spending-bg))',
+					border: 'hsl(var(--insight-spending-border))'
+				},
+				'insight-budget': {
+					DEFAULT: 'hsl(var(--insight-budget))',
+					bg: 'hsl(var(--insight-budget-bg))',
+					border: 'hsl(var(--insight-budget-border))'
+				},
+				'insight-saving': {
+					DEFAULT: 'hsl(var(--insight-saving))',
+					bg: 'hsl(var(--insight-saving-bg))',
+					border: 'hsl(var(--insight-saving-border))'
+				},
+				'insight-investment': {
+					DEFAULT: 'hsl(var(--insight-investment))',
+					bg: 'hsl(var(--insight-investment-bg))',
+					border: 'hsl(var(--insight-investment-border))'
+				},
+				'metric-excellent': 'hsl(var(--metric-excellent))',
+				'metric-good': 'hsl(var(--metric-good))',
+				'metric-warning': 'hsl(var(--metric-warning))',
+				'metric-critical': 'hsl(var(--metric-critical))'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

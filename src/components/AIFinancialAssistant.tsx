@@ -91,15 +91,15 @@ export const AIFinancialAssistant = () => {
   const getInsightColor = (type: string) => {
     switch (type) {
       case 'spending_pattern':
-        return 'bg-blue-500/10 text-blue-700 border-blue-200';
+        return 'bg-insight-spending-bg text-insight-spending border-insight-spending-border';
       case 'budget_suggestion':
-        return 'bg-yellow-500/10 text-yellow-700 border-yellow-200';
+        return 'bg-insight-budget-bg text-insight-budget border-insight-budget-border';
       case 'saving_opportunity':
-        return 'bg-green-500/10 text-green-700 border-green-200';
+        return 'bg-insight-saving-bg text-insight-saving border-insight-saving-border';
       case 'investment_advice':
-        return 'bg-purple-500/10 text-purple-700 border-purple-200';
+        return 'bg-insight-investment-bg text-insight-investment border-insight-investment-border';
       default:
-        return 'bg-gray-500/10 text-gray-700 border-gray-200';
+        return 'bg-muted text-muted-foreground border-border';
     }
   };
 
@@ -263,7 +263,7 @@ export const AIFinancialAssistant = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <Card>
                       <CardContent className="p-4 text-center">
-                        <div className="text-2xl font-bold text-blue-600 mb-1">
+                        <div className="text-2xl font-bold text-insight-spending mb-1">
                           {healthScore.spending_score}
                         </div>
                         <p className="text-sm text-muted-foreground">Spending</p>
@@ -273,7 +273,7 @@ export const AIFinancialAssistant = () => {
 
                     <Card>
                       <CardContent className="p-4 text-center">
-                        <div className="text-2xl font-bold text-green-600 mb-1">
+                        <div className="text-2xl font-bold text-insight-saving mb-1">
                           {healthScore.saving_score}
                         </div>
                         <p className="text-sm text-muted-foreground">Saving</p>
@@ -283,7 +283,7 @@ export const AIFinancialAssistant = () => {
 
                     <Card>
                       <CardContent className="p-4 text-center">
-                        <div className="text-2xl font-bold text-orange-600 mb-1">
+                        <div className="text-2xl font-bold text-metric-warning mb-1">
                           {healthScore.debt_score}
                         </div>
                         <p className="text-sm text-muted-foreground">Debt</p>
@@ -293,7 +293,7 @@ export const AIFinancialAssistant = () => {
 
                     <Card>
                       <CardContent className="p-4 text-center">
-                        <div className="text-2xl font-bold text-purple-600 mb-1">
+                        <div className="text-2xl font-bold text-insight-investment mb-1">
                           {healthScore.investment_score}
                         </div>
                         <p className="text-sm text-muted-foreground">Investment</p>
@@ -311,7 +311,7 @@ export const AIFinancialAssistant = () => {
                         <ul className="space-y-2">
                           {(healthScore.recommendations as string[]).map((rec, index) => (
                             <li key={index} className="flex items-start gap-2 text-sm">
-                              <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                              <CheckCircle2 className="h-4 w-4 text-insight-saving mt-0.5 flex-shrink-0" />
                               {rec}
                             </li>
                           ))}
