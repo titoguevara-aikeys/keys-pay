@@ -129,6 +129,11 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
             minHeight: '200px'
           }}
         >
+          {/* Gold overlay for gold cards */}
+          {getMembershipTier(card.card_type) === 'gold' && (
+            <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 via-amber-400 to-yellow-600 opacity-75"></div>
+          )}
+          
           {/* Platinum overlay for platinum cards */}
           {getMembershipTier(card.card_type) === 'platinum' && (
             <div className="absolute inset-0 bg-gradient-to-br from-zinc-400 via-slate-300 to-zinc-500 opacity-75"></div>
