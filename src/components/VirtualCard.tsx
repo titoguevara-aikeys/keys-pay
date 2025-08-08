@@ -98,6 +98,19 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
     });
   };
 
+  const getTierBadgeStyle = (tier: string | null) => {
+    switch (tier) {
+      case 'silver':
+        return 'bg-gray-300/30 border-gray-300/50';
+      case 'gold':
+        return 'bg-yellow-400/30 border-yellow-400/50';
+      case 'platinum':
+        return 'bg-gray-100/30 border-gray-100/50';
+      default:
+        return 'bg-white/20';
+    }
+  };
+
   const getExpiryDate = () => {
     const date = new Date();
     date.setFullYear(date.getFullYear() + 3);
@@ -137,7 +150,7 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
                  </div>
               </div>
               <Badge 
-                className="bg-white/20 text-white border-white/30"
+                className={`text-white border-white/30 ${getMembershipTier(card.card_type) ? getTierBadgeStyle(getMembershipTier(card.card_type)) : 'bg-white/20'}`}
                 variant="outline"
               >
                 {card.card_status}
