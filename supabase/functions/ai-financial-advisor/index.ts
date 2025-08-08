@@ -52,6 +52,12 @@ serve(async (req) => {
 async function generateInsights(supabase: any, userId: string) {
   console.log('Generating insights for user:', userId);
   
+  // Check if OpenAI API key is available
+  if (!openAIApiKey) {
+    throw new Error('OpenAI API key not configured');
+  }
+  console.log('OpenAI API key available:', openAIApiKey ? 'Yes' : 'No');
+  
   // Fetch user's financial data
   const [accountsResponse, transactionsResponse, budgetsResponse] = await Promise.all([
     supabase.from('accounts').select('*').eq('user_id', userId),
