@@ -43,12 +43,12 @@ const handler = async (req: Request): Promise<Response> => {
 
     const eventData: SecurityEventRequest = await req.json();
 
-    // Extract IP address from request headers
-    const ip = req.headers.get("x-forwarded-for") || 
-               req.headers.get("x-real-ip") || 
-               "unknown";
-
-    // Extract user agent
+    // Extract IP address using secure parsing function
+    const headers = Object.fromEntries(req.headers.entries());
+    const { data: ipResult, error: ipError } = await supabase
+      .rpc('parse_client_ip', { headers });
+    
+    const ip = ipError ? '127.0.0.1' : ipResult;
     const userAgent = req.headers.get("user-agent") || "unknown";
 
     // Calculate risk score based on event type and metadata
