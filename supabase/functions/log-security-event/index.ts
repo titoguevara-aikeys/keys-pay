@@ -54,14 +54,14 @@ const handler = async (req: Request): Promise<Response> => {
     // Calculate risk score based on event type and metadata
     const riskScore = calculateRiskScore(eventData);
 
-    // Log the security event
+    // Log the security event with proper IP handling
     const { data: securityEvent, error: eventError } = await supabase
       .from('security_events')
       .insert({
         event_type: eventData.type,
         event_description: generateEventDescription(eventData),
         user_id: eventData.user_id || null,
-        ip_address: eventData.ip_address || ip,
+        ip_address: ip, // Use parsed IP directly
         user_agent: eventData.user_agent || userAgent,
         device_fingerprint: eventData.device_fingerprint,
         location: eventData.location,
@@ -253,11 +253,14 @@ async function sendCriticalAlert(
   securityEvent: any
 ): Promise<void> {
   try {
-    // Send critical alert to platform owner
-    const alertResponse = await fetch('/api/send-security-alert', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    // Use Supabase edge function instead of external API
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+    );
+    
+    const { error } = await supabase.functions.invoke('send-security-alert', {
+      body: {
         violationType: eventData.type,
         details: {
           ...eventData.metadata,
@@ -268,11 +271,17 @@ async function sendCriticalAlert(
         domain: eventData.metadata?.domain || 'unknown',
         userAgent: eventData.user_agent || 'unknown',
         severity: eventData.severity
-      })
+      }
     });
 
-    if (!alertResponse.ok) {
-      console.error("Failed to send critical security alert");
+    if (error) {
+      console.error("Failed to send critical security alert:", error);
+    } else {
+      console.log("Security alert sent successfully:", {
+        event_id: securityEvent.id,
+        type: eventData.type,
+        severity: eventData.severity
+      });
     }
 
   } catch (error) {

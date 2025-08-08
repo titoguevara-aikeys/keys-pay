@@ -120,6 +120,7 @@ export class IntellectualPropertyProtection {
   // Send security alert email to platform owner
   private static async sendSecurityAlert(violation: any): Promise<void> {
     try {
+      // Use proper Supabase client configuration instead of process.env
       const alertData = {
         violationType: violation.subtype,
         details: violation.details,
@@ -129,13 +130,11 @@ export class IntellectualPropertyProtection {
         severity: this.getSeverityLevel(violation.subtype)
       };
 
-      await fetch('/api/functions/v1/send-security-alert', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY || ''}`
-        },
-        body: JSON.stringify(alertData)
+      // Import supabase client dynamically to avoid frontend exposure
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      await supabase.functions.invoke('send-security-alert', {
+        body: alertData
       });
     } catch (error) {
       // Fail silently to avoid revealing security measures
