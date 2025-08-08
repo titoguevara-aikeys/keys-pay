@@ -32,6 +32,30 @@ import { useCreateCard } from '@/hooks/useCards';
 import { useAccounts } from '@/hooks/useAccounts';
 import { useToast } from '@/hooks/use-toast';
 
+const getAccountDisplayName = (accountType: string) => {
+  const accountTypes: { [key: string]: string } = {
+    'checking': 'Checking Account',
+    'savings': 'Savings Account',
+    'business': 'Business Account',
+    'investment': 'Investment Account',
+    'crypto': 'Crypto Wallet',
+    'forex': 'Forex Trading Account',
+    'money_market': 'Money Market Account',
+    'certificate_deposit': 'Certificate of Deposit',
+    'retirement_401k': '401(k) Retirement',
+    'retirement_ira': 'IRA Retirement',
+    'student': 'Student Account',
+    'joint': 'Joint Account',
+    'trust': 'Trust Account',
+    'corporate': 'Corporate Account',
+    'merchant': 'Merchant Account',
+    'escrow': 'Escrow Account',
+    'premium': 'Premium Account',
+    'vip': 'VIP Account'
+  };
+  return accountTypes[accountType] || accountType;
+};
+
 const formSchema = z.object({
   account_id: z.string().min(1, 'Please select an account'),
   card_type: z.string().min(1, 'Please select a card type'),
@@ -115,13 +139,13 @@ export const CreateCardDialog: React.FC<CreateCardDialogProps> = ({
                         <SelectValue placeholder="Select an account" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
-                      {accounts?.map((account) => (
-                        <SelectItem key={account.id} value={account.id}>
-                          {account.account_type} - ${account.balance}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
+                     <SelectContent>
+                       {accounts?.map((account) => (
+                         <SelectItem key={account.id} value={account.id}>
+                           {getAccountDisplayName(account.account_type)} - ${account.balance}
+                         </SelectItem>
+                       ))}
+                     </SelectContent>
                   </Select>
                   <FormDescription>
                     The account this card will be linked to
@@ -143,14 +167,20 @@ export const CreateCardDialog: React.FC<CreateCardDialogProps> = ({
                         <SelectValue placeholder="Select card type" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="debit">Debit Card</SelectItem>
-                      <SelectItem value="credit">Credit Card</SelectItem>
-                    </SelectContent>
+                     <SelectContent>
+                       <SelectItem value="debit">Keys Pay Debit Card (Regular)</SelectItem>
+                       <SelectItem value="credit">Keys Pay Credit Card (Regular)</SelectItem>
+                       <SelectItem value="silver_debit">Silver Debit Card (VIP)</SelectItem>
+                       <SelectItem value="silver_credit">Silver Credit Card (VIP)</SelectItem>
+                       <SelectItem value="gold_debit">Gold Debit Card (Premium)</SelectItem>
+                       <SelectItem value="gold_credit">Gold Credit Card (Premium)</SelectItem>
+                       <SelectItem value="platinum_debit">Platinum Debit Card (Elite)</SelectItem>
+                       <SelectItem value="platinum_credit">Platinum Credit Card (Elite)</SelectItem>
+                     </SelectContent>
                   </Select>
-                  <FormDescription>
-                    Choose between debit (direct account access) or credit card
-                  </FormDescription>
+                   <FormDescription>
+                     Choose your card type and membership level for exclusive benefits
+                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

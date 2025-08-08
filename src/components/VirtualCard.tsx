@@ -3,6 +3,9 @@ import { MoreHorizontal, Lock, Unlock, Copy, Settings, Trash } from 'lucide-reac
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import silverCardBg from '@/assets/silver-card-bg.png';
+import goldCardBg from '@/assets/gold-card-bg.png';
+import platinumCardBg from '@/assets/platinum-card-bg.png';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,14 +29,59 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
 }) => {
   const { toast } = useToast();
 
-  const getCardGradient = (type: string) => {
+  const getCardGradient = (type: string, membershipTier?: string) => {
+    // Membership-based card colors
+    if (membershipTier) {
+      switch (membershipTier) {
+        case 'platinum':
+          return 'bg-gradient-to-br from-purple-800 via-purple-900 to-black';
+        case 'gold':
+          return 'bg-gradient-to-br from-yellow-600 via-yellow-700 to-orange-800';
+        case 'silver':
+          return 'bg-gradient-to-br from-gray-400 via-gray-500 to-gray-700';
+        default:
+          break;
+      }
+    }
+    
+    // Default card type colors for regular members (Keys Pay blue)
     switch (type) {
       case 'credit':
-        return 'bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800';
+        return 'bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900';
       case 'debit':
         return 'bg-gradient-to-br from-blue-600 via-blue-700 to-cyan-800';
       default:
-        return 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800';
+        return 'bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800';
+    }
+  };
+
+  const getMembershipTier = (type: string) => {
+    // Extract membership tier from card type if it contains tier info
+    if (type.includes('platinum')) return 'platinum';
+    if (type.includes('gold')) return 'gold';
+    if (type.includes('silver')) return 'silver';
+    return null;
+  };
+
+  const getCardDisplayName = (type: string) => {
+    const tier = getMembershipTier(type);
+    if (tier) {
+      return `${tier.charAt(0).toUpperCase() + tier.slice(1)} ${type.includes('credit') ? 'Credit' : 'Debit'} Card`;
+    }
+    return `${type.charAt(0).toUpperCase() + type.slice(1)} Card`;
+  };
+
+  const getCardBackground = (type: string) => {
+    const tier = getMembershipTier(type);
+    switch (tier) {
+      case 'platinum':
+        return platinumCardBg;
+      case 'gold':
+        return goldCardBg;
+      case 'silver':
+        return silverCardBg;
+      default:
+        return '/lovable-uploads/eeab292b-99eb-449c-a828-8cf2c55b6ef1.png'; // Default Keys Pay blue card
     }
   };
 
@@ -77,7 +125,7 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
         <div 
           className="relative w-full bg-cover bg-center"
           style={{
-            backgroundImage: `url('/lovable-uploads/eeab292b-99eb-449c-a828-8cf2c55b6ef1.png')`,
+            backgroundImage: `url('${getCardBackground(card.card_type)}')`,
             aspectRatio: '1.586/1',
             minHeight: '200px'
           }}
@@ -90,11 +138,16 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
             <div className="flex justify-between items-start">
               <div className="flex items-center">
                 <img src="/lovable-uploads/ad78c06f-06c1-4a99-b7fc-aefe5def66cc.png" alt="Keys Logo" className="h-12 w-12 ml-4 mr-8 -mt-2" />
-                <div>
-                  <p className="text-white/90 text-sm font-medium uppercase tracking-wider">
-                    {card.card_type} Card
-                  </p>
-                </div>
+                 <div>
+                   <p className="text-white/90 text-sm font-medium uppercase tracking-wider">
+                     {getCardDisplayName(card.card_type)}
+                   </p>
+                   {getMembershipTier(card.card_type) && (
+                     <p className="text-white/70 text-xs uppercase tracking-wide">
+                       {getMembershipTier(card.card_type)} Member
+                     </p>
+                   )}
+                 </div>
               </div>
               <Badge 
                 className="bg-white/20 text-white border-white/30"
