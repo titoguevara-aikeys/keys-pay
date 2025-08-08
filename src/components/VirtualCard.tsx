@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import silverCardBg from '@/assets/silver-card-bg.png';
 import goldCardBg from '@/assets/gold-card-bg.png';
-import platinumCardBg from '@/assets/platinum-card-bg.png';
+import platinumCardBg from '@/assets/platinum-card-bg-clean.png';
 import {
   DropdownMenu,
   DropdownMenuContent,
