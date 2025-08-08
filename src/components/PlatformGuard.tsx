@@ -83,7 +83,7 @@ export const PlatformGuard: React.FC<PlatformGuardProps> = ({ children }) => {
               This platform is licensed exclusively for AIKEYS Financial Platform.
             </p>
             <p className="text-sm text-muted-foreground">
-              Contact: support@aikeys.ai for authorization.
+              Contact: tito.guevara@aikeys.ai or tito.guevara@gmail.com for authorization.
             </p>
           </CardContent>
         </Card>

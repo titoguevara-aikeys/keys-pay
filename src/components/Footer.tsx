@@ -119,7 +119,7 @@ export const Footer = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:support@aikeys.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
+                  <a href="mailto:tito.guevara@aikeys.ai" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
                     <Mail className="h-4 w-4" />
                     Email Support
                   </a>
