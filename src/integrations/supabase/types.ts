@@ -1518,6 +1518,14 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      is_protected_owner: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      is_super_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       log_security_event: {
         Args: {
           p_user_id: string
@@ -1553,6 +1561,10 @@ export type Database = {
           p_description?: string
         }
         Returns: Json
+      }
+      validate_platform_license: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
       }
     }
     Enums: {
