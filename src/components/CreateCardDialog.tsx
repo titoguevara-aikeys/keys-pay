@@ -28,32 +28,102 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useCreateCard } from '@/hooks/useCards';
+import { useCreateCard, useCards } from '@/hooks/useCards';
 import { useAccounts } from '@/hooks/useAccounts';
 import { useToast } from '@/hooks/use-toast';
 
 const getAccountDisplayName = (accountType: string) => {
   const accountTypes: { [key: string]: string } = {
-    'checking': 'Checking Account',
-    'savings': 'Savings Account',
-    'business': 'Business Account',
-    'investment': 'Investment Account',
-    'crypto': 'Crypto Wallet',
-    'forex': 'Forex Trading Account',
+    // Personal Banking
+    'checking': 'Personal Checking Account',
+    'savings': 'Personal Savings Account',
     'money_market': 'Money Market Account',
-    'certificate_deposit': 'Certificate of Deposit',
-    'retirement_401k': '401(k) Retirement',
-    'retirement_ira': 'IRA Retirement',
-    'student': 'Student Account',
-    'joint': 'Joint Account',
-    'trust': 'Trust Account',
-    'corporate': 'Corporate Account',
-    'merchant': 'Merchant Account',
+    'certificate_deposit': 'Certificate of Deposit (CD)',
+    'high_yield_savings': 'High-Yield Savings Account',
+    
+    // Business Banking
+    'business': 'Business Checking Account',
+    'business_savings': 'Business Savings Account',
+    'business_credit': 'Business Credit Line',
+    'merchant': 'Merchant Payment Account',
+    'corporate': 'Corporate Banking Account',
     'escrow': 'Escrow Account',
-    'premium': 'Premium Account',
-    'vip': 'VIP Account'
+    'payroll': 'Payroll Management Account',
+    
+    // Investment & Wealth
+    'investment': 'Investment Portfolio Account',
+    'brokerage': 'Brokerage Trading Account',
+    'robo_advisor': 'Robo-Advisor Investment Account',
+    'mutual_fund': 'Mutual Fund Account',
+    'etf': 'ETF Portfolio Account',
+    'real_estate': 'Real Estate Investment Account',
+    
+    // Retirement Planning
+    'retirement_401k': '401(k) Retirement Account',
+    'retirement_ira': 'Traditional IRA Account',
+    'retirement_roth': 'Roth IRA Account',
+    'retirement_sep': 'SEP-IRA Account',
+    'retirement_simple': 'SIMPLE IRA Account',
+    'pension': 'Pension Fund Account',
+    
+    // Specialized Accounts
+    'student': 'Student Banking Account',
+    'joint': 'Joint Account',
+    'trust': 'Trust Fund Account',
+    'custodial': 'Custodial Account (Minor)',
+    'estate': 'Estate Management Account',
+    'nonprofit': 'Non-Profit Organization Account',
+    
+    // Digital & Crypto
+    'crypto': 'Cryptocurrency Wallet',
+    'defi': 'DeFi Staking Account',
+    'nft': 'NFT Collection Wallet',
+    'digital_assets': 'Digital Assets Portfolio',
+    
+    // Trading & Forex
+    'forex': 'Forex Trading Account',
+    'commodities': 'Commodities Trading Account',
+    'futures': 'Futures Trading Account',
+    'options': 'Options Trading Account',
+    'day_trading': 'Day Trading Account',
+    
+    // Premium & VIP Services
+    'premium': 'Premium Banking Account',
+    'vip': 'VIP Private Banking',
+    'private_wealth': 'Private Wealth Management',
+    'concierge': 'Concierge Banking Account',
+    
+    // International & Multi-Currency
+    'international': 'International Banking Account',
+    'multi_currency': 'Multi-Currency Account',
+    'foreign_exchange': 'Foreign Exchange Account',
+    'offshore': 'Offshore Banking Account',
+    
+    // Specialized Financial Services
+    'insurance': 'Insurance Premium Account',
+    'loan_servicing': 'Loan Servicing Account',
+    'credit_builder': 'Credit Building Account',
+    'debt_consolidation': 'Debt Consolidation Account',
+    'emergency_fund': 'Emergency Fund Account',
+    
+    // Family & Education
+    'family_plan': 'Family Banking Plan',
+    'education_savings': 'Education Savings Account (529)',
+    'child_savings': 'Children\'s Savings Account',
+    'allowance': 'Kids Allowance Account'
   };
   return accountTypes[accountType] || accountType;
+};
+
+const getCardLimits = (userTier: string = 'regular') => {
+  const limits: { [key: string]: { max: number; description: string } } = {
+    'regular': { max: 3, description: 'Regular members can create up to 3 cards' },
+    'silver': { max: 5, description: 'Silver members can create up to 5 cards' },
+    'gold': { max: 8, description: 'Gold members can create up to 8 cards' },
+    'platinum': { max: 15, description: 'Platinum members can create up to 15 cards' },
+    'vip': { max: 20, description: 'VIP members can create up to 20 cards' }
+  };
+  return limits[userTier] || limits['regular'];
 };
 
 const formSchema = z.object({
@@ -76,6 +146,12 @@ export const CreateCardDialog: React.FC<CreateCardDialogProps> = ({
   const { toast } = useToast();
   const createCard = useCreateCard();
   const { data: accounts } = useAccounts();
+  const { data: existingCards } = useCards();
+  
+  // For demo purposes, assuming user tier can be determined from profile or account type
+  // In real implementation, this would come from user profile/subscription data
+  const userTier = 'regular'; // This should be fetched from user profile
+  const cardLimits = getCardLimits(userTier);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -88,9 +164,20 @@ export const CreateCardDialog: React.FC<CreateCardDialogProps> = ({
 
   const onSubmit = async (data: FormData) => {
     try {
+      // Check card limits
+      const currentCardCount = existingCards?.length || 0;
+      if (currentCardCount >= cardLimits.max) {
+        toast({
+          title: 'Card limit reached',
+          description: `${cardLimits.description}. Please upgrade your membership to create more cards.`,
+          variant: 'destructive',
+        });
+        return;
+      }
+
       await createCard.mutateAsync({
         account_id: data.account_id,
-        card_type: data.card_type as 'debit' | 'credit',
+        card_type: data.card_type,
         spending_limit: data.spending_limit ? parseFloat(data.spending_limit) : undefined,
       });
 
@@ -122,6 +209,12 @@ export const CreateCardDialog: React.FC<CreateCardDialogProps> = ({
           <DialogTitle>Create New Virtual Card</DialogTitle>
           <DialogDescription>
             Create a new virtual card for secure online payments and spending control.
+            {existingCards && (
+              <span className="block mt-2 text-sm text-muted-foreground">
+                Cards created: {existingCards.length} / {cardLimits.max} 
+                ({userTier.charAt(0).toUpperCase() + userTier.slice(1)} Member)
+              </span>
+            )}
           </DialogDescription>
         </DialogHeader>
 
@@ -139,10 +232,13 @@ export const CreateCardDialog: React.FC<CreateCardDialogProps> = ({
                         <SelectValue placeholder="Select an account" />
                       </SelectTrigger>
                     </FormControl>
-                     <SelectContent>
+                     <SelectContent className="max-h-[300px]">
                        {accounts?.map((account) => (
                          <SelectItem key={account.id} value={account.id}>
-                           {getAccountDisplayName(account.account_type)} - ${account.balance}
+                           <div className="flex flex-col">
+                             <span className="font-medium">{getAccountDisplayName(account.account_type)}</span>
+                             <span className="text-sm text-muted-foreground">Balance: ${account.balance?.toLocaleString()}</span>
+                           </div>
                          </SelectItem>
                        ))}
                      </SelectContent>
