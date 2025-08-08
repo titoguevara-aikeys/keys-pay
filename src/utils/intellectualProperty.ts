@@ -104,32 +104,65 @@ export class IntellectualPropertyProtection {
       checksum: this.generatePlatformChecksum()
     };
 
-    // Log to console with copyright notice
-    console.error('🚨 INTELLECTUAL PROPERTY VIOLATION DETECTED 🚨');
-    console.error(this.getCopyrightNotice());
-    console.error(this.getIPNotice());
-    console.error('Violation Details:', violation);
+    // Send immediate email alert to owner
+    this.sendSecurityAlert(violation);
     
-    // In production, this would send to security monitoring
-    if (process.env.NODE_ENV === 'production') {
-      // Send violation report to secure endpoint
-      this.reportViolation(violation);
+    // Show warning to intruder
+    this.showIntruderWarning(violationType);
+    
+    // Simple console logging without creating loops
+    if (typeof console !== 'undefined' && console.warn) {
+      console.warn('🚨 SECURITY VIOLATION LOGGED 🚨');
+      console.warn('Platform Owner Notified');
     }
   }
 
-  private static async reportViolation(violation: any): Promise<void> {
+  // Send security alert email to platform owner
+  private static async sendSecurityAlert(violation: any): Promise<void> {
     try {
-      await fetch('/api/security/ip-violation', {
+      const alertData = {
+        violationType: violation.subtype,
+        details: violation.details,
+        timestamp: violation.timestamp,
+        domain: violation.domain,
+        userAgent: violation.userAgent,
+        severity: this.getSeverityLevel(violation.subtype)
+      };
+
+      await fetch('/api/functions/v1/send-security-alert', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Platform-Checksum': this.generatePlatformChecksum()
+          'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY || ''}`
         },
-        body: JSON.stringify(violation)
+        body: JSON.stringify(alertData)
       });
     } catch (error) {
-      console.error('Failed to report IP violation:', error);
+      // Fail silently to avoid revealing security measures
     }
+  }
+
+  // Show warning to potential intruders
+  private static showIntruderWarning(violationType: string): void {
+    // Create and dispatch custom event for warning display
+    const warningEvent = new CustomEvent('showIntruderWarning', {
+      detail: { violationType }
+    });
+    window.dispatchEvent(warningEvent);
+  }
+
+  // Determine severity level for different violation types
+  private static getSeverityLevel(violationType: string): 'critical' | 'high' | 'medium' | 'low' {
+    const severityMap: Record<string, 'critical' | 'high' | 'medium' | 'low'> = {
+      'UNAUTHORIZED_DOMAIN_ACCESS': 'critical',
+      'DEVELOPER_TOOLS_DETECTED': 'high',
+      'CONSOLE_TAMPERING': 'high',
+      'DOMAIN_MANIPULATION': 'critical',
+      'CODE_INSPECTION': 'medium',
+      'REVERSE_ENGINEERING': 'critical'
+    };
+    
+    return severityMap[violationType] || 'medium';
   }
 
   // Initialize IP protection
@@ -177,24 +210,21 @@ export class IntellectualPropertyProtection {
   }
 
   private static setupIntegrityMonitoring(): void {
-    // Monitor for code modification attempts
-    const originalConsole = { ...console };
+    // Monitor for code modification attempts - simplified to avoid infinite loops
+    let tamperingDetected = false;
     
-    // Protect against console manipulation
-    Object.keys(console).forEach(key => {
-      const original = console[key as keyof Console];
-      if (typeof original === 'function') {
-        (console as any)[key] = function(...args: any[]) {
-          if (args.some(arg => typeof arg === 'string' && arg.includes('AIKEYS'))) {
-            IntellectualPropertyProtection.logIPViolation('CONSOLE_TAMPERING', {
-              method: key,
-              arguments: args
-            });
-          }
-          return (original as any).apply(console, args);
-        };
+    // Simple console protection without overriding
+    const checkInterval = setInterval(() => {
+      if (!tamperingDetected && window.console !== console) {
+        tamperingDetected = true;
+        this.logIPViolation('CONSOLE_TAMPERING', {
+          detection: 'Console object modification detected'
+        });
       }
-    });
+    }, 5000);
+    
+    // Clear interval after 1 hour to avoid memory leaks
+    setTimeout(() => clearInterval(checkInterval), 3600000);
   }
 }
 

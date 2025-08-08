@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { Shield, AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { IntellectualPropertyProtection } from '@/utils/intellectualProperty';
+import { IntruderWarning } from '@/components/security/IntruderWarning';
 
 interface PlatformGuardProps {
   children: React.ReactNode;
@@ -16,6 +17,8 @@ interface PlatformGuardProps {
 export const PlatformGuard: React.FC<PlatformGuardProps> = ({ children }) => {
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showWarning, setShowWarning] = useState(false);
+  const [violationType, setViolationType] = useState('');
 
   useEffect(() => {
     const validateAccess = async () => {
@@ -79,6 +82,20 @@ export const PlatformGuard: React.FC<PlatformGuardProps> = ({ children }) => {
     return () => clearInterval(protectionInterval);
   }, []);
 
+  // Listen for intruder warning events
+  useEffect(() => {
+    const handleWarningEvent = (event: CustomEvent) => {
+      setViolationType(event.detail.violationType);
+      setShowWarning(true);
+    };
+
+    window.addEventListener('showIntruderWarning', handleWarningEvent as EventListener);
+    
+    return () => {
+      window.removeEventListener('showIntruderWarning', handleWarningEvent as EventListener);
+    };
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -118,5 +135,14 @@ export const PlatformGuard: React.FC<PlatformGuardProps> = ({ children }) => {
     );
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      <IntruderWarning 
+        violationType={violationType}
+        show={showWarning}
+        onClose={() => setShowWarning(false)}
+      />
+    </>
+  );
 };
