@@ -212,12 +212,14 @@ export const AIFinancialAssistant = () => {
                           <div className="space-y-2">
                             <h4 className="text-sm font-medium">Recommended Actions:</h4>
                             <ul className="space-y-1">
-                              {insight.action_items.map((action, index) => (
-                                <li key={index} className="text-sm text-muted-foreground flex items-center gap-2">
-                                  <div className="w-1 h-1 bg-current rounded-full" />
-                                  {String(action)}
-                                </li>
-                              ))}
+                               {insight.action_items.map((action, index) => (
+                                 <li key={index} className="text-sm text-muted-foreground flex items-center gap-2">
+                                   <div className="w-1 h-1 bg-current rounded-full" />
+                                    {typeof action === 'object' && action !== null ? 
+                                      ((action as any).title || (action as any).description || JSON.stringify(action)) : 
+                                      String(action)}
+                                 </li>
+                               ))}
                             </ul>
                           </div>
                         </CardContent>
