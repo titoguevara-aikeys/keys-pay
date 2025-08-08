@@ -30,29 +30,14 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
   const { toast } = useToast();
 
   const getCardGradient = (type: string, membershipTier?: string) => {
-    // Membership-based card colors
+    // Membership-based card colors - all cards now use the full card background approach
     if (membershipTier) {
-      switch (membershipTier) {
-        case 'platinum':
-          return 'bg-gradient-to-br from-purple-800 via-purple-900 to-black';
-        case 'gold':
-          return 'bg-gradient-to-br from-yellow-600 via-yellow-700 to-orange-800';
-        case 'silver':
-          return 'bg-gradient-to-br from-gray-400 via-gray-500 to-gray-700';
-        default:
-          break;
-      }
+      // Return transparent since we're using background images
+      return 'bg-transparent';
     }
     
-    // Default card type colors for regular members (Keys Pay blue)
-    switch (type) {
-      case 'credit':
-        return 'bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900';
-      case 'debit':
-        return 'bg-gradient-to-br from-blue-600 via-blue-700 to-cyan-800';
-      default:
-        return 'bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800';
-    }
+    // Default card type colors for regular members (Keys Pay blue) - also transparent for consistency
+    return 'bg-transparent';
   };
 
   const getMembershipTier = (type: string) => {

@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useCards, useCreateCard, useUpdateCard } from '@/hooks/useCards';
 import { CreateCardDialog } from '@/components/CreateCardDialog';
 import { VirtualCard } from '@/components/VirtualCard';
+import { MembershipManager } from '@/components/MembershipManager';
 import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
@@ -172,6 +173,9 @@ const Cards = () => {
             </Card>
           )}
         </div>
+
+        {/* Membership Management */}
+        <MembershipManager currentTier="regular" />
 
         {/* Card Benefits */}
         <Card>
