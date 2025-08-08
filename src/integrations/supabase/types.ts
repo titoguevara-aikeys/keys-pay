@@ -258,6 +258,45 @@ export type Database = {
           },
         ]
       }
+      biometric_credentials: {
+        Row: {
+          counter: number | null
+          created_at: string
+          credential_id: string
+          credential_type: string | null
+          id: string
+          last_used: string | null
+          name: string | null
+          public_key: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          counter?: number | null
+          created_at?: string
+          credential_id: string
+          credential_type?: string | null
+          id?: string
+          last_used?: string | null
+          name?: string | null
+          public_key: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          counter?: number | null
+          created_at?: string
+          credential_id?: string
+          credential_type?: string | null
+          id?: string
+          last_used?: string | null
+          name?: string | null
+          public_key?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       budgets: {
         Row: {
           alert_threshold: number | null
@@ -483,6 +522,45 @@ export type Database = {
           },
         ]
       }
+      device_trust: {
+        Row: {
+          created_at: string
+          device_fingerprint: string
+          device_name: string | null
+          expires_at: string | null
+          id: string
+          last_seen: string | null
+          metadata: Json | null
+          trust_level: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_fingerprint: string
+          device_name?: string | null
+          expires_at?: string | null
+          id?: string
+          last_seen?: string | null
+          metadata?: Json | null
+          trust_level?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_fingerprint?: string
+          device_name?: string | null
+          expires_at?: string | null
+          id?: string
+          last_seen?: string | null
+          metadata?: Json | null
+          trust_level?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       family_controls: {
         Row: {
           child_id: string
@@ -569,6 +647,39 @@ export type Database = {
           saving_score?: number
           spending_score?: number
           user_id?: string
+        }
+        Relationships: []
+      }
+      fraud_rules: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean | null
+          risk_score: number | null
+          rule_config: Json
+          rule_name: string
+          rule_type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          risk_score?: number | null
+          rule_config: Json
+          rule_name: string
+          rule_type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          risk_score?: number | null
+          rule_config?: Json
+          rule_name?: string
+          rule_type?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1120,6 +1231,7 @@ export type Database = {
           id: string
           ip_address: unknown | null
           location: string | null
+          metadata: Json | null
           risk_score: number | null
           user_agent: string | null
           user_id: string
@@ -1133,6 +1245,7 @@ export type Database = {
           id?: string
           ip_address?: unknown | null
           location?: string | null
+          metadata?: Json | null
           risk_score?: number | null
           user_agent?: string | null
           user_id: string
@@ -1146,6 +1259,7 @@ export type Database = {
           id?: string
           ip_address?: unknown | null
           location?: string | null
+          metadata?: Json | null
           risk_score?: number | null
           user_agent?: string | null
           user_id?: string
