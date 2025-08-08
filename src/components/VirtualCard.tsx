@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MoreHorizontal, Lock, Unlock, Copy, Settings, Trash } from 'lucide-react';
+import { MoreHorizontal, Lock, Unlock, Copy, Settings, Trash, CreditCard } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { type Card as CardType } from '@/hooks/useCards';
 import { useToast } from '@/hooks/use-toast';
+import { PhysicalCardOrder } from '@/components/PhysicalCardOrder';
 
 interface VirtualCardProps {
   card: CardType;
@@ -28,6 +29,7 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
   onToggleStatus 
 }) => {
   const { toast } = useToast();
+  const [showPhysicalCardOrder, setShowPhysicalCardOrder] = useState(false);
 
   const getCardGradient = (type: string, membershipTier?: string) => {
     // Membership-based card colors - all cards now use the full card background approach
@@ -202,6 +204,10 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
                   <Copy className="h-4 w-4 mr-2" />
                   Copy Details
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setShowPhysicalCardOrder(true)}>
+                  <CreditCard className="h-4 w-4 mr-2" />
+                  Order Physical Card
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="text-red-600">
                   <Trash className="h-4 w-4 mr-2" />
@@ -236,6 +242,17 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
           </div>
         </CardContent>
       </Card>
+
+      {/* Physical Card Order Dialog */}
+      <PhysicalCardOrder
+        open={showPhysicalCardOrder}
+        onClose={() => setShowPhysicalCardOrder(false)}
+        virtualCard={{
+          id: card.id,
+          card_type: card.card_type,
+          card_number: card.card_number
+        }}
+      />
     </div>
   );
 };
