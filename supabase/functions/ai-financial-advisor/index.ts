@@ -122,7 +122,18 @@ async function generateInsights(supabase: any, userId: string) {
     }),
   });
 
+  console.log('OpenAI response status:', response.status);
   const aiResponse = await response.json();
+  console.log('OpenAI response:', JSON.stringify(aiResponse, null, 2));
+
+  if (!response.ok) {
+    throw new Error(`OpenAI API error: ${response.status} - ${aiResponse.error?.message || 'Unknown error'}`);
+  }
+
+  if (!aiResponse.choices || !aiResponse.choices[0] || !aiResponse.choices[0].message) {
+    throw new Error('Invalid OpenAI response format');
+  }
+
   const insightsData = JSON.parse(aiResponse.choices[0].message.content);
 
   // Store insights in database
