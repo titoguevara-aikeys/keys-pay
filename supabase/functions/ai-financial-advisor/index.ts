@@ -134,7 +134,17 @@ async function generateInsights(supabase: any, userId: string) {
     throw new Error('Invalid OpenAI response format');
   }
 
-  const insightsData = JSON.parse(aiResponse.choices[0].message.content);
+  let insightsData;
+  try {
+    insightsData = JSON.parse(aiResponse.choices[0].message.content);
+  } catch (parseError) {
+    console.error('Failed to parse AI response:', aiResponse.choices[0].message.content);
+    throw new Error('Invalid JSON in AI response');
+  }
+
+  if (!insightsData.insights || !Array.isArray(insightsData.insights)) {
+    throw new Error('AI response missing insights array');
+  }
 
   // Store insights in database
   const insightsToStore = insightsData.insights.map((insight: any) => ({
