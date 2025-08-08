@@ -45,7 +45,7 @@ export class PlatformSecurity {
     }, 1000);
 
     // Disable right-click in production
-    if (process.env.NODE_ENV === 'production') {
+    if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
       document.addEventListener('contextmenu', (e) => e.preventDefault());
       document.addEventListener('selectstart', (e) => e.preventDefault());
       document.addEventListener('dragstart', (e) => e.preventDefault());
@@ -100,6 +100,6 @@ export class PlatformSecurity {
 }
 
 // Auto-initialize in production
-if (process.env.NODE_ENV === 'production') {
+if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
   PlatformSecurity.init();
 }

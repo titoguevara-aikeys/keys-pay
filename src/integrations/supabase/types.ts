@@ -1812,6 +1812,10 @@ export type Database = {
         }
         Returns: string
       }
+      parse_client_ip: {
+        Args: { headers: Json }
+        Returns: unknown
+      }
       send_notification: {
         Args: {
           p_user_id: string
