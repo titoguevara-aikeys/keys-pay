@@ -582,6 +582,65 @@ export type Database = {
         }
         Relationships: []
       }
+      physical_card_orders: {
+        Row: {
+          card_issuance_price: number
+          created_at: string
+          delivery_option: string
+          delivery_price: number
+          estimated_delivery: string | null
+          id: string
+          shipping_address: Json
+          status: string
+          stripe_session_id: string | null
+          total_amount: number
+          tracking_number: string | null
+          updated_at: string
+          user_id: string | null
+          virtual_card_id: string | null
+        }
+        Insert: {
+          card_issuance_price?: number
+          created_at?: string
+          delivery_option: string
+          delivery_price: number
+          estimated_delivery?: string | null
+          id?: string
+          shipping_address: Json
+          status?: string
+          stripe_session_id?: string | null
+          total_amount: number
+          tracking_number?: string | null
+          updated_at?: string
+          user_id?: string | null
+          virtual_card_id?: string | null
+        }
+        Update: {
+          card_issuance_price?: number
+          created_at?: string
+          delivery_option?: string
+          delivery_price?: number
+          estimated_delivery?: string | null
+          id?: string
+          shipping_address?: Json
+          status?: string
+          stripe_session_id?: string | null
+          total_amount?: number
+          tracking_number?: string | null
+          updated_at?: string
+          user_id?: string | null
+          virtual_card_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "physical_card_orders_virtual_card_id_fkey"
+            columns: ["virtual_card_id"]
+            isOneToOne: false
+            referencedRelation: "cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
