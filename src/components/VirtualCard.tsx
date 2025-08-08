@@ -131,7 +131,7 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
         >
           {/* Platinum overlay for platinum cards */}
           {getMembershipTier(card.card_type) === 'platinum' && (
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-600 via-slate-500 to-gray-700" style={{mixBlendMode: 'overlay'}}></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-zinc-400 via-slate-300 to-zinc-500 opacity-95"></div>
           )}
           
           {/* Overlay for better text readability */}
