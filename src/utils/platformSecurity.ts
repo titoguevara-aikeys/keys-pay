@@ -99,7 +99,9 @@ export class PlatformSecurity {
   }
 }
 
-// Auto-initialize in production
-if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+// Auto-initialize in production (but not in Lovable development environment)
+if (typeof window !== 'undefined' && 
+    window.location.hostname !== 'localhost' && 
+    !window.location.hostname.includes('lovableproject.com')) {
   PlatformSecurity.init();
 }

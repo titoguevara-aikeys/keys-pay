@@ -33,6 +33,13 @@ export const PlatformGuard: React.FC<PlatformGuardProps> = ({ children }) => {
           'localhost'
         ];
 
+        // Allow Lovable development environment
+        if (currentDomain.includes('lovableproject.com')) {
+          setIsAuthorized(true);
+          setLoading(false);
+          return;
+        }
+
         if (!authorizedDomains.includes(currentDomain)) {
           // Log IP violation for unauthorized domain access
           IntellectualPropertyProtection.logIPViolation('UNAUTHORIZED_DOMAIN_ACCESS', {
@@ -58,9 +65,15 @@ export const PlatformGuard: React.FC<PlatformGuardProps> = ({ children }) => {
 
     validateAccess();
 
-    // Runtime protection against domain changes
+    // Runtime protection against domain changes (skip for Lovable dev environment)
     const protectionInterval = setInterval(() => {
       const currentHost = window.location.hostname;
+      
+      // Skip protection in Lovable development environment
+      if (currentHost.includes('lovableproject.com')) {
+        return;
+      }
+      
       const authorizedDomains = [
         'www.aikeys.ai',
         'www.aikeys-hub.com',
