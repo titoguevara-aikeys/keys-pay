@@ -14,6 +14,8 @@ import { BiometricAuth } from '@/components/security/BiometricAuth';
 import { SecurityDashboard } from '@/components/security/SecurityDashboard';
 import { EnhancedSecurityDashboard } from '@/components/security/EnhancedSecurityDashboard';
 import { RealTimeMonitor } from '@/components/security/RealTimeMonitor';
+import { SecurityCenterDashboard } from '@/components/SecurityCenterDashboard';
+import { AdvancedThreatMonitor } from '@/components/AdvancedThreatMonitor';
 import { useSecuritySettings, useUpdateSecuritySettings } from '@/hooks/useSecuritySettings';
 import Navigation from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
@@ -139,8 +141,9 @@ const Security = () => {
         </Card>
 
         {/* Security Configuration Tabs */}
-          <Tabs defaultValue="enhanced" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-7">
+          <Tabs defaultValue="center" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-8">
+              <TabsTrigger value="center">Security Center</TabsTrigger>
               <TabsTrigger value="enhanced">Enhanced</TabsTrigger>
               <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
               <TabsTrigger value="realtime">Real-time</TabsTrigger>
@@ -149,6 +152,10 @@ const Security = () => {
               <TabsTrigger value="devices">Devices</TabsTrigger>
               <TabsTrigger value="audit">Audit Log</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="center" className="space-y-6">
+              <SecurityCenterDashboard />
+            </TabsContent>
 
             <TabsContent value="enhanced" className="space-y-6">
               <EnhancedSecurityDashboard />
@@ -159,7 +166,7 @@ const Security = () => {
             </TabsContent>
 
             <TabsContent value="realtime" className="space-y-6">
-              <RealTimeMonitor />
+              <AdvancedThreatMonitor />
             </TabsContent>
 
             <TabsContent value="authentication" className="space-y-6">
