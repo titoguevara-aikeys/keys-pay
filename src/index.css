@@ -76,6 +76,23 @@
     --insight-investment: 270 80% 45%;
     --insight-investment-bg: 270 100% 97%;
     --insight-investment-border: 270 50% 85%;
+
+    /* Intelligence Dashboard */
+    --intelligence-primary: 231 98% 65%;
+    --intelligence-secondary: 270 95% 75%;
+    --intelligence-accent: 142 76% 36%;
+    --intelligence-warning: 45 93% 47%;
+    --intelligence-error: 0 84% 60%;
+    
+    /* AI Chat */
+    --chat-user-bg: var(--primary);
+    --chat-ai-bg: var(--muted);
+    --chat-border: var(--border);
+    
+    /* Portfolio Analytics */
+    --portfolio-growth: 142 76% 36%;
+    --portfolio-decline: 0 84% 60%;
+    --portfolio-neutral: 213 27% 84%;
   }
 
   .dark {
