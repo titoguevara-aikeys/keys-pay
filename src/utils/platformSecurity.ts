@@ -13,6 +13,18 @@ export class PlatformSecurity {
       'localhost' // for development
     ];
     
+    // Allow all development and preview environments
+    if (currentDomain.includes('lovableproject.com') || 
+        currentDomain.includes('vercel.app') ||
+        currentDomain.includes('netlify.app') ||
+        currentDomain.includes('preview') ||
+        currentDomain.includes('staging') ||
+        currentDomain === 'localhost' ||
+        currentDomain.startsWith('127.0.0.1') ||
+        currentDomain.startsWith('192.168')) {
+      return true;
+    }
+    
     return authorizedDomains.includes(currentDomain);
   }
 
@@ -99,9 +111,16 @@ export class PlatformSecurity {
   }
 }
 
-// Auto-initialize in production (but not in Lovable development environment)
+// Auto-initialize only in actual production environments
 if (typeof window !== 'undefined' && 
     window.location.hostname !== 'localhost' && 
-    !window.location.hostname.includes('lovableproject.com')) {
+    !window.location.hostname.includes('lovableproject.com') &&
+    !window.location.hostname.includes('vercel.app') &&
+    !window.location.hostname.includes('netlify.app') &&
+    !window.location.hostname.includes('preview') &&
+    !window.location.hostname.includes('staging') &&
+    !window.location.hostname.startsWith('127.0.0.1') &&
+    !window.location.hostname.startsWith('192.168') &&
+    process.env.NODE_ENV === 'production') {
   PlatformSecurity.init();
 }
