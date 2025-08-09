@@ -199,6 +199,48 @@ export type Database = {
         }
         Relationships: []
       }
+      allowances: {
+        Row: {
+          amount: number
+          child_id: string
+          conditions: Json | null
+          created_at: string
+          frequency: string
+          id: string
+          is_active: boolean | null
+          name: string
+          next_payment_date: string
+          parent_id: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          child_id: string
+          conditions?: Json | null
+          created_at?: string
+          frequency?: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          next_payment_date: string
+          parent_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          child_id?: string
+          conditions?: Json | null
+          created_at?: string
+          frequency?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          next_payment_date?: string
+          parent_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bills: {
         Row: {
           account_id: string | null
@@ -383,6 +425,159 @@ export type Database = {
           },
         ]
       }
+      child_savings_goals: {
+        Row: {
+          category: string | null
+          child_id: string
+          completed_at: string | null
+          created_at: string
+          current_amount: number | null
+          goal_name: string
+          id: string
+          image_url: string | null
+          parent_id: string
+          reward_description: string | null
+          status: string | null
+          target_amount: number
+          target_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          child_id: string
+          completed_at?: string | null
+          created_at?: string
+          current_amount?: number | null
+          goal_name: string
+          id?: string
+          image_url?: string | null
+          parent_id: string
+          reward_description?: string | null
+          status?: string | null
+          target_amount: number
+          target_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          child_id?: string
+          completed_at?: string | null
+          created_at?: string
+          current_amount?: number | null
+          goal_name?: string
+          id?: string
+          image_url?: string | null
+          parent_id?: string
+          reward_description?: string | null
+          status?: string | null
+          target_amount?: number
+          target_date?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      child_spending_controls: {
+        Row: {
+          category: string
+          child_id: string
+          created_at: string
+          daily_limit: number | null
+          id: string
+          is_allowed: boolean | null
+          location_restrictions: Json | null
+          monthly_limit: number | null
+          parent_id: string
+          time_restrictions: Json | null
+          updated_at: string
+          weekly_limit: number | null
+        }
+        Insert: {
+          category: string
+          child_id: string
+          created_at?: string
+          daily_limit?: number | null
+          id?: string
+          is_allowed?: boolean | null
+          location_restrictions?: Json | null
+          monthly_limit?: number | null
+          parent_id: string
+          time_restrictions?: Json | null
+          updated_at?: string
+          weekly_limit?: number | null
+        }
+        Update: {
+          category?: string
+          child_id?: string
+          created_at?: string
+          daily_limit?: number | null
+          id?: string
+          is_allowed?: boolean | null
+          location_restrictions?: Json | null
+          monthly_limit?: number | null
+          parent_id?: string
+          time_restrictions?: Json | null
+          updated_at?: string
+          weekly_limit?: number | null
+        }
+        Relationships: []
+      }
+      chores: {
+        Row: {
+          approved_at: string | null
+          category: string | null
+          child_id: string
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          due_date: string | null
+          id: string
+          is_recurring: boolean | null
+          parent_id: string
+          priority: string | null
+          recurrence_pattern: string | null
+          reward_amount: number | null
+          status: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          category?: string | null
+          child_id: string
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          is_recurring?: boolean | null
+          parent_id: string
+          priority?: string | null
+          recurrence_pattern?: string | null
+          reward_amount?: number | null
+          status?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          category?: string | null
+          child_id?: string
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          is_recurring?: boolean | null
+          parent_id?: string
+          priority?: string | null
+          recurrence_pattern?: string | null
+          reward_amount?: number | null
+          status?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       crypto_assets: {
         Row: {
           created_at: string
@@ -561,6 +756,45 @@ export type Database = {
         }
         Relationships: []
       }
+      family_activities: {
+        Row: {
+          activity_type: string
+          amount: number | null
+          child_id: string
+          created_at: string
+          description: string | null
+          family_control_id: string
+          id: string
+          metadata: Json | null
+          parent_id: string
+          title: string
+        }
+        Insert: {
+          activity_type: string
+          amount?: number | null
+          child_id: string
+          created_at?: string
+          description?: string | null
+          family_control_id: string
+          id?: string
+          metadata?: Json | null
+          parent_id: string
+          title: string
+        }
+        Update: {
+          activity_type?: string
+          amount?: number | null
+          child_id?: string
+          created_at?: string
+          description?: string | null
+          family_control_id?: string
+          id?: string
+          metadata?: Json | null
+          parent_id?: string
+          title?: string
+        }
+        Relationships: []
+      }
       family_controls: {
         Row: {
           child_id: string
@@ -604,6 +838,42 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
         ]
+      }
+      financial_education: {
+        Row: {
+          child_id: string
+          completed_at: string | null
+          created_at: string
+          id: string
+          module_name: string
+          module_type: string
+          progress: number | null
+          score: number | null
+          updated_at: string
+        }
+        Insert: {
+          child_id: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          module_name: string
+          module_type: string
+          progress?: number | null
+          score?: number | null
+          updated_at?: string
+        }
+        Update: {
+          child_id?: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          module_name?: string
+          module_type?: string
+          progress?: number | null
+          score?: number | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       financial_health_scores: {
         Row: {
@@ -1832,6 +2102,10 @@ export type Database = {
       parse_client_ip: {
         Args: { headers: Json }
         Returns: unknown
+      }
+      process_allowance_payment: {
+        Args: { p_allowance_id: string }
+        Returns: Json
       }
       send_notification: {
         Args: {
