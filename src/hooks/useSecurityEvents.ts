@@ -45,7 +45,14 @@ export const useSecurityEvents = () => {
         throw fetchError;
       }
 
-      setEvents(data || []);
+      setEvents((data || []).map(event => ({
+        ...event,
+        ip_address: event.ip_address as string || '',
+        user_agent: event.user_agent || '',
+        device_fingerprint: event.device_fingerprint || '',
+        location: event.location || '',
+        metadata: event.metadata || {}
+      })));
     } catch (err) {
       console.error('Failed to fetch security events:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch security events');

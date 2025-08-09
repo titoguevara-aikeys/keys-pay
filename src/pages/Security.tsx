@@ -139,18 +139,27 @@ const Security = () => {
         </Card>
 
         {/* Security Configuration Tabs */}
-          <Tabs defaultValue="dashboard" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-6">
+          <Tabs defaultValue="enhanced" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-7">
+              <TabsTrigger value="enhanced">Enhanced</TabsTrigger>
               <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+              <TabsTrigger value="realtime">Real-time</TabsTrigger>
               <TabsTrigger value="authentication">Authentication</TabsTrigger>
               <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
               <TabsTrigger value="devices">Devices</TabsTrigger>
-              <TabsTrigger value="testing">Testing</TabsTrigger>
               <TabsTrigger value="audit">Audit Log</TabsTrigger>
             </TabsList>
 
+            <TabsContent value="enhanced" className="space-y-6">
+              <EnhancedSecurityDashboard />
+            </TabsContent>
+
             <TabsContent value="dashboard" className="space-y-6">
               <SecurityDashboard />
+            </TabsContent>
+
+            <TabsContent value="realtime" className="space-y-6">
+              <RealTimeMonitor />
             </TabsContent>
 
             <TabsContent value="authentication" className="space-y-6">
