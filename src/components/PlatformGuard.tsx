@@ -35,6 +35,7 @@ export const PlatformGuard: React.FC<PlatformGuardProps> = ({ children }) => {
 
         // Allow all Lovable and development environments
         if (currentDomain.includes('lovableproject.com') || 
+            currentDomain.includes('lovable.app') ||
             currentDomain.includes('vercel.app') ||
             currentDomain.includes('netlify.app') ||
             currentDomain === 'localhost' ||
