@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,6 +16,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [showResend, setShowResend] = useState(false);
   
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
@@ -35,6 +37,9 @@ const Auth = () => {
     if (error) {
       if (error.message.includes('Invalid login credentials')) {
         setError('Invalid email or password. Please check your credentials.');
+      } else if (error.message.toLowerCase().includes('email') && error.message.toLowerCase().includes('confirm')) {
+        setError('Email not confirmed. Please confirm your email to continue.');
+        setShowResend(true);
       } else {
         setError(error.message);
       }
@@ -60,6 +65,29 @@ const Auth = () => {
       setMessage('Check your email for a confirmation link to complete your registration.');
     }
     setLoading(false);
+  };
+
+  const handleResend = async () => {
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const redirectUrl = `${window.location.origin}/`;
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+        options: { emailRedirectTo: redirectUrl }
+      });
+      if (error) {
+        setError(error.message);
+      } else {
+        setMessage('Confirmation email resent. Please check your inbox (and spam).');
+      }
+    } catch (e: any) {
+      setError(e.message || 'Failed to resend email.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -124,8 +152,20 @@ const Auth = () => {
                     <AlertDescription>{error}</AlertDescription>
                   </Alert>
                 )}
+                
+                {showResend && (
+                  <Button
+                    type="button"
+                    onClick={handleResend}
+                    variant="secondary"
+                    className="w-full"
+                    disabled={loading}
+                  >
+                    {loading ? 'Sending...' : 'Resend confirmation email'}
+                  </Button>
+                )}
 
-                <Button 
+                <Button
                   type="submit" 
                   className="w-full" 
                   disabled={loading}
@@ -174,6 +214,18 @@ const Auth = () => {
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>{message}</AlertDescription>
                   </Alert>
+                )}
+                
+                {(showResend || message) && (
+                  <Button
+                    type="button"
+                    onClick={handleResend}
+                    variant="secondary"
+                    className="w-full"
+                    disabled={loading}
+                  >
+                    {loading ? 'Sending...' : 'Resend confirmation email'}
+                  </Button>
                 )}
 
                 <Button 
