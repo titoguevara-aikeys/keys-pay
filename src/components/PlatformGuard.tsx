@@ -21,94 +21,10 @@ export const PlatformGuard: React.FC<PlatformGuardProps> = ({ children }) => {
   const [violationType, setViolationType] = useState('');
 
   useEffect(() => {
-    const validateAccess = async () => {
-      try {
-        // Check domain authorization
-        const currentDomain = window.location.hostname;
-        const authorizedDomains = [
-          'www.aikeys.ai',
-          'www.aikeys-hub.com',
-          'aikeys.ai',
-          'aikeys-hub.com',
-          'localhost'
-        ];
-
-        // Allow all Lovable and development environments
-        if (currentDomain.includes('lovableproject.com') || 
-            currentDomain.includes('lovable.app') ||
-            currentDomain.includes('vercel.app') ||
-            currentDomain.includes('netlify.app') ||
-            currentDomain === 'localhost' ||
-            currentDomain.startsWith('127.0.0.1') ||
-            currentDomain.startsWith('192.168') ||
-            process.env.NODE_ENV === 'development') {
-          setIsAuthorized(true);
-          setLoading(false);
-          return;
-        }
-
-        if (!authorizedDomains.includes(currentDomain)) {
-          // Only log violations for actual production domains
-          if (!currentDomain.includes('preview') && !currentDomain.includes('staging')) {
-            IntellectualPropertyProtection.logIPViolation('UNAUTHORIZED_DOMAIN_ACCESS', {
-              attemptedDomain: currentDomain,
-              authorizedDomains: authorizedDomains,
-              timestamp: new Date().toISOString()
-            });
-          }
-          
-          setIsAuthorized(false);
-          setLoading(false);
-          return;
-        }
-
-        setIsAuthorized(true);
-        setLoading(false);
-      } catch (error) {
-        console.error('Platform validation error:', error);
-        // In case of validation errors, allow access in development
-        if (process.env.NODE_ENV === 'development' || 
-            window.location.hostname.includes('lovableproject.com')) {
-          setIsAuthorized(true);
-        } else {
-          setIsAuthorized(false);
-        }
-        setLoading(false);
-      }
-    };
-
-    validateAccess();
-
-    // Disable runtime protection in development and preview environments
-    if (window.location.hostname.includes('lovableproject.com') ||
-        window.location.hostname.includes('preview') ||
-        window.location.hostname.includes('staging') ||
-        process.env.NODE_ENV === 'development') {
-      return;
-    }
-
-    // Runtime protection only for production domains
-    const protectionInterval = setInterval(() => {
-      const currentHost = window.location.hostname;
-      
-      const authorizedDomains = [
-        'www.aikeys.ai',
-        'www.aikeys-hub.com',
-        'aikeys.ai',
-        'aikeys-hub.com',
-        'localhost'
-      ];
-      
-      if (!authorizedDomains.includes(currentHost)) {
-        IntellectualPropertyProtection.logIPViolation('DOMAIN_MANIPULATION', {
-          currentDomain: currentHost,
-          timestamp: new Date().toISOString()
-        });
-        setIsAuthorized(false);
-      }
-    }, 30000); // Increased interval to reduce aggressive checking
-
-    return () => clearInterval(protectionInterval);
+    // SECURITY DISABLED FOR BETA TESTING
+    setIsAuthorized(true);
+    setLoading(false);
+    console.log('🔓 Platform security disabled for beta testing');
   }, []);
 
   // Listen for intruder warning events

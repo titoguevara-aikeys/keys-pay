@@ -227,8 +227,5 @@ export class IntellectualPropertyProtection {
   }
 }
 
-// Auto-initialize IP protection (but not in Lovable development environment)
-if (typeof window !== 'undefined' && 
-    !window.location.hostname.includes('lovableproject.com')) {
-  IntellectualPropertyProtection.initializeProtection();
-}
+// SECURITY DISABLED FOR BETA TESTING
+// IntellectualPropertyProtection.initializeProtection();

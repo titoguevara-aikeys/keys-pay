@@ -39,18 +39,9 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
   }, []);
 
   const initializeSecurity = async () => {
-    try {
-      // Skip security initialization in Lovable development environment
-      if (window.location.hostname.includes('lovableproject.com')) {
-        return;
-      }
-      
-      await SecurityCore.initializeSecurity();
-      await performSecurityCheck();
-    } catch (error) {
-      console.error('Security initialization failed:', error);
-      // Fail secure - don't block user but log the issue
-    }
+    // SECURITY DISABLED FOR BETA TESTING
+    setSecurityLevel('low');
+    console.log('🔓 Security features disabled for beta testing');
   };
 
   const performSecurityCheck = async () => {
