@@ -12,6 +12,8 @@ import { TrustedDevices } from '@/components/TrustedDevices';
 import { SendAppLink } from '@/components/SendAppLink';
 import { BiometricAuth } from '@/components/security/BiometricAuth';
 import { SecurityDashboard } from '@/components/security/SecurityDashboard';
+import { EnhancedSecurityDashboard } from '@/components/security/EnhancedSecurityDashboard';
+import { RealTimeMonitor } from '@/components/security/RealTimeMonitor';
 import { useSecuritySettings, useUpdateSecuritySettings } from '@/hooks/useSecuritySettings';
 import Navigation from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
