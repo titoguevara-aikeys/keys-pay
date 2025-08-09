@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.ai-financial-advisor]
 verify_jwt = true
+
+[functions.sumsub-issue-token]
+verify_jwt = true
