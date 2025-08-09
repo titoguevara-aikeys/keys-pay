@@ -233,55 +233,113 @@ export class EnterpriseSecurityCore {
 
   // 4. NETWORK SECURITY & ANTI-TAMPERING
   private enableAntiTampering(): void {
-    // Detect DevTools
-    let devtools = { open: false, orientation: null };
+    // Skip aggressive measures in development environment
+    if (window.location.hostname.includes('lovableproject.com')) {
+      return;
+    }
+
+    // Background monitoring for actual threats only
+    this.setupThreatDetection();
+  }
+
+  private setupThreatDetection(): void {
+    // Monitor for actual cloning attempts
+    this.detectSourceCodeTheft();
     
-    setInterval(() => {
-      if (window.outerHeight - window.innerHeight > 200 || 
-          window.outerWidth - window.innerWidth > 200) {
-        if (!devtools.open) {
-          devtools.open = true;
-          this.handleSecurityViolation('DEVELOPER_TOOLS_DETECTED', {
-            windowDimensions: {
-              outer: { width: window.outerWidth, height: window.outerHeight },
-              inner: { width: window.innerWidth, height: window.innerHeight }
-            }
+    // Monitor for automation/scraping attempts
+    this.detectAutomationThreats();
+    
+    // Monitor for data exfiltration attempts
+    this.monitorDataExfiltration();
+  }
+
+  private detectSourceCodeTheft(): void {
+    // Check for mass DOM access patterns (scraping)
+    let domAccessCount = 0;
+    const originalGetElementById = document.getElementById;
+    
+    try {
+      document.getElementById = function(...args) {
+        domAccessCount++;
+        if (domAccessCount > 100) {
+          EnterpriseSecurityCore.getInstance().handleSecurityViolation('POTENTIAL_SCRAPING', {
+            accessCount: domAccessCount,
+            timeframe: '1min'
           });
         }
-      } else {
-        devtools.open = false;
-      }
-    }, 1000);
+        return originalGetElementById.apply(document, args);
+      };
+    } catch (error) {
+      // Silently fail if we can't override
+    }
 
-    // Prevent common tampering
-    if (process.env.NODE_ENV === 'production') {
-      // Disable right-click
-      document.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        this.handleSecurityViolation('CONTEXT_MENU_BLOCKED', {});
-      });
-
-      // Disable text selection
-      document.addEventListener('selectstart', (e) => {
-        e.preventDefault();
-      });
-
-      // Disable drag operations
-      document.addEventListener('dragstart', (e) => {
-        e.preventDefault();
-      });
-
-      // Detect console usage
-      let consoleDetected = false;
-      Object.defineProperty(console, 'log', {
-        get: function() {
-          if (!consoleDetected) {
-            consoleDetected = true;
-            EnterpriseSecurityCore.getInstance().handleSecurityViolation('CONSOLE_ACCESS_DETECTED', {});
-          }
-          return function() {};
+    // Monitor for excessive network requests (data extraction)
+    let requestCount = 0;
+    const startTime = Date.now();
+    
+    try {
+      const originalFetch = window.fetch;
+      window.fetch = async function(...args) {
+        requestCount++;
+        const timeDiff = Date.now() - startTime;
+        
+        if (requestCount > 50 && timeDiff < 60000) { // 50 requests in 1 minute
+          EnterpriseSecurityCore.getInstance().handleSecurityViolation('EXCESSIVE_REQUESTS', {
+            requestCount,
+            timeframe: `${timeDiff}ms`
+          });
         }
+        
+        return originalFetch.apply(window, args);
+      };
+    } catch (error) {
+      // Silently fail if we can't override
+    }
+  }
+
+  private detectAutomationThreats(): void {
+    // Monitor for headless browser patterns
+    const headlessChecks = [
+      () => navigator.webdriver,
+      () => (window as any).chrome && (window as any).chrome.runtime && (window as any).chrome.runtime.onConnect,
+      () => (window as any).callPhantom || (window as any)._phantom,
+      () => navigator.userAgent.includes('HeadlessChrome')
+    ];
+
+    const suspiciousCount = headlessChecks.filter(check => {
+      try {
+        return check();
+      } catch {
+        return false;
+      }
+    }).length;
+    
+    if (suspiciousCount >= 2) {
+      this.handleSecurityViolation('AUTOMATION_DETECTED', {
+        patterns: suspiciousCount,
+        userAgent: navigator.userAgent
       });
+    }
+  }
+
+  private monitorDataExfiltration(): void {
+    // Monitor for localStorage/sessionStorage mass access
+    let storageAccessCount = 0;
+    
+    try {
+      const originalGetItem = localStorage.getItem;
+      
+      localStorage.getItem = function(key) {
+        storageAccessCount++;
+        if (storageAccessCount > 20) {
+          EnterpriseSecurityCore.getInstance().handleSecurityViolation('STORAGE_ENUMERATION', {
+            accessCount: storageAccessCount
+          });
+        }
+        return originalGetItem.call(localStorage, key);
+      };
+    } catch (error) {
+      // Silently fail if we can't override
     }
   }
 
