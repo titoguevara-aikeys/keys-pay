@@ -1234,7 +1234,7 @@ export type Database = {
           metadata: Json | null
           risk_score: number | null
           user_agent: string | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           blocked?: boolean | null
@@ -1248,7 +1248,7 @@ export type Database = {
           metadata?: Json | null
           risk_score?: number | null
           user_agent?: string | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           blocked?: boolean | null
@@ -1262,7 +1262,7 @@ export type Database = {
           metadata?: Json | null
           risk_score?: number | null
           user_agent?: string | null
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -1782,6 +1782,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Database["public"]["Enums"]["app_role"]
       }
+      get_security_metrics: {
+        Args: { p_user_id: string }
+        Returns: Json
+      }
       has_role: {
         Args: { _role: Database["public"]["Enums"]["app_role"] }
         Returns: boolean
@@ -1799,17 +1803,30 @@ export type Database = {
         Returns: boolean
       }
       log_security_event: {
-        Args: {
-          p_user_id: string
-          p_event_type: string
-          p_event_description: string
-          p_ip_address?: unknown
-          p_user_agent?: string
-          p_device_fingerprint?: string
-          p_location?: string
-          p_risk_score?: number
-          p_blocked?: boolean
-        }
+        Args:
+          | {
+              p_event_type: string
+              p_event_description: string
+              p_user_id?: string
+              p_ip_address?: unknown
+              p_user_agent?: string
+              p_device_fingerprint?: string
+              p_location?: string
+              p_risk_score?: number
+              p_blocked?: boolean
+              p_metadata?: Json
+            }
+          | {
+              p_user_id: string
+              p_event_type: string
+              p_event_description: string
+              p_ip_address?: unknown
+              p_user_agent?: string
+              p_device_fingerprint?: string
+              p_location?: string
+              p_risk_score?: number
+              p_blocked?: boolean
+            }
         Returns: string
       }
       parse_client_ip: {
