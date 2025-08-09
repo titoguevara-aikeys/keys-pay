@@ -12,13 +12,13 @@ import {
   Bitcoin,
   Brain,
   BadgeCheck,
-  Send
+  ArrowRightLeft
 } from 'lucide-react';
 
 const Navigation = () => {
   const navItems = [
     { to: '/', icon: Home, label: 'Dashboard' },
-    { to: '/transactions', icon: Send, label: 'Transactions' },
+    { to: '/transactions', icon: ArrowRightLeft, label: 'Transactions' },
     { to: '/crypto', icon: (props: any) => <img src="/lovable-uploads/f90e4085-4c59-4872-9955-14e5aa8b7243.png" alt="Crypto Hub icon" className={props.className || "h-4 w-4"} />, label: 'Crypto Hub' },
     { to: '/ai-assistant', icon: Brain, label: 'AI Assistant' },
     { to: '/super-app', icon: Zap, label: 'Super App' },
