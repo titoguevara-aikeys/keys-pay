@@ -31,6 +31,7 @@ import SuperApp from "./pages/SuperApp";
 import CryptoHub from "./pages/CryptoHub";
 import AIAssistant from "./pages/AIAssistant";
 import AdminPortal from "./pages/AdminPortal";
+import KYC from "./pages/KYC";
 
 const queryClient = new QueryClient();
 
@@ -89,6 +90,11 @@ const App = () => (
               <AdminRoute>
                 <AdminPortal />
               </AdminRoute>
+            } />
+            <Route path="/kyc" element={
+              <ProtectedRoute>
+                <KYC />
+              </ProtectedRoute>
             } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
