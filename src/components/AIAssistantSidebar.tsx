@@ -147,15 +147,27 @@ export function AIAssistantSidebar({ activeTab = 'intelligence', onTabChange }: 
             <SidebarGroupLabel>Quick Actions</SidebarGroupLabel>
             <SidebarGroupContent>
               <div className="space-y-2 p-2">
-                <Button variant="outline" size="sm" className="w-full justify-start">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full justify-start bg-background hover:bg-muted hover:text-foreground border-border text-foreground"
+                >
                   <Sparkles className="h-4 w-4 mr-2" />
                   Generate Insights
                 </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full justify-start bg-background hover:bg-muted hover:text-foreground border-border text-foreground"
+                >
                   <Target className="h-4 w-4 mr-2" />
                   Optimize Portfolio
                 </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full justify-start bg-background hover:bg-muted hover:text-foreground border-border text-foreground"
+                >
                   <MessageCircle className="h-4 w-4 mr-2" />
                   New Chat
                 </Button>
