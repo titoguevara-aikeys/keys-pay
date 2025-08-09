@@ -1,6 +1,6 @@
 import Navigation from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
-import { CryptoWallet } from '@/components/CryptoWallet';
+import { EnhancedCryptoWallet } from '@/components/EnhancedCryptoWallet';
 import { InternationalTransfer } from '@/components/InternationalTransfer';
 import { MerchantPayments } from '@/components/MerchantPayments';
 import { PaymentHub } from '@/components/PaymentHub';
@@ -141,7 +141,7 @@ export default function CryptoHub() {
           </TabsContent>
 
           <TabsContent value="wallet">
-            <CryptoWallet />
+            <EnhancedCryptoWallet />
           </TabsContent>
 
           <TabsContent value="transfers">
