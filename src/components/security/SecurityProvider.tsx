@@ -40,6 +40,11 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
 
   const initializeSecurity = async () => {
     try {
+      // Skip security initialization in Lovable development environment
+      if (window.location.hostname.includes('lovableproject.com')) {
+        return;
+      }
+      
       await SecurityCore.initializeSecurity();
       await performSecurityCheck();
     } catch (error) {
