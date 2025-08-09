@@ -21,6 +21,7 @@ import {
   Plus
 } from 'lucide-react';
 import { useFamilyMembers, useRemoveFamilyMember } from '@/hooks/useFamilyMembers';
+import { useFamilyStats, useFamilyActivity } from '@/hooks/useFamilyActivity';
 import { AddFamilyMemberDialog } from './AddFamilyMemberDialog';
 import { TransferMoneyDialog } from './TransferMoneyDialog';
 import { useToast } from '@/hooks/use-toast';
@@ -34,24 +35,23 @@ export const FamilyDashboard = () => {
   const [showTransferDialog, setShowTransferDialog] = useState(false);
   const [selectedMember, setSelectedMember] = useState<FamilyMember | null>(null);
   const { data: familyMembers, isLoading } = useFamilyMembers();
+  const { data: familyStats } = useFamilyStats();
+  const { data: recentActivity } = useFamilyActivity(10);
   const removeFamilyMember = useRemoveFamilyMember();
 
-  // Calculate real stats from actual data
+  // Use real stats from the database
   const dashboardStats = {
     totalChildren: familyMembers?.length || 0,
-    activeChores: 0, // No chores implemented yet
-    pendingApprovals: 0, // No approvals implemented yet
-    totalSavings: 0, // No savings implemented yet
-    weeklyAllowances: 0, // No allowances implemented yet
-    completedGoals: 0, // No goals implemented yet
-    interestEarned: 0, // No interest implemented yet
-    avgProgressPercentage: 0 // No progress implemented yet
+    activeChores: familyStats?.activeChores || 0,
+    pendingApprovals: familyStats?.pendingApprovals || 0,
+    totalSavings: familyStats?.totalSavings || 0,
+    weeklyAllowances: familyStats?.weeklyAllowances || 0,
+    completedGoals: familyStats?.completedGoals || 0,
+    interestEarned: familyStats?.interestEarned || 0,
+    avgProgressPercentage: familyStats?.avgProgressPercentage || 0
   };
 
-  // No sample activity data - will be empty until features are implemented
-  const recentActivity: any[] = [];
-
-  // No sample events data - will be empty until features are implemented
+  // Mock upcoming events - would be calculated from allowances and chores due dates
   const upcomingEvents: any[] = [];
 
   const handleRemoveMember = async (member: FamilyMember) => {
@@ -204,7 +204,7 @@ export const FamilyDashboard = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {recentActivity.length === 0 ? (
+                {!recentActivity || recentActivity.length === 0 ? (
                   <div className="text-center py-6 text-muted-foreground">
                     <Clock className="h-8 w-8 mx-auto mb-2 opacity-50" />
                     <p>No recent activity</p>
@@ -214,14 +214,20 @@ export const FamilyDashboard = () => {
                   <div className="space-y-3">
                     {recentActivity.map((activity) => (
                       <div key={activity.id} className="flex items-start gap-3 p-3 border rounded-lg">
-                        {getActivityIcon(activity.type)}
+                        {getActivityIcon(activity.activity_type)}
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm">{activity.child}</p>
+                          <p className="font-medium text-sm">
+                            {activity.child_profile?.first_name} {activity.child_profile?.last_name}
+                          </p>
                           <p className="text-sm text-muted-foreground truncate">{activity.description}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-sm font-medium text-green-600">+${activity.amount}</p>
-                          <p className="text-xs text-muted-foreground">{activity.time}</p>
+                          {activity.amount && (
+                            <p className="text-sm font-medium text-green-600">+${activity.amount}</p>
+                          )}
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(activity.created_at).toLocaleDateString()}
+                          </p>
                         </div>
                       </div>
                     ))}

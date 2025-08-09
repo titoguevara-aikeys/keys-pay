@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Plus, Calendar, DollarSign, Star, Clock, CheckCircle, XCircle } from 'lucide-react';
-import { useChores } from '@/hooks/useChores';
+// import { useChores } from '@/hooks/useChores'; // Temporarily disabled until DB is ready
 import { useToast } from '@/hooks/use-toast';
 
 interface Chore {
@@ -28,7 +28,10 @@ interface Chore {
 
 export const ChoreManager = () => {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const { data: chores, isLoading } = useChores();
+  // Temporarily disabled until DB is ready
+  // const { data: chores, isLoading } = useChores();
+  const chores: Chore[] = [];
+  const isLoading = false;
   const { toast } = useToast();
   const [newChore, setNewChore] = useState({
     title: '',
