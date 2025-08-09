@@ -15,11 +15,11 @@ import physicalCardsImage from '@/assets/physical-cards.png';
 interface PhysicalCardOrderProps {
   open: boolean;
   onClose: () => void;
-  virtualCard: {
+  virtualCard?: {
     id: string;
     card_type: string;
     card_number: string;
-  };
+  } | null;
 }
 
 export const PhysicalCardOrder: React.FC<PhysicalCardOrderProps> = ({
@@ -27,6 +27,10 @@ export const PhysicalCardOrder: React.FC<PhysicalCardOrderProps> = ({
   onClose,
   virtualCard
 }) => {
+  // Don't render if no virtual card is provided
+  if (!virtualCard) {
+    return null;
+  }
   const [deliveryOption, setDeliveryOption] = useState('standard');
   const [address, setAddress] = useState({
     street: '',
