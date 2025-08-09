@@ -1,7 +1,7 @@
-import { AIFinancialAssistant } from '@/components/AIFinancialAssistant';
+import { EnhancedAIAssistant } from '@/components/EnhancedAIAssistant';
 
 const AIAssistant = () => {
-  return <AIFinancialAssistant />;
+  return <EnhancedAIAssistant />;
 };
 
 export default AIAssistant;
