@@ -39,11 +39,13 @@ class SupabaseFlagStore implements FlagStore {
 
   async setFlag(key: FlagKey, value: FlagValue, actorUserId?: string): Promise<boolean> {
     try {
-      // Check for env override first
-      const envOverride = process.env[`FLAG_${key.toUpperCase()}`] as FlagValue;
-      if (envOverride) {
-        console.warn(`Cannot set flag ${key}: environment override active`);
-        return false;
+      // Check for env override first (server-side only)
+      if (typeof process !== 'undefined') {
+        const envOverride = process.env[`FLAG_${key.toUpperCase()}`] as FlagValue;
+        if (envOverride) {
+          console.warn(`Cannot set flag ${key}: environment override active`);
+          return false;
+        }
       }
 
       // Upsert the flag
@@ -91,9 +93,10 @@ class SupabaseFlagStore implements FlagStore {
   }
 }
 
-// Initialize flag store based on configuration
+// Initialize flag store based on configuration (server-side only)
 const getFlagStore = (): FlagStore => {
-  const storeType = process.env.FLAG_STORE || 'supabase';
+  // Only use environment variables server-side
+  const storeType = (typeof process !== 'undefined' ? process.env.FLAG_STORE : null) || 'supabase';
   
   switch (storeType) {
     case 'supabase':
@@ -111,10 +114,12 @@ const flagStore = getFlagStore();
  * Priority: Environment override > Database store > null
  */
 export async function getServerFlag(key: FlagKey): Promise<FlagValue | null> {
-  // Check environment override first
-  const envOverride = process.env[`FLAG_${key.toUpperCase()}`] as FlagValue;
-  if (envOverride === 'on' || envOverride === 'off') {
-    return envOverride;
+  // Check environment override first (server-side only)
+  if (typeof process !== 'undefined') {
+    const envOverride = process.env[`FLAG_${key.toUpperCase()}`] as FlagValue;
+    if (envOverride === 'on' || envOverride === 'off') {
+      return envOverride;
+    }
   }
 
   // Fall back to store
@@ -134,13 +139,17 @@ export async function setServerFlag(key: FlagKey, value: FlagValue, actorUserId?
  * Default is true (safe default)
  */
 export function isForceFullMonitoring(): boolean {
-  const forced = process.env.FORCE_FULL_MONITORING;
-  return forced !== 'false'; // Default to true unless explicitly set to 'false'
+  // Only check environment variables server-side, default to safe mode client-side
+  if (typeof process !== 'undefined') {
+    const forced = process.env.FORCE_FULL_MONITORING;
+    return forced !== 'false'; // Default to true unless explicitly set to 'false'
+  }
+  return true; // Safe default for client-side
 }
 
 /**
  * Get current flag store type for debugging
  */
 export function getFlagStoreType(): string {
-  return process.env.FLAG_STORE || 'supabase';
+  return (typeof process !== 'undefined' ? process.env.FLAG_STORE : null) || 'supabase';
 }
