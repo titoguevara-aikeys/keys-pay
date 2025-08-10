@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -46,6 +46,9 @@ import {
   useSendChatMessage
 } from '@/hooks/useAIAssistant';
 import { useInsertDemoData } from '@/hooks/useDemoData';
+import { debounce } from '../../utils/debounce';
+import { useWebWorker } from '@/hooks/useWebWorker';
+import { VirtualizedList } from './VirtualizedList';
 
 interface EnhancedMessage {
   id: string;
@@ -64,7 +67,9 @@ export const EnhancedAIAssistant = () => {
   const [selectedVoice, setSelectedVoice] = useState('alloy');
   const [isProcessing, setIsProcessing] = useState(false);
   const [enhancedMessages, setEnhancedMessages] = useState<EnhancedMessage[]>([]);
-  const [quickActions, setQuickActions] = useState([
+  
+  // Memoized quick actions to prevent re-renders
+  const quickActions = useMemo(() => [
     { icon: BarChart3, label: 'Investment Analysis', prompt: 'Analyze my investment portfolio and suggest optimizations' },
     { icon: DollarSign, label: 'Budget Review', prompt: 'Review my spending patterns and suggest budget improvements' },
     { icon: Target, label: 'Goal Planning', prompt: 'Help me create a financial plan for my savings goals' },
@@ -73,13 +78,14 @@ export const EnhancedAIAssistant = () => {
     { icon: Calculator, label: 'Tax Optimization', prompt: 'Suggest tax optimization strategies for my situation' },
     { icon: Lightbulb, label: 'Money Tips', prompt: 'Give me personalized money-saving tips based on my spending' },
     { icon: Shield, label: 'Risk Assessment', prompt: 'Evaluate my financial risks and suggest protection strategies' }
-  ]);
+  ], []);
 
   const OFFLINE = typeof window !== 'undefined' ? ((localStorage.getItem('aikeys_offline') ?? '1') === '1') : true;
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { postMessage: postToWorker } = useWebWorker();
 
   const { data: insights, isLoading: insightsLoading } = useAIInsights();
   const { data: healthScore, isLoading: healthLoading } = useFinancialHealthScore();
@@ -106,11 +112,21 @@ export const EnhancedAIAssistant = () => {
     scrollToBottom();
   }, [enhancedMessages, chatMessages]);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, []);
 
-  const handleSendMessage = async (messageText: string = chatMessage) => {
+  // Debounced input handler
+  const debouncedChatChange = useMemo(
+    () => debounce((value: string) => setChatMessage(value), 150),
+    []
+  );
+
+  useEffect(() => {
+    return () => debouncedChatChange.cancel();
+  }, [debouncedChatChange]);
+
+  const handleSendMessage = useCallback(async (messageText: string = chatMessage) => {
     if (!messageText.trim()) return;
 
     setIsProcessing(true);
@@ -173,7 +189,7 @@ export const EnhancedAIAssistant = () => {
     } finally {
       setIsProcessing(false);
     }
-  };
+  }, [chatMessage, voiceEnabled, selectedVoice, activeChatSession, sendMessage, generateInsights, insights, healthScore]);
 
   const generateAudio = async (text: string, messageId: string) => {
     try {
@@ -279,10 +295,14 @@ export const EnhancedAIAssistant = () => {
     audio.play();
   };
 
-  const handleQuickAction = (prompt: string) => {
+  const handleQuickAction = useCallback((prompt: string) => {
     setChatMessage(prompt);
     handleSendMessage(prompt);
-  };
+  }, [handleSendMessage]);
+
+  const handleChatInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    debouncedChatChange(e.target.value);
+  }, [debouncedChatChange]);
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -452,7 +472,7 @@ export const EnhancedAIAssistant = () => {
                   <div className="flex-1">
                     <Input
                       value={chatMessage}
-                      onChange={(e) => setChatMessage(e.target.value)}
+                      onChange={handleChatInputChange}
                       placeholder="Ask about your finances, investments, budgeting..."
                       onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                       disabled={isProcessing}
