@@ -1,4 +1,45 @@
-# Welcome to your Lovable project
+# AIKEYS Financial Platform
+
+A comprehensive financial platform built with modern web technologies.
+
+## Seeding an Admin (Supabase)
+
+To promote an existing user to admin status, you'll need to update both the database and auth metadata:
+
+### Getting User ID from Supabase Dashboard
+
+1. Go to your [Supabase Dashboard](https://supabase.com/dashboard)
+2. Navigate to Authentication > Users
+3. Find your user and copy their UUID (User ID)
+
+### Setup Environment Variables
+
+Add these to your `.env` file:
+
+```bash
+# Prefer USER_ID if available (more direct)
+ADMIN_USER_ID=your-user-uuid-here
+# OR use email as fallback
+ADMIN_EMAIL=admin@example.com
+
+# Required Supabase credentials
+SUPABASE_URL=your-supabase-url
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
+
+### Run the Seeding Script
+
+```bash
+npm run seed:admin
+```
+
+This script will:
+- Look up the user by ID (preferred) or email (fallback)
+- Create/update their profile with `is_admin = true`
+- Add admin role to their auth metadata (`roles: ['admin'], is_admin: true`)
+- Print success confirmation
+
+**Security Note**: The service role key is only used server-side in this script, never exposed to the client.
 
 ## Project info
 
