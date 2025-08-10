@@ -8,7 +8,6 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
-import { getServerFlag, isForceFullMonitoring } from '@/lib/flags';
 
 // Server-controlled monitoring intervals (hardened security defaults)
 export const DEFAULT_INTERVAL_MS = 30_000; // 30 seconds - production default
@@ -16,18 +15,30 @@ export const BETA_INTERVAL_MS = 300_000; // 5 minutes - beta only
 
 /**
  * Compute monitoring interval based on server-controlled flags
- * SECURITY: Never reads client state, always server-controlled
+ * SECURITY: Server-controlled only, never reads client state
  */
 export async function computeMonitoringIntervalMs(): Promise<number> {
   try {
+    // Dynamic import to avoid issues if this runs client-side
+    if (typeof window !== 'undefined') {
+      // Client-side fallback - always use safe default
+      return DEFAULT_INTERVAL_MS;
+    }
+    
+    const { isForceFullMonitoring, getServerFlag } = await import('@/lib/flags');
+    
     // Force monitoring takes absolute priority (safe default)
     if (isForceFullMonitoring()) {
+      console.debug('Using production monitoring interval (forced)');
       return DEFAULT_INTERVAL_MS;
     }
     
     // Check server flag only if force monitoring is disabled
     const betaFlag = await getServerFlag('beta_monitoring');
-    return betaFlag === 'on' ? BETA_INTERVAL_MS : DEFAULT_INTERVAL_MS;
+    const interval = betaFlag === 'on' ? BETA_INTERVAL_MS : DEFAULT_INTERVAL_MS;
+    
+    console.info(`Security monitoring interval: ${interval}ms (beta: ${betaFlag})`);
+    return interval;
   } catch (error) {
     console.error('Failed to compute monitoring interval, using safe default:', error);
     return DEFAULT_INTERVAL_MS; // Always fail safe to production interval

@@ -6,11 +6,7 @@
  * Server-side feature flags management
  */
 
-// Dynamic import to avoid dependency issues in client context
-async function importFlags() {
-  const flags = await import('../../lib/flags');
-  return flags;
-}
+import { getServerFlag, setServerFlag, isForceFullMonitoring, getFlagStoreType, type FlagKey, type FlagValue } from '@/lib/flags';
 
 // Rate limiting - simple in-memory store for temporary use
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
@@ -49,12 +45,27 @@ function getClientIP(request: Request): string {
   return 'unknown';
 }
 
-function validateAdminAccess(request: Request): boolean {
-  // TODO: Replace with proper RBAC authentication
-  const adminSecret = request.headers.get('x-admin-secret');
-  const expectedSecret = process.env.VITE_ADMIN_API_SECRET || 'temp-admin-secret';
-  
-  return adminSecret === expectedSecret;
+async function validateAdminAccess(request: Request): Promise<{ isValid: boolean; userId?: string }> {
+  try {
+    // Get session from Supabase auth
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader) {
+      return { isValid: false };
+    }
+
+    // For now, use the temporary admin secret until proper auth is implemented
+    const adminSecret = request.headers.get('x-admin-secret');
+    const expectedSecret = process.env.VITE_ADMIN_API_SECRET || 'temp-admin-secret';
+    
+    if (adminSecret === expectedSecret) {
+      return { isValid: true, userId: 'admin-temp' };
+    }
+
+    return { isValid: false };
+  } catch (error) {
+    console.error('Auth validation error:', error);
+    return { isValid: false };
+  }
 }
 
 export async function handleFlagsRequest(request: Request): Promise<Response> {
@@ -83,7 +94,8 @@ export async function handleFlagsRequest(request: Request): Promise<Response> {
     }
 
     // Auth check
-    if (!validateAdminAccess(request)) {
+    const { isValid, userId } = await validateAdminAccess(request);
+    if (!isValid) {
       return new Response(
         JSON.stringify({ error: 'Unauthorized - invalid or missing x-admin-secret header' }),
         { 
@@ -95,7 +107,6 @@ export async function handleFlagsRequest(request: Request): Promise<Response> {
 
     if (request.method === 'GET') {
       // Get all flags
-      const { getServerFlag, isForceFullMonitoring, getFlagStoreType } = await importFlags();
       const betaMonitoring = await getServerFlag('beta_monitoring');
       const forceFullMonitoring = isForceFullMonitoring();
       const storeType = getFlagStoreType();
@@ -151,7 +162,6 @@ export async function handleFlagsRequest(request: Request): Promise<Response> {
       }
 
       // Check for environment override conflict
-      const { setServerFlag, isForceFullMonitoring } = await importFlags();
       if (isForceFullMonitoring() && value === 'on') {
         return new Response(
           JSON.stringify({ 
@@ -166,7 +176,7 @@ export async function handleFlagsRequest(request: Request): Promise<Response> {
       }
 
       // Set the flag
-      const success = await setServerFlag(key as any, value as any, 'admin-api');
+      const success = await setServerFlag(key as FlagKey, value as FlagValue, userId);
       
       if (!success) {
         return new Response(

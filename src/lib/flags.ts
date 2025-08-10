@@ -3,135 +3,111 @@
  * © 2025 AIKEYS Financial Technologies. All Rights Reserved.
  * 
  * ENTERPRISE SECURITY MODULE - SERVER-ONLY FLAGS
- * Compliant with Zero Trust Architecture
+ * Uses Supabase Service Role for secure server-side operations
  */
 
-import { supabase } from '@/integrations/supabase/client';
+import { getServiceRoleClient } from './supabase-client';
 
 export type FlagValue = 'on' | 'off';
 export type FlagKey = 'beta_monitoring';
 
-interface FlagStore {
-  getFlag(key: FlagKey): Promise<FlagValue | null>;
-  setFlag(key: FlagKey, value: FlagValue, actorUserId?: string): Promise<boolean>;
-}
-
-class SupabaseFlagStore implements FlagStore {
-  async getFlag(key: FlagKey): Promise<FlagValue | null> {
-    try {
-      const { data, error } = await supabase
-        .from('admin_settings')
-        .select('value')
-        .eq('key', key)
-        .maybeSingle();
-      
-      if (error) {
-        console.error('Failed to read flag from Supabase:', error);
-        return null;
-      }
-      
-      return data?.value as FlagValue || null;
-    } catch (error) {
-      console.error('Supabase flag store error:', error);
-      return null;
-    }
-  }
-
-  async setFlag(key: FlagKey, value: FlagValue, actorUserId?: string): Promise<boolean> {
-    try {
-      // Check for env override first (server-side only)
-      if (typeof process !== 'undefined') {
-        const envOverride = process.env[`FLAG_${key.toUpperCase()}`] as FlagValue;
-        if (envOverride) {
-          console.warn(`Cannot set flag ${key}: environment override active`);
-          return false;
-        }
-      }
-
-      // Upsert the flag
-      const { error: upsertError } = await supabase
-        .from('admin_settings')
-        .upsert({
-          key,
-          value,
-          updated_by: actorUserId,
-          updated_at: new Date().toISOString()
-        });
-
-      if (upsertError) {
-        console.error('Failed to set flag in Supabase:', upsertError);
-        return false;
-      }
-
-      // Write audit log
-      await this.writeAuditLog('flag_changed', {
-        key,
-        value,
-        actor_user_id: actorUserId,
-        timestamp: new Date().toISOString()
-      });
-
-      return true;
-    } catch (error) {
-      console.error('Supabase flag store set error:', error);
-      return false;
-    }
-  }
-
-  private async writeAuditLog(action: string, meta: any): Promise<void> {
-    try {
-      await supabase
-        .from('admin_audit')
-        .insert({
-          action,
-          meta,
-          created_at: new Date().toISOString()
-        });
-    } catch (error) {
-      console.error('Failed to write audit log:', error);
-    }
-  }
-}
-
-// Initialize flag store based on configuration (server-side only)
-const getFlagStore = (): FlagStore => {
-  // Only use environment variables server-side
-  const storeType = (typeof process !== 'undefined' ? process.env.FLAG_STORE : null) || 'supabase';
-  
-  switch (storeType) {
-    case 'supabase':
-      return new SupabaseFlagStore();
-    default:
-      console.warn(`Unknown flag store type: ${storeType}, defaulting to Supabase`);
-      return new SupabaseFlagStore();
-  }
-};
-
-const flagStore = getFlagStore();
-
 /**
  * Get a server-side feature flag value
  * Priority: Environment override > Database store > null
+ * SECURITY: Only use on server-side, never expose service role to client
  */
 export async function getServerFlag(key: FlagKey): Promise<FlagValue | null> {
-  // Check environment override first (server-side only)
-  if (typeof process !== 'undefined') {
+  try {
+    // Check environment override first (highest priority)
     const envOverride = process.env[`FLAG_${key.toUpperCase()}`] as FlagValue;
     if (envOverride === 'on' || envOverride === 'off') {
+      console.debug(`Flag ${key} overridden by environment: ${envOverride}`);
       return envOverride;
     }
-  }
 
-  // Fall back to store
-  return await flagStore.getFlag(key);
+    // Fall back to database store
+    const supabase = getServiceRoleClient();
+    const { data, error } = await supabase
+      .from('admin_settings')
+      .select('value')
+      .eq('key', key)
+      .maybeSingle();
+    
+    if (error) {
+      console.error('Failed to read flag from Supabase:', error);
+      return null;
+    }
+    
+    const value = data?.value as FlagValue || null;
+    console.debug(`Flag ${key} read from database: ${value}`);
+    return value;
+  } catch (error) {
+    console.error('Server flag store error:', error);
+    return null;
+  }
 }
 
 /**
  * Set a server-side feature flag value
  * Returns false if environment override is active
+ * SECURITY: Only use on server-side with proper admin authorization
  */
-export async function setServerFlag(key: FlagKey, value: FlagValue, actorUserId?: string): Promise<boolean> {
-  return await flagStore.setFlag(key, value, actorUserId);
+export async function setServerFlag(
+  key: FlagKey, 
+  value: FlagValue, 
+  actorUserId?: string
+): Promise<boolean> {
+  try {
+    // Check for env override first - cannot override environment flags
+    const envOverride = process.env[`FLAG_${key.toUpperCase()}`];
+    if (envOverride) {
+      console.warn(`Cannot set flag ${key}: environment override active`);
+      return false;
+    }
+
+    const supabase = getServiceRoleClient();
+    
+    // Upsert the flag
+    const { error: upsertError } = await supabase
+      .from('admin_settings')
+      .upsert({
+        key,
+        value,
+        updated_by: actorUserId,
+        updated_at: new Date().toISOString()
+      });
+
+    if (upsertError) {
+      console.error('Failed to set flag in Supabase:', upsertError);
+      return false;
+    }
+
+    // Write audit log
+    const { error: auditError } = await supabase
+      .from('admin_audit')
+      .insert({
+        action: 'flag_changed',
+        meta: {
+          key,
+          value,
+          actor_user_id: actorUserId,
+          timestamp: new Date().toISOString()
+        },
+        actor: actorUserId,
+        created_at: new Date().toISOString()
+      });
+
+    if (auditError) {
+      console.error('Failed to write audit log:', auditError);
+      // Don't fail the operation if audit log fails
+    }
+
+    console.info(`Admin flag changed: ${key}=${value} by user ${actorUserId}`);
+    return true;
+  } catch (error) {
+    console.error('Server flag store set error:', error);
+    return false;
+  }
 }
 
 /**
@@ -139,17 +115,13 @@ export async function setServerFlag(key: FlagKey, value: FlagValue, actorUserId?
  * Default is true (safe default)
  */
 export function isForceFullMonitoring(): boolean {
-  // Only check environment variables server-side, default to safe mode client-side
-  if (typeof process !== 'undefined') {
-    const forced = process.env.FORCE_FULL_MONITORING;
-    return forced !== 'false'; // Default to true unless explicitly set to 'false'
-  }
-  return true; // Safe default for client-side
+  const forced = process.env.FORCE_FULL_MONITORING;
+  return forced !== 'false'; // Default to true unless explicitly set to 'false'
 }
 
 /**
  * Get current flag store type for debugging
  */
 export function getFlagStoreType(): string {
-  return (typeof process !== 'undefined' ? process.env.FLAG_STORE : null) || 'supabase';
+  return process.env.FLAG_STORE || 'supabase';
 }
