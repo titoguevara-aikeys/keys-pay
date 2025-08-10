@@ -32,7 +32,7 @@ export default function CryptoHub() {
         {/* Hero Section */}
         <div className="text-center space-y-4">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <img src="/lovable-uploads/ad78c06f-06c1-4a99-b7fc-aefe5def66cc.png" alt="Keys Logo" className="h-8 w-8" />
+            <img src="/lovable-uploads/4326dc21-0939-4654-8586-fba79c3b8f84.png?v=2" alt="AIKeys Logo" className="h-8 w-8" />
             <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
               Keys Crypto Hub
             </h1>
@@ -65,7 +65,7 @@ export default function CryptoHub() {
                   <p className="text-sm font-medium text-muted-foreground">Supported Cryptos</p>
                   <p className="text-2xl font-bold">50+</p>
                 </div>
-                <img src="/lovable-uploads/ad78c06f-06c1-4a99-b7fc-aefe5def66cc.png" alt="Keys Logo" className="h-8 w-8" />
+                <img src="/lovable-uploads/4326dc21-0939-4654-8586-fba79c3b8f84.png?v=2" alt="AIKeys Logo" className="h-8 w-8" />
               </div>
             </CardContent>
           </Card>
