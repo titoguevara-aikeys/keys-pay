@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -75,6 +75,8 @@ export const EnhancedAIAssistant = () => {
     { icon: Shield, label: 'Risk Assessment', prompt: 'Evaluate my financial risks and suggest protection strategies' }
   ]);
 
+  const OFFLINE = typeof window !== 'undefined' ? ((localStorage.getItem('aikeys_offline') ?? '1') === '1') : true;
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -113,27 +115,22 @@ export const EnhancedAIAssistant = () => {
 
     setIsProcessing(true);
     try {
-      // Send to enhanced AI endpoint
-      const { data, error } = await supabase.functions.invoke('ai-financial-chat', {
-        body: {
-          message: messageText,
-          context: {
-            insights: insights?.slice(0, 5),
-            healthScore,
-            recentTransactions: [], // Would be populated with real data
-            budgets: [] // Would be populated with real data
-          },
-          userProfile: {
-            riskTolerance: 'moderate',
-            age: 30,
-            goals: ['retirement', 'house_purchase']
+      // Send to enhanced AI endpoint (mocked offline)
+      let aiResponse = '';
+      if (OFFLINE) {
+        await new Promise((r) => setTimeout(r, 30));
+        aiResponse = `Here’s a quick take: ${messageText}\n\n• Keep emergency fund at 3–6 months.\n• Allocate new savings 60/30/10 (invest/savings/fun).\n• Want me to draft a plan?`;
+      } else {
+        const { data, error } = await supabase.functions.invoke('ai-financial-chat', {
+          body: {
+            message: messageText,
+            context: { insights: insights?.slice(0, 5), healthScore, recentTransactions: [], budgets: [] },
+            userProfile: { riskTolerance: 'moderate', age: 30, goals: ['retirement', 'house_purchase'] }
           }
-        }
-      });
-
-      if (error) throw error;
-
-      const aiResponse = data.response || data.fallbackResponse;
+        });
+        if (error) throw error;
+        aiResponse = data.response || data.fallbackResponse;
+      }
       
       // Add to enhanced messages
       const userMessage: EnhancedMessage = {
@@ -180,22 +177,14 @@ export const EnhancedAIAssistant = () => {
 
   const generateAudio = async (text: string, messageId: string) => {
     try {
+      if (OFFLINE) return; // Skip TTS in offline mode
       const { data, error } = await supabase.functions.invoke('text-to-speech', {
         body: { text, voice: selectedVoice }
       });
-
       if (error) throw error;
-
-      const audioBlob = new Blob([Uint8Array.from(atob(data.audioContent), c => c.charCodeAt(0))], {
-        type: 'audio/mpeg'
-      });
+      const audioBlob = new Blob([Uint8Array.from(atob(data.audioContent), c => c.charCodeAt(0))], { type: 'audio/mpeg' });
       const audioUrl = URL.createObjectURL(audioBlob);
-
-      setEnhancedMessages(prev => 
-        prev.map(msg => 
-          msg.id === messageId ? { ...msg, audioUrl } : msg
-        )
-      );
+      setEnhancedMessages(prev => prev.map(msg => msg.id === messageId ? { ...msg, audioUrl } : msg));
     } catch (error) {
       console.error('Error generating audio:', error);
     }
@@ -241,19 +230,24 @@ export const EnhancedAIAssistant = () => {
       reader.onload = async (e) => {
         const base64Audio = (e.target?.result as string).split(',')[1];
         
-        const { data, error } = await supabase.functions.invoke('voice-to-text', {
-          body: { audio: base64Audio }
-        });
-
-        if (error) throw error;
-
-        const transcribedText = data.text;
-        setChatMessage(transcribedText);
-        toast.success('Voice transcribed!');
-        
-        // Auto-send if voice mode is enabled
-        if (voiceEnabled && transcribedText.trim()) {
-          await handleSendMessage(transcribedText);
+        if (OFFLINE) {
+          const transcribedText = '[voice] Quick budget check';
+          setChatMessage(transcribedText);
+          toast.success('Voice transcribed!');
+          if (voiceEnabled && transcribedText.trim()) {
+            await handleSendMessage(transcribedText);
+          }
+        } else {
+          const { data, error } = await supabase.functions.invoke('voice-to-text', {
+            body: { audio: base64Audio }
+          });
+          if (error) throw error;
+          const transcribedText = data.text;
+          setChatMessage(transcribedText);
+          toast.success('Voice transcribed!');
+          if (voiceEnabled && transcribedText.trim()) {
+            await handleSendMessage(transcribedText);
+          }
         }
       };
       reader.readAsDataURL(audioBlob);

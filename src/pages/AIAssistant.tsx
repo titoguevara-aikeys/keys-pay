@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { EnhancedAIAssistant } from '@/components/EnhancedAIAssistant';
-import { AIFinancialAssistant } from '@/components/AIFinancialAssistant';
-import { AIKEYSIntelligence } from '@/components/AIKEYSIntelligence';
-import { AIKEYSFinancial } from '@/components/AIKEYSFinancial';
-import { AIKEYSWealth } from '@/components/AIKEYSWealth';
+const EnhancedAIAssistant = lazy(() => import('@/components/EnhancedAIAssistant').then(m => ({ default: m.EnhancedAIAssistant })));
+const AIFinancialAssistant = lazy(() => import('@/components/AIFinancialAssistant').then(m => ({ default: m.AIFinancialAssistant })));
+const AIKEYSIntelligence = lazy(() => import('@/components/AIKEYSIntelligence').then(m => ({ default: m.AIKEYSIntelligence })));
+const AIKEYSFinancial = lazy(() => import('@/components/AIKEYSFinancial').then(m => ({ default: m.AIKEYSFinancial })));
+const AIKEYSWealth = lazy(() => import('@/components/AIKEYSWealth').then(m => ({ default: m.AIKEYSWealth })));
 import { AIAssistantSidebar } from '@/components/AIAssistantSidebar';
+import AIAssistantSkeleton from '@/components/skeletons/AIAssistantSkeleton';
 import { Home, Menu, X } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
@@ -21,10 +22,10 @@ const AIAssistant = () => {
     setActiveTab(tab);
   }, [searchParams]);
 
-  const handleTabChange = (tab: string) => {
+  const handleTabChange = useCallback((tab: string) => {
     setActiveTab(tab);
     setSearchParams({ tab });
-  };
+  }, [setSearchParams]);
 
   return (
     <SidebarProvider defaultOpen={true}>
@@ -66,23 +67,33 @@ const AIAssistant = () => {
                 </TabsList>
 
                 <TabsContent value="intelligence">
-                  <AIKEYSIntelligence />
+                  <Suspense fallback={<div className="p-6 text-sm text-muted-foreground">Loading Intelligence...</div>}>
+                    <AIKEYSIntelligence />
+                  </Suspense>
                 </TabsContent>
 
                 <TabsContent value="assistant">
-                  <AIFinancialAssistant />
+                  <Suspense fallback={<div className="p-6 text-sm text-muted-foreground">Loading Assistant...</div>}>
+                    <AIFinancialAssistant />
+                  </Suspense>
                 </TabsContent>
 
                 <TabsContent value="financial">
-                  <AIKEYSFinancial />
+                  <Suspense fallback={<div className="p-6 text-sm text-muted-foreground">Loading Financial Services...</div>}>
+                    <AIKEYSFinancial />
+                  </Suspense>
                 </TabsContent>
 
                 <TabsContent value="wealth">
-                  <AIKEYSWealth />
+                  <Suspense fallback={<div className="p-6 text-sm text-muted-foreground">Loading Wealth Management...</div>}>
+                    <AIKEYSWealth />
+                  </Suspense>
                 </TabsContent>
 
                 <TabsContent value="enhanced">
-                  <EnhancedAIAssistant />
+                  <Suspense fallback={<div className="p-6 text-sm text-muted-foreground">Loading Enhanced Chat...</div>}>
+                    <EnhancedAIAssistant />
+                  </Suspense>
                 </TabsContent>
               </Tabs>
             </div>
