@@ -8,6 +8,31 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
+import { getServerFlag, isForceFullMonitoring } from '@/lib/flags';
+
+// Server-controlled monitoring intervals (hardened security defaults)
+export const DEFAULT_INTERVAL_MS = 30_000; // 30 seconds - production default
+export const BETA_INTERVAL_MS = 300_000; // 5 minutes - beta only
+
+/**
+ * Compute monitoring interval based on server-controlled flags
+ * SECURITY: Never reads client state, always server-controlled
+ */
+export async function computeMonitoringIntervalMs(): Promise<number> {
+  try {
+    // Force monitoring takes absolute priority (safe default)
+    if (isForceFullMonitoring()) {
+      return DEFAULT_INTERVAL_MS;
+    }
+    
+    // Check server flag only if force monitoring is disabled
+    const betaFlag = await getServerFlag('beta_monitoring');
+    return betaFlag === 'on' ? BETA_INTERVAL_MS : DEFAULT_INTERVAL_MS;
+  } catch (error) {
+    console.error('Failed to compute monitoring interval, using safe default:', error);
+    return DEFAULT_INTERVAL_MS; // Always fail safe to production interval
+  }
+}
 
 export interface SecurityEvent {
   type: string;
@@ -697,37 +722,6 @@ export class EnterpriseSecurityCore {
   }
 }
 
-// Monitoring interval constants
-export const DEFAULT_INTERVAL_MS = 30_000; // 30 seconds (production default)
-export const BETA_INTERVAL_MS = 300_000; // 5 minutes (beta testing)
-
-/**
- * Compute the monitoring interval based on server-controlled flags
- * Safe default: 30 seconds unless server explicitly enables beta mode
- */
-export async function computeMonitoringIntervalMs(): Promise<number> {
-  try {
-    // Dynamic import to avoid circular dependency
-    const { getServerFlag, isForceFullMonitoring } = await import('@/lib/flags');
-    
-    // Force full monitoring overrides everything
-    if (isForceFullMonitoring()) {
-      return DEFAULT_INTERVAL_MS;
-    }
-    
-    // Check server-side beta flag
-    const betaFlag = await getServerFlag('beta_monitoring');
-    if (betaFlag === 'on') {
-      return BETA_INTERVAL_MS;
-    }
-    
-    // Default to production interval
-    return DEFAULT_INTERVAL_MS;
-  } catch (error) {
-    console.error('Failed to compute monitoring interval, using safe default:', error);
-    return DEFAULT_INTERVAL_MS; // Safe fallback
-  }
-}
 
 // Initialize singleton
 export const SecurityCore = EnterpriseSecurityCore.getInstance();

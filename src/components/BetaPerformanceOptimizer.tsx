@@ -41,7 +41,12 @@ export const BetaPerformanceOptimizer = () => {
       // TODO: Replace with proper RBAC authentication
       const adminSecret = import.meta.env.VITE_ADMIN_API_SECRET || 'temp-admin-secret';
       
-      const response = await fetch('/api/admin/flags', {
+      // Use Supabase edge function for API calls
+      const apiUrl = import.meta.env.PROD 
+        ? '/functions/v1/admin-flags'
+        : '/api/admin/flags';
+      
+      const response = await fetch(apiUrl, {
         method: 'GET',
         headers: {
           'x-admin-secret': adminSecret,
@@ -74,7 +79,11 @@ export const BetaPerformanceOptimizer = () => {
       // TODO: Replace with proper RBAC authentication
       const adminSecret = import.meta.env.VITE_ADMIN_API_SECRET || 'temp-admin-secret';
       
-      const response = await fetch('/api/admin/flags', {
+      const apiUrl = import.meta.env.PROD 
+        ? '/functions/v1/admin-flags'
+        : '/api/admin/flags';
+      
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
