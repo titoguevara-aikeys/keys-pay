@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -36,8 +36,9 @@ import { useToast } from '@/hooks/use-toast';
 import { VirtualCard } from './VirtualCard';
 import { PhysicalCardOrder } from './PhysicalCardOrder';
 import { CreateCardDialog } from './CreateCardDialog';
+import { CardsSkeleton } from './skeletons/CardsSkeleton';
 
-const EnhancedCardManagement = () => {
+const EnhancedCardManagementComponent = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [showCardNumbers, setShowCardNumbers] = useState(false);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
@@ -53,38 +54,67 @@ const EnhancedCardManagement = () => {
   const updateCard = useUpdateCard();
   const { toast } = useToast();
 
-  // Mock data for enhanced features
-  const cardStats = {
+  // Memoized callbacks to prevent unnecessary re-renders
+  const handleStatusChange = useCallback((value: string) => {
+    setCardFilters(prev => ({ ...prev, status: value }));
+  }, []);
+
+  const handleTypeChange = useCallback((value: string) => {
+    setCardFilters(prev => ({ ...prev, type: value }));
+  }, []);
+
+  const handleShowCardNumbers = useCallback(() => {
+    setShowCardNumbers(!showCardNumbers);
+  }, [showCardNumbers]);
+
+  const handleCreateDialog = useCallback(() => {
+    setShowCreateDialog(true);
+  }, []);
+
+  const handlePhysicalOrder = useCallback(() => {
+    setShowPhysicalOrder(true);
+  }, []);
+
+  const handleCloseCreateDialog = useCallback(() => {
+    setShowCreateDialog(false);
+  }, []);
+
+  const handleClosePhysicalOrder = useCallback(() => {
+    setShowPhysicalOrder(false);
+  }, []);
+
+  // Memoized data to prevent unnecessary recalculations
+  const cardStats = useMemo(() => ({
     totalCards: cards?.length || 0,
     activeCards: cards?.filter(c => c.card_status === 'active').length || 0,
     monthlySpending: 2847.50,
     pendingTransactions: 3,
     securityScore: 95
-  };
+  }), [cards]);
 
-  const recentTransactions = [
+  const recentTransactions = useMemo(() => [
     { id: '1', merchant: 'Amazon', amount: 89.99, date: '2024-01-08', status: 'completed' },
     { id: '2', merchant: 'Starbucks', amount: 5.75, date: '2024-01-08', status: 'completed' },
     { id: '3', merchant: 'Spotify', amount: 9.99, date: '2024-01-07', status: 'completed' },
     { id: '4', merchant: 'Uber', amount: 24.50, date: '2024-01-07', status: 'pending' }
-  ];
+  ], []);
 
-  const cardTypes = [
+  const cardTypes = useMemo(() => [
     { value: 'debit', label: 'Debit Card', description: 'Direct account access' },
     { value: 'credit', label: 'Credit Card', description: 'Credit line access' },
     { value: 'prepaid', label: 'Prepaid Card', description: 'Preloaded balance' },
     { value: 'virtual', label: 'Virtual Card', description: 'Online only' },
     { value: 'family', label: 'Family Card', description: 'Shared access' }
-  ];
+  ], []);
 
-  const securityFeatures = [
+  const securityFeatures = useMemo(() => [
     { name: 'Real-time Fraud Protection', enabled: true, icon: Shield },
     { name: 'Mobile Notifications', enabled: true, icon: Smartphone },
     { name: 'Geographic Blocking', enabled: false, icon: Globe },
     { name: 'Merchant Category Controls', enabled: true, icon: ShoppingCart }
-  ];
+  ], []);
 
-  const handleToggleCard = async (cardId: string, currentStatus: string) => {
+  const handleToggleCard = useCallback(async (cardId: string, currentStatus: string) => {
     const newStatus = currentStatus === 'active' ? 'frozen' : 'active';
     
     try {
@@ -104,27 +134,18 @@ const EnhancedCardManagement = () => {
         variant: 'destructive',
       });
     }
-  };
+  }, [updateCard, toast]);
 
-  const filteredCards = cards?.filter(card => {
-    if (cardFilters.status !== 'all' && card.card_status !== cardFilters.status) return false;
-    if (cardFilters.type !== 'all' && card.card_type !== cardFilters.type) return false;
-    return true;
-  }) || [];
+  const filteredCards = useMemo(() => {
+    return cards?.filter(card => {
+      if (cardFilters.status !== 'all' && card.card_status !== cardFilters.status) return false;
+      if (cardFilters.type !== 'all' && card.card_type !== cardFilters.type) return false;
+      return true;
+    }) || [];
+  }, [cards, cardFilters.status, cardFilters.type]);
 
   if (cardsLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-muted rounded w-64"></div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-24 bg-muted rounded"></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+    return <CardsSkeleton />;
   }
 
   return (
@@ -136,11 +157,11 @@ const EnhancedCardManagement = () => {
           <p className="text-muted-foreground">Manage your virtual and physical payment cards</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setShowPhysicalOrder(true)}>
+          <Button variant="outline" onClick={handlePhysicalOrder}>
             <Package className="h-4 w-4 mr-2" />
             Order Physical
           </Button>
-          <Button onClick={() => setShowCreateDialog(true)}>
+          <Button onClick={handleCreateDialog}>
             <Plus className="h-4 w-4 mr-2" />
             New Card
           </Button>
@@ -231,11 +252,11 @@ const EnhancedCardManagement = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <Button variant="outline" className="h-20 flex-col" onClick={() => setShowCreateDialog(true)}>
+                  <Button variant="outline" className="h-20 flex-col" onClick={handleCreateDialog}>
                     <Plus className="h-6 w-6 mb-2" />
                     Create Card
                   </Button>
-                  <Button variant="outline" className="h-20 flex-col" onClick={() => setShowPhysicalOrder(true)}>
+                  <Button variant="outline" className="h-20 flex-col" onClick={handlePhysicalOrder}>
                     <Package className="h-6 w-6 mb-2" />
                     Order Physical
                   </Button>
@@ -296,7 +317,7 @@ const EnhancedCardManagement = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setShowCardNumbers(!showCardNumbers)}
+                  onClick={handleShowCardNumbers}
                 >
                   {showCardNumbers ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </Button>
@@ -321,7 +342,7 @@ const EnhancedCardManagement = () => {
                   <p className="text-sm text-muted-foreground mb-4">
                     Create your first card to start making secure payments.
                   </p>
-                  <Button onClick={() => setShowCreateDialog(true)}>
+                  <Button onClick={handleCreateDialog}>
                     <Plus className="h-4 w-4 mr-2" />
                     Create First Card
                   </Button>
@@ -338,7 +359,7 @@ const EnhancedCardManagement = () => {
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="status-filter">Status:</Label>
-                  <Select value={cardFilters.status} onValueChange={(value) => setCardFilters(prev => ({ ...prev, status: value }))}>
+                  <Select value={cardFilters.status} onValueChange={handleStatusChange}>
                     <SelectTrigger className="w-32">
                       <SelectValue />
                     </SelectTrigger>
@@ -353,7 +374,7 @@ const EnhancedCardManagement = () => {
                 
                 <div className="flex items-center gap-2">
                   <Label htmlFor="type-filter">Type:</Label>
-                  <Select value={cardFilters.type} onValueChange={(value) => setCardFilters(prev => ({ ...prev, type: value }))}>
+                  <Select value={cardFilters.type} onValueChange={handleTypeChange}>
                     <SelectTrigger className="w-32">
                       <SelectValue />
                     </SelectTrigger>
@@ -369,7 +390,7 @@ const EnhancedCardManagement = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setShowCardNumbers(!showCardNumbers)}
+                  onClick={handleShowCardNumbers}
                 >
                   {showCardNumbers ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
                   {showCardNumbers ? 'Hide' : 'Show'} Numbers
@@ -403,7 +424,7 @@ const EnhancedCardManagement = () => {
                     }
                   </p>
                 </div>
-                <Button onClick={() => setShowCreateDialog(true)}>
+                <Button onClick={handleCreateDialog}>
                   <Plus className="h-4 w-4 mr-2" />
                   Create New Card
                 </Button>
@@ -494,16 +515,18 @@ const EnhancedCardManagement = () => {
       {/* Dialogs */}
       <CreateCardDialog 
         open={showCreateDialog}
-        onClose={() => setShowCreateDialog(false)}
+        onClose={handleCloseCreateDialog}
       />
       
       <PhysicalCardOrder 
         open={showPhysicalOrder}
-        onClose={() => setShowPhysicalOrder(false)}
+        onClose={handleClosePhysicalOrder}
         virtualCard={selectedCard}
       />
     </div>
   );
 };
+
+const EnhancedCardManagement = React.memo(EnhancedCardManagementComponent);
 
 export default EnhancedCardManagement;

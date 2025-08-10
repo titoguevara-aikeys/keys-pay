@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { MoreHorizontal, Lock, Unlock, Copy, Settings, Trash, CreditCard } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,7 @@ interface VirtualCardProps {
   onToggleStatus?: () => void;
 }
 
-export const VirtualCard: React.FC<VirtualCardProps> = ({ 
+const VirtualCardComponent: React.FC<VirtualCardProps> = ({ 
   card, 
   showNumber = false,
   onToggleStatus 
@@ -89,13 +89,13 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
     return number.replace(/(\d{4})(?=\d)/g, '$1 ');
   };
 
-  const copyCardNumber = () => {
+  const copyCardNumber = useCallback(() => {
     navigator.clipboard.writeText(card.card_number);
     toast({
       title: 'Card number copied',
       description: 'Card number has been copied to clipboard.',
     });
-  };
+  }, [card.card_number, toast]);
 
   const getTierBadgeStyle = (tier: string | null) => {
     switch (tier) {
@@ -283,3 +283,5 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
     </div>
   );
 };
+
+export const VirtualCard = React.memo(VirtualCardComponent);
