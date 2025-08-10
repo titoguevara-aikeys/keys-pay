@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { BetaPerformanceOptimizer } from '@/components/BetaPerformanceOptimizer';
 import { 
   Activity, 
   Database, 
@@ -87,6 +88,9 @@ export const AdminSystemHealth = () => {
 
   return (
     <div className="space-y-6">
+      {/* Beta Performance Optimizer */}
+      <BetaPerformanceOptimizer />
+      
       {/* System Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>

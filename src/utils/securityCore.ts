@@ -637,25 +637,28 @@ export class EnterpriseSecurityCore {
   }
 
   private initializeSecurityMonitoring(): void {
-    // Start continuous monitoring
+    // BETA TESTING: Reduced monitoring frequency to improve performance
+    // TODO: Restore to 30 seconds for production
     setInterval(() => {
       this.performContinuousMonitoring();
-    }, 30000); // Every 30 seconds
+    }, 300000); // Every 5 minutes during beta
     
     // Initialize network security layer
     this.setupNetworkSecurity();
   }
 
   private async performContinuousMonitoring(): Promise<void> {
-    // Check for unusual patterns
-    await this.calculateRiskScore({});
+    // BETA TESTING: Reduced monitoring frequency
+    console.log('🔐 Security monitoring check (beta mode)');
     
-    // Monitor session health
+    // Light monitoring during beta - only critical checks
     if (Date.now() - this.sessionMetrics.startTime > this.securityConfig.sessionTimeout) {
       this.handleSecurityViolation('SESSION_TIMEOUT', {
         duration: Date.now() - this.sessionMetrics.startTime
       });
     }
+    
+    // Skip aggressive fingerprinting during beta to improve performance
   }
 
   private setupNetworkSecurity(): void {
