@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { MoreHorizontal, Edit, Shield, DollarSign, Clock, User } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,7 @@ interface FamilyMemberCardProps {
   member: FamilyMember;
 }
 
-export const FamilyMemberCard: React.FC<FamilyMemberCardProps> = ({ member }) => {
+const FamilyMemberCardComponent: React.FC<FamilyMemberCardProps> = ({ member }) => {
   const [isEditing, setIsEditing] = useState(false);
   const updateMember = useUpdateFamilyMember();
   const { toast } = useToast();
@@ -41,7 +41,7 @@ export const FamilyMemberCard: React.FC<FamilyMemberCardProps> = ({ member }) =>
     }
   };
 
-  const handleStatusToggle = async () => {
+  const handleStatusToggle = useCallback(async () => {
     try {
       const newStatus = member.status === 'active' ? 'suspended' : 'active';
       await updateMember.mutateAsync({
@@ -60,7 +60,11 @@ export const FamilyMemberCard: React.FC<FamilyMemberCardProps> = ({ member }) =>
         variant: 'destructive',
       });
     }
-  };
+  }, [member.status, member.id, updateMember, toast]);
+
+  const handleEditClick = useCallback(() => {
+    setIsEditing(true);
+  }, []);
 
   return (
     <Card className="hover:shadow-lg transition-shadow">
@@ -92,7 +96,7 @@ export const FamilyMemberCard: React.FC<FamilyMemberCardProps> = ({ member }) =>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setIsEditing(true)}>
+              <DropdownMenuItem onClick={handleEditClick}>
                 <Edit className="h-4 w-4 mr-2" />
                 Edit Details
               </DropdownMenuItem>
@@ -163,3 +167,5 @@ export const FamilyMemberCard: React.FC<FamilyMemberCardProps> = ({ member }) =>
     </Card>
   );
 };
+
+export const FamilyMemberCard = React.memo(FamilyMemberCardComponent);

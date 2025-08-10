@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChoreManager } from './ChoreManager';
@@ -25,10 +25,11 @@ import { useFamilyStats, useFamilyActivity } from '@/hooks/useFamilyActivity';
 import { AddFamilyMemberDialog } from './AddFamilyMemberDialog';
 import { TransferMoneyDialog } from './TransferMoneyDialog';
 import { useToast } from '@/hooks/use-toast';
+import { FamilySkeleton } from './skeletons/FamilySkeleton';
 
 import type { FamilyMember } from '@/hooks/useFamilyMembers';
 
-export const FamilyDashboard = () => {
+const FamilyDashboardComponent = () => {
   const { toast } = useToast();
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
@@ -39,8 +40,8 @@ export const FamilyDashboard = () => {
   const { data: recentActivity } = useFamilyActivity(10);
   const removeFamilyMember = useRemoveFamilyMember();
 
-  // Use real stats from the database
-  const dashboardStats = {
+  // Memoized stats to prevent unnecessary recalculations
+  const dashboardStats = useMemo(() => ({
     totalChildren: familyMembers?.length || 0,
     activeChores: familyStats?.activeChores || 0,
     pendingApprovals: familyStats?.pendingApprovals || 0,
@@ -49,12 +50,29 @@ export const FamilyDashboard = () => {
     completedGoals: familyStats?.completedGoals || 0,
     interestEarned: familyStats?.interestEarned || 0,
     avgProgressPercentage: familyStats?.avgProgressPercentage || 0
-  };
+  }), [familyMembers, familyStats]);
 
-  // Mock upcoming events - would be calculated from allowances and chores due dates
-  const upcomingEvents: any[] = [];
+  // Memoized upcoming events
+  const upcomingEvents = useMemo(() => [], []);
 
-  const handleRemoveMember = async (member: FamilyMember) => {
+  // Memoized callbacks to prevent unnecessary re-renders
+  const handleAddDialog = useCallback(() => {
+    setShowAddDialog(true);
+  }, []);
+
+  const handleCloseAddDialog = useCallback(() => {
+    setShowAddDialog(false);
+  }, []);
+
+  const handleCloseEditDialog = useCallback(() => {
+    setShowEditDialog(false);
+  }, []);
+
+  const handleCloseTransferDialog = useCallback(() => {
+    setShowTransferDialog(false);
+  }, []);
+
+  const handleRemoveMember = useCallback(async (member: FamilyMember) => {
     if (!confirm(`Are you sure you want to remove ${member.child_profile?.first_name} ${member.child_profile?.last_name} from your family controls? This action cannot be undone.`)) {
       return;
     }
@@ -72,17 +90,17 @@ export const FamilyDashboard = () => {
         variant: 'destructive',
       });
     }
-  };
+  }, [removeFamilyMember, toast]);
 
-  const handleEditMember = (member: FamilyMember) => {
+  const handleEditMember = useCallback((member: FamilyMember) => {
     setSelectedMember(member);
     setShowEditDialog(true);
-  };
+  }, []);
 
-  const handleTransferMoney = (member: FamilyMember) => {
+  const handleTransferMoney = useCallback((member: FamilyMember) => {
     setSelectedMember(member);
     setShowTransferDialog(true);
-  };
+  }, []);
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -104,18 +122,7 @@ export const FamilyDashboard = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-muted rounded w-64"></div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-24 bg-muted rounded"></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+    return <FamilySkeleton />;
   }
 
   return (
@@ -126,7 +133,7 @@ export const FamilyDashboard = () => {
           <h1 className="text-3xl font-bold">Family Dashboard</h1>
           <p className="text-muted-foreground">Complete family finance management in one place</p>
         </div>
-        <Button onClick={() => setShowAddDialog(true)}>
+        <Button onClick={handleAddDialog}>
           <Plus className="h-4 w-4 mr-2" />
           Add Family Member
         </Button>
@@ -349,7 +356,7 @@ export const FamilyDashboard = () => {
                     Add family members to start using the full FamZoo-inspired features
                   </p>
                 </div>
-                <Button onClick={() => setShowAddDialog(true)}>
+                <Button onClick={handleAddDialog}>
                   <Plus className="h-4 w-4 mr-2" />
                   Add Your First Family Member
                 </Button>
@@ -362,20 +369,22 @@ export const FamilyDashboard = () => {
       {/* Dialogs */}
       <AddFamilyMemberDialog 
         open={showAddDialog}
-        onClose={() => setShowAddDialog(false)}
+        onClose={handleCloseAddDialog}
       />
       
       <EditFamilyMemberDialog 
         open={showEditDialog}
-        onClose={() => setShowEditDialog(false)}
+        onClose={handleCloseEditDialog}
         member={selectedMember}
       />
       
       <TransferMoneyDialog 
         open={showTransferDialog}
-        onClose={() => setShowTransferDialog(false)}
+        onClose={handleCloseTransferDialog}
         member={selectedMember}
       />
     </div>
   );
 };
+
+export const FamilyDashboard = React.memo(FamilyDashboardComponent);
