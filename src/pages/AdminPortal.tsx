@@ -18,7 +18,8 @@ import {
   Calendar,
   Eye,
   Lock,
-  Ban
+  Ban,
+  Monitor
 } from 'lucide-react';
 import { Footer } from '@/components/Footer';
 import Navigation from '@/components/Navigation';
@@ -27,6 +28,7 @@ import { AdminTransactionMonitor } from '@/components/admin/AdminTransactionMoni
 import { AdminSystemHealth } from '@/components/admin/AdminSystemHealth';
 import { AdminAnalyticsDashboard } from '@/components/admin/AdminAnalyticsDashboard';
 import { AdminSecurityCenter } from '@/components/admin/AdminSecurityCenter';
+import MonitoringDashboard from '@/components/admin/MonitoringDashboard';
 
 const AdminPortal = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -63,10 +65,14 @@ const AdminPortal = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <Activity className="h-4 w-4" />
               Overview
+            </TabsTrigger>
+            <TabsTrigger value="monitoring" className="flex items-center gap-2">
+              <Monitor className="h-4 w-4" />
+              Monitor
             </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
@@ -231,6 +237,11 @@ const AdminPortal = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Monitoring Tab */}
+          <TabsContent value="monitoring" className="mt-6">
+            <MonitoringDashboard />
           </TabsContent>
 
           {/* Users Tab */}
