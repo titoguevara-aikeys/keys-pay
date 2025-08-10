@@ -86,6 +86,48 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_audit: {
+        Row: {
+          action: string
+          created_at: string
+          id: number
+          meta: Json | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: number
+          meta?: Json | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: number
+          meta?: Json | null
+        }
+        Relationships: []
+      }
+      admin_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: string
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value: string
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: string
+        }
+        Relationships: []
+      }
       ai_chat_messages: {
         Row: {
           content: string

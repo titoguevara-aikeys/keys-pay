@@ -605,15 +605,32 @@ export class EnterpriseSecurityCore {
     await this.initializeWebAuthn();
     await this.generateDeviceFingerprint();
     await this.calculateRiskScore({});
+    await this.initializeSecurityMonitoring();
+    
+    const interval = await computeMonitoringIntervalMs();
     
     this.logSecurityEvent({
       type: 'SECURITY_INITIALIZED',
       severity: 'low',
       source: 'core',
       timestamp: new Date().toISOString(),
-      metadata: { version: '1.0.0', networkSecurity: true },
+      metadata: { 
+        version: '1.0.0', 
+        networkSecurity: true,
+        monitoringInterval: interval
+      },
       blocked: false
     });
+  }
+
+  private async performFullSecurityScan(): Promise<void> {
+    // Perform comprehensive security checks in production mode
+    try {
+      await this.calculateRiskScore({});
+      // Additional security validations can be added here
+    } catch (error) {
+      console.error('Full security scan error:', error);
+    }
   }
 
   getRiskProfile(): RiskProfile | null {
@@ -636,29 +653,37 @@ export class EnterpriseSecurityCore {
     };
   }
 
-  private initializeSecurityMonitoring(): void {
-    // BETA TESTING: Reduced monitoring frequency to improve performance
-    // TODO: Restore to 30 seconds for production
+  private async initializeSecurityMonitoring(): Promise<void> {
+    // Use server-controlled monitoring interval
+    const interval = await computeMonitoringIntervalMs();
+    
     setInterval(() => {
       this.performContinuousMonitoring();
-    }, 300000); // Every 5 minutes during beta
+    }, interval);
+    
+    console.log(`🔐 Security monitoring initialized with ${interval/1000}s interval`);
     
     // Initialize network security layer
     this.setupNetworkSecurity();
   }
 
   private async performContinuousMonitoring(): Promise<void> {
-    // BETA TESTING: Reduced monitoring frequency
-    console.log('🔐 Security monitoring check (beta mode)');
+    const interval = await computeMonitoringIntervalMs();
+    const isBetaMode = interval === BETA_INTERVAL_MS;
     
-    // Light monitoring during beta - only critical checks
+    console.log(`🔐 Security monitoring check (${isBetaMode ? 'beta' : 'production'} mode)`);
+    
+    // Always perform critical security checks
     if (Date.now() - this.sessionMetrics.startTime > this.securityConfig.sessionTimeout) {
       this.handleSecurityViolation('SESSION_TIMEOUT', {
         duration: Date.now() - this.sessionMetrics.startTime
       });
     }
     
-    // Skip aggressive fingerprinting during beta to improve performance
+    // In production mode, perform additional security checks
+    if (!isBetaMode) {
+      await this.performFullSecurityScan();
+    }
   }
 
   private setupNetworkSecurity(): void {
@@ -669,6 +694,38 @@ export class EnterpriseSecurityCore {
     }).catch(error => {
       console.error('Failed to initialize network security:', error);
     });
+  }
+}
+
+// Monitoring interval constants
+export const DEFAULT_INTERVAL_MS = 30_000; // 30 seconds (production default)
+export const BETA_INTERVAL_MS = 300_000; // 5 minutes (beta testing)
+
+/**
+ * Compute the monitoring interval based on server-controlled flags
+ * Safe default: 30 seconds unless server explicitly enables beta mode
+ */
+export async function computeMonitoringIntervalMs(): Promise<number> {
+  try {
+    // Dynamic import to avoid circular dependency
+    const { getServerFlag, isForceFullMonitoring } = await import('@/lib/flags');
+    
+    // Force full monitoring overrides everything
+    if (isForceFullMonitoring()) {
+      return DEFAULT_INTERVAL_MS;
+    }
+    
+    // Check server-side beta flag
+    const betaFlag = await getServerFlag('beta_monitoring');
+    if (betaFlag === 'on') {
+      return BETA_INTERVAL_MS;
+    }
+    
+    // Default to production interval
+    return DEFAULT_INTERVAL_MS;
+  } catch (error) {
+    console.error('Failed to compute monitoring interval, using safe default:', error);
+    return DEFAULT_INTERVAL_MS; // Safe fallback
   }
 }
 

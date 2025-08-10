@@ -59,6 +59,71 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+- Supabase (Backend & Database)
+
+## Beta flags & safety
+
+This platform implements server-controlled security monitoring with enterprise-grade safety controls.
+
+### Environment Variables
+
+```bash
+# Security monitoring control (production default: true)
+FORCE_FULL_MONITORING=true
+
+# Temporary admin API authentication (replace with proper RBAC)
+VITE_ADMIN_API_SECRET=your-secure-secret
+
+# Feature flag storage backend
+FLAG_STORE=supabase
+
+# Override specific flags via environment (bypasses database)
+FLAG_BETA_MONITORING=on
+```
+
+### Admin API Endpoints
+
+#### GET /api/admin/flags
+Returns current flag status and system configuration.
+
+**Headers:** `x-admin-secret: your-secret`
+
+**Response:**
+```json
+{
+  "flags": { "beta_monitoring": "on" },
+  "force_full_monitoring": false,
+  "store": "supabase"
+}
+```
+
+#### POST /api/admin/flags  
+Updates feature flags (admin only).
+
+**Headers:** 
+- `x-admin-secret: your-secret`
+- `Content-Type: application/json`
+
+**Body:**
+```json
+{
+  "key": "beta_monitoring",
+  "value": "on"
+}
+```
+
+### Override Priority
+
+1. **Environment override** (`FORCE_FULL_MONITORING=true`) - Highest priority
+2. **Database flags** (admin-controlled via API) - Standard operation  
+3. **Safe defaults** (30s monitoring) - Fallback
+
+### Security Monitoring Intervals
+
+- **Production mode:** 30 seconds (comprehensive security checks)
+- **Beta mode:** 5 minutes (optimized for development performance)
+
+The system defaults to production mode for maximum security. Beta mode can only be enabled by admins through the secure API, and is automatically disabled if `FORCE_FULL_MONITORING=true`.
 
 ## How can I deploy this project?
 

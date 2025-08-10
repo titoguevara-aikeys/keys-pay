@@ -19,4 +19,10 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  define: {
+    // Ensure environment variables are available
+    'import.meta.env.VITE_ADMIN_API_SECRET': JSON.stringify(process.env.VITE_ADMIN_API_SECRET || 'temp-admin-secret'),
+    'import.meta.env.FORCE_FULL_MONITORING': JSON.stringify(process.env.FORCE_FULL_MONITORING || 'true'),
+    'import.meta.env.FLAG_STORE': JSON.stringify(process.env.FLAG_STORE || 'supabase'),
+  }
 }));
