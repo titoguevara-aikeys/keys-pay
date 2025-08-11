@@ -283,6 +283,39 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_events: {
+        Row: {
+          actor_email: string | null
+          actor_id: string | null
+          created_at: string
+          details: Json
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          timestamp: string
+        }
+        Insert: {
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          details?: Json
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          timestamp?: string
+        }
+        Update: {
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          details?: Json
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          timestamp?: string
+        }
+        Relationships: []
+      }
       bills: {
         Row: {
           account_id: string | null
@@ -620,6 +653,132 @@ export type Database = {
         }
         Relationships: []
       }
+      circle_health_metrics: {
+        Row: {
+          circuit_breaker_state: string | null
+          created_at: string
+          endpoint: string
+          error_count: number | null
+          id: string
+          response_time_ms: number
+          status_code: number | null
+          success_count: number | null
+          timestamp: string
+        }
+        Insert: {
+          circuit_breaker_state?: string | null
+          created_at?: string
+          endpoint: string
+          error_count?: number | null
+          id?: string
+          response_time_ms: number
+          status_code?: number | null
+          success_count?: number | null
+          timestamp?: string
+        }
+        Update: {
+          circuit_breaker_state?: string | null
+          created_at?: string
+          endpoint?: string
+          error_count?: number | null
+          id?: string
+          response_time_ms?: number
+          status_code?: number | null
+          success_count?: number | null
+          timestamp?: string
+        }
+        Relationships: []
+      }
+      circle_transactions: {
+        Row: {
+          amount: number
+          circle_response: Json | null
+          circle_transaction_id: string | null
+          circle_wallet_id: string | null
+          completed_at: string | null
+          created_at: string
+          currency: string
+          deposit_address: string | null
+          destination_address: string | null
+          error_details: Json | null
+          id: string
+          idempotency_key: string | null
+          status: string
+          transaction_type: string
+          updated_at: string
+          user_id: string
+          webhook_received_at: string | null
+        }
+        Insert: {
+          amount: number
+          circle_response?: Json | null
+          circle_transaction_id?: string | null
+          circle_wallet_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          currency?: string
+          deposit_address?: string | null
+          destination_address?: string | null
+          error_details?: Json | null
+          id?: string
+          idempotency_key?: string | null
+          status?: string
+          transaction_type: string
+          updated_at?: string
+          user_id: string
+          webhook_received_at?: string | null
+        }
+        Update: {
+          amount?: number
+          circle_response?: Json | null
+          circle_transaction_id?: string | null
+          circle_wallet_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          currency?: string
+          deposit_address?: string | null
+          destination_address?: string | null
+          error_details?: Json | null
+          id?: string
+          idempotency_key?: string | null
+          status?: string
+          transaction_type?: string
+          updated_at?: string
+          user_id?: string
+          webhook_received_at?: string | null
+        }
+        Relationships: []
+      }
+      circle_webhooks: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          processed_at: string
+          raw_payload: string | null
+          signature: string
+          webhook_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          processed_at?: string
+          raw_payload?: string | null
+          signature: string
+          webhook_id: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          processed_at?: string
+          raw_payload?: string | null
+          signature?: string
+          webhook_id?: string
+        }
+        Relationships: []
+      }
       crypto_assets: {
         Row: {
           created_at: string
@@ -880,6 +1039,36 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
         ]
+      }
+      feature_flags: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: []
       }
       financial_education: {
         Row: {
@@ -1154,6 +1343,48 @@ export type Database = {
           type?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      payment_queue: {
+        Row: {
+          attempts: number
+          created_at: string
+          error_details: Json | null
+          id: string
+          job_data: Json
+          job_type: string
+          max_attempts: number
+          processed_at: string | null
+          scheduled_at: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          error_details?: Json | null
+          id?: string
+          job_data: Json
+          job_type: string
+          max_attempts?: number
+          processed_at?: string | null
+          scheduled_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          error_details?: Json | null
+          id?: string
+          job_data?: Json
+          job_type?: string
+          max_attempts?: number
+          processed_at?: string | null
+          scheduled_at?: string
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -2117,6 +2348,16 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      log_audit_event: {
+        Args: {
+          p_actor_id: string
+          p_actor_email: string
+          p_ip_address: unknown
+          p_event_type: string
+          p_details?: Json
+        }
+        Returns: string
+      }
       log_security_event: {
         Args:
           | {
@@ -2173,6 +2414,16 @@ export type Database = {
           p_description?: string
         }
         Returns: Json
+      }
+      update_feature_flag: {
+        Args: {
+          p_key: string
+          p_value: Json
+          p_actor_id?: string
+          p_actor_email?: string
+          p_ip_address?: unknown
+        }
+        Returns: boolean
       }
       validate_platform_license: {
         Args: Record<PropertyKey, never>
