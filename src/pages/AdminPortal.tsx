@@ -29,6 +29,7 @@ import { AdminSystemHealth } from '@/components/admin/AdminSystemHealth';
 import { AdminAnalyticsDashboard } from '@/components/admin/AdminAnalyticsDashboard';
 import { AdminSecurityCenter } from '@/components/admin/AdminSecurityCenter';
 import MonitoringDashboard from '@/components/admin/MonitoringDashboard';
+import { BetaControlPanel } from '@/components/admin/BetaControlPanel';
 
 const AdminPortal = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -65,7 +66,11 @@ const AdminPortal = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-7">
+          <TabsList className="grid w-full grid-cols-8">
+            <TabsTrigger value="beta" className="flex items-center gap-2">
+              <Settings className="h-4 w-4" />
+              Beta Control
+            </TabsTrigger>
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <Activity className="h-4 w-4" />
               Overview
@@ -95,6 +100,11 @@ const AdminPortal = () => {
               System
             </TabsTrigger>
           </TabsList>
+
+          {/* Beta Control Tab */}
+          <TabsContent value="beta" className="mt-6">
+            <BetaControlPanel />
+          </TabsContent>
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="mt-6">
