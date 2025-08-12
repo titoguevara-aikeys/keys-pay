@@ -33,6 +33,10 @@ import AIAssistant from "./pages/AIAssistant";
 import AdminPortal from "./pages/AdminPortal";
 import KYC from "./pages/KYC";
 import Transactions from "./pages/Transactions";
+import Aikeys from "./pages/Aikeys";
+import Travel from "./pages/Travel";
+import Education from "./pages/Education";
+import Logistics from "./pages/Logistics";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +51,22 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/auth" element={<Auth />} />
+            <Route path="/aikeys" element={<Aikeys />} />
+            <Route path="/travel" element={
+              <ProtectedRoute>
+                <Travel />
+              </ProtectedRoute>
+            } />
+            <Route path="/education" element={
+              <ProtectedRoute>
+                <Education />
+              </ProtectedRoute>
+            } />
+            <Route path="/logistics" element={
+              <ProtectedRoute>
+                <Logistics />
+              </ProtectedRoute>
+            } />
             <Route path="/" element={
               <ProtectedRoute>
                 <Index />
