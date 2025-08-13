@@ -28,7 +28,7 @@ const Navigation = () => {
     { to: '/analytics', icon: BarChart3, label: 'Analytics' },
     { to: '/kyc', icon: BadgeCheck, label: 'KYC' },
     { to: '/security', icon: Shield, label: 'Security' },
-    { to: '/mobile-app', icon: Smartphone, label: 'Mobile App' },
+    { to: '/mobile-app', icon: Smartphone, label: 'Join Beta Program' },
   ];
 
   return (
