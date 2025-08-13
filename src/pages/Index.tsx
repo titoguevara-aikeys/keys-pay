@@ -19,7 +19,8 @@ import {
   CreditCard,
   Settings,
   Eye,
-  EyeOff
+  EyeOff,
+  Smartphone
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -144,6 +145,25 @@ const Index = () => {
                 <CreditCard className="h-5 w-5" />
                 Cards
               </Button>
+            </div>
+            
+            {/* Mobile App CTA */}
+            <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold text-sm">Get the Mobile App</h3>
+                  <p className="text-xs text-muted-foreground">Join beta testing for iOS & Android</p>
+                </div>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => window.location.href = '/mobile-app'}
+                  className="flex items-center gap-1"
+                >
+                  <Smartphone className="h-3 w-3" />
+                  Join Beta
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>

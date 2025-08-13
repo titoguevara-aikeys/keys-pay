@@ -12,7 +12,8 @@ import {
   Bitcoin,
   Brain,
   BadgeCheck,
-  ArrowRightLeft
+  ArrowRightLeft,
+  Smartphone
 } from 'lucide-react';
 
 const Navigation = () => {
@@ -27,6 +28,7 @@ const Navigation = () => {
     { to: '/analytics', icon: BarChart3, label: 'Analytics' },
     { to: '/kyc', icon: BadgeCheck, label: 'KYC' },
     { to: '/security', icon: Shield, label: 'Security' },
+    { to: '/mobile-app', icon: Smartphone, label: 'Mobile App' },
   ];
 
   return (
