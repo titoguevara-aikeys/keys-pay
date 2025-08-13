@@ -37,6 +37,7 @@ import Aikeys from "./pages/Aikeys";
 import Travel from "./pages/Travel";
 import Education from "./pages/Education";
 import Logistics from "./pages/Logistics";
+import MobileApp from "./pages/MobileApp";
 
 const queryClient = new QueryClient();
 
@@ -122,6 +123,7 @@ const App = () => (
                 <Transactions />
               </ProtectedRoute>
             } />
+            <Route path="/mobile-app" element={<MobileApp />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
