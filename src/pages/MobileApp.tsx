@@ -9,6 +9,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
 import { 
   Smartphone, 
   Download, 
@@ -17,7 +20,9 @@ import {
   Shield,
   Zap,
   Globe,
-  Users
+  Users,
+  Mail,
+  Check
 } from 'lucide-react';
 
 function upsertMeta(name: string, content: string) {
@@ -46,6 +51,36 @@ function upsertLink(rel: string, href: string) {
 
 const MobileApp: React.FC = () => {
   const isMobile = useIsMobile();
+  const { toast } = useToast();
+  const [email, setEmail] = React.useState('');
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+
+  const handleBetaSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !email.includes('@')) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    toast({
+      title: "Welcome to Keys Pay Beta! 🎉",
+      description: "Check your email for TestFlight/Play Console invitation.",
+    });
+    
+    setEmail('');
+    setIsSubmitting(false);
+    setIsDialogOpen(false);
+  };
 
   useEffect(() => {
     document.title = 'Keys Pay Mobile App | Native iOS & Android';
@@ -263,9 +298,66 @@ const MobileApp: React.FC = () => {
                 Join our beta testing program and be among the first to experience 
                 the future of mobile financial services.
               </p>
-              <Button size="lg">
-                Join Beta Program
-              </Button>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="lg" className="flex items-center gap-2">
+                    <Mail className="h-4 w-4" />
+                    Join Beta Program
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Join Keys Pay Beta Testing</DialogTitle>
+                    <DialogDescription>
+                      Get early access to the Keys Pay mobile app. We'll send you TestFlight (iOS) or Google Play Internal Testing (Android) invitation links.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <form onSubmit={handleBetaSignup} className="space-y-4">
+                    <div>
+                      <Input
+                        type="email"
+                        placeholder="Enter your email address"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div className="flex gap-3">
+                      <Button 
+                        type="submit" 
+                        className="flex-1 flex items-center gap-2"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                            Submitting...
+                          </>
+                        ) : (
+                          <>
+                            <Check className="h-4 w-4" />
+                            Join Beta
+                          </>
+                        )}
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={() => setIsDialogOpen(false)}
+                        disabled={isSubmitting}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      <p>• You'll receive beta testing invitations within 24 hours</p>
+                      <p>• Available for iOS 14.0+ and Android 8.0+</p>
+                      <p>• Beta version includes all core features</p>
+                    </div>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
         </section>
