@@ -41,7 +41,7 @@ const handler = async (req: Request): Promise<Response> => {
     };
 
     const emailResponse = await resend.emails.send({
-      from: "AIKEYS Security <security@aikeys.ai>",
+      from: "AIKEYS Security <onboarding@resend.dev>",
       to: ownerEmails,
       subject: `${severityIcons[alertData.severity]} AIKEYS Platform Security Alert - ${alertData.violationType}`,
       html: `
