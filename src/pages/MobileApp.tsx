@@ -229,30 +229,16 @@ const MobileApp: React.FC = () => {
               </DialogContent>
             </Dialog>
             
-            {/* Android - Direct Download */}
-            {latestAPK ? (
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="flex items-center gap-2" 
-                asChild
-              >
-                <a href={latestAPK.url} download>
-                  <Download className="h-5 w-5" />
-                  Download Android APK
-                </a>
-              </Button>
-            ) : releasesLoading ? (
-              <Button size="lg" variant="outline" disabled>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                Loading APK...
-              </Button>
-            ) : (
+            {/* Android - Show setup required message */}
+            <div className="text-center space-y-4">
               <Button size="lg" variant="outline" className="flex items-center gap-2" onClick={() => setIsDialogOpen(true)}>
                 <PlayCircle className="h-5 w-5" />
-                Download for Android
+                Request Beta Access
               </Button>
-            )}
+              <p className="text-sm text-muted-foreground">
+                APK builds are being set up. Join beta for early access notifications.
+              </p>
+            </div>
           </div>
           
           <div className="flex justify-center gap-6 text-sm text-muted-foreground">
@@ -397,22 +383,14 @@ const MobileApp: React.FC = () => {
                 </div>
               </div>
               
-              {latestAPK && (
-                <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-                  <h4 className="font-medium mb-2">Latest Android Version</h4>
-                  <div className="text-sm space-y-1">
-                    <p><strong>Version:</strong> {latestAPK.version}</p>
-                    <p><strong>Size:</strong> {(latestAPK.size / 1024 / 1024).toFixed(2)} MB</p>
-                    <p><strong>Built:</strong> {new Date(latestAPK.releaseDate).toLocaleDateString()}</p>
-                  </div>
-                  <Button className="mt-3" asChild>
-                    <a href={latestAPK.url} download>
-                      <Download className="h-4 w-4 mr-2" />
-                      Download Latest APK
-                    </a>
-                  </Button>
+              <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+                <h4 className="font-medium mb-2">Android APK Status</h4>
+                <div className="text-sm space-y-2">
+                  <p className="text-amber-600">⏳ Build system is being configured</p>
+                  <p>APK downloads will be available once GitHub releases are set up</p>
+                  <p>Join the beta program above to receive notifications when ready</p>
                 </div>
-              )}
+              </div>
             </CardContent>
           </Card>
         </section>

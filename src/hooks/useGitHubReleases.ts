@@ -23,15 +23,13 @@ export const useGitHubReleases = () => {
   useEffect(() => {
     const fetchReleases = async () => {
       try {
-        // Replace with your actual GitHub repo URL
-        const response = await fetch('https://api.github.com/repos/YOUR_USERNAME/YOUR_REPO_NAME/releases');
+        // For now, simulate no releases available until GitHub is set up
+        // Replace with your actual GitHub repo URL when ready
+        // const response = await fetch('https://api.github.com/repos/YOUR_USERNAME/YOUR_REPO_NAME/releases');
         
-        if (!response.ok) {
-          throw new Error('Failed to fetch releases');
-        }
-        
-        const data = await response.json();
-        setReleases(data);
+        setReleases([]);
+        setLoading(false);
+        return;
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
