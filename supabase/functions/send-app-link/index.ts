@@ -13,6 +13,7 @@ interface SendLinkRequest {
   email: string;
   appUrl: string;
   apkUrl?: string;
+  setupRequired?: boolean;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -22,14 +23,14 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, appUrl, apkUrl }: SendLinkRequest = await req.json();
+    const { email, appUrl, apkUrl, setupRequired }: SendLinkRequest = await req.json();
 
     console.log(`Sending app link to: ${email}`);
 
     const emailResponse = await resend.emails.send({
       from: "AIKEYS Wallet <onboarding@resend.dev>",
       to: [email],
-      subject: "AIKEYS Wallet - Download AIKEYS Wallet App",
+      subject: apkUrl ? "AIKEYS Wallet - APK Download Ready!" : "AIKEYS Wallet - Setup Required for APK Download",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <h1 style="color: #1a1a1a; margin-bottom: 20px;">📱 AIKEYS Wallet App Download</h1>
@@ -40,27 +41,28 @@ const handler = async (req: Request): Promise<Response> => {
           
           <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;">
             ${apkUrl ? `
-              <h3 style="margin: 0 0 15px 0; color: #1a1a1a;">📥 Download Android App (APK)</h3>
-              <a href="${apkUrl}" style="display: inline-block; background: #22c55e; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px; font-size: 16px;">📱 Download APK</a>
+              <h3 style="margin: 0 0 15px 0; color: #22c55e;">✅ APK Download Ready!</h3>
+              <a href="${apkUrl}" style="display: inline-block; background: #22c55e; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px; font-size: 16px;">📱 Download APK Now</a>
               <p style="margin: 10px 0 0 0; font-size: 14px; color: #666;">Click to download and install the AIKEYS Wallet app on your Android device</p>
               <p style="margin: 10px 0 0 0; font-size: 12px; color: #999;">Compatible with Android 8.0+ • File size: ~15MB</p>
             ` : `
-              <h3 style="margin: 0 0 15px 0; color: #f59e0b;">⚠️ APK Download Not Available Yet</h3>
-              <div style="background: #fef3c7; border: 1px solid #f59e0b; padding: 15px; border-radius: 6px; margin: 20px 0;">
-                <p style="margin: 0; color: #92400e; font-weight: bold;">
-                  🔧 Setup Required: GitHub releases need to be configured first
+              <h3 style="margin: 0 0 15px 0; color: #ef4444;">❌ APK Download Not Available</h3>
+              <div style="background: #fef2f2; border: 2px solid #ef4444; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h4 style="margin: 0 0 10px 0; color: #dc2626;">🔧 GitHub Releases Setup Required</h4>
+                <p style="margin: 0 0 15px 0; color: #7f1d1d; font-weight: bold;">
+                  The APK build system is not configured yet. You need to:
                 </p>
+                <ol style="text-align: left; margin: 0; padding-left: 20px; color: #7f1d1d; font-size: 14px;">
+                  <li>Export your project to GitHub</li>
+                  <li>Add 4 Android signing secrets</li>
+                  <li>Update the GitHub repo URL in your code</li>
+                  <li>Push to main branch to trigger the first build</li>
+                </ol>
               </div>
-              <h4 style="color: #1a1a1a; margin: 20px 0 10px 0;">📋 Quick Setup Steps:</h4>
-              <ol style="text-align: left; margin: 0 auto; display: inline-block; color: #333; font-size: 14px;">
-                <li>Export project to GitHub</li>
-                <li>Add Android signing secrets</li>
-                <li>Push to main branch</li>
-                <li>APK will be automatically built</li>
-              </ol>
-              <br><br>
-              <a href="${appUrl}" style="display: inline-block; background: #3b82f6; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px;">🌐 Use Web App Meanwhile</a>
-              <p style="margin: 10px 0 0 0; font-size: 12px; color: #666;">Access the full AIKEYS Wallet experience in your browser</p>
+              <a href="${appUrl}/mobile-app" style="display: inline-block; background: #3b82f6; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px;">📋 View Setup Guide</a>
+              <br>
+              <a href="${appUrl}" style="display: inline-block; background: #6b7280; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px;">🌐 Use Web App Meanwhile</a>
+              <p style="margin: 10px 0 0 0; font-size: 12px; color: #666;">Setup takes ~10 minutes. Once complete, you'll get direct APK download links!</p>
             `}
           </div>
           

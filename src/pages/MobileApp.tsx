@@ -57,7 +57,7 @@ const MobileApp: React.FC = () => {
   const [email, setEmail] = React.useState('');
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-  const { latestAPK, loading: releasesLoading } = useGitHubReleases();
+  const { latestAPK, loading: releasesLoading, error: releasesError } = useGitHubReleases();
 
   const handleBetaSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,19 +75,21 @@ const MobileApp: React.FC = () => {
     try {
       const appUrl = window.location.origin;
       
-      // Get the latest APK download URL if available
-      const apkUrl = latestAPK?.url;
+      // Check if GitHub releases are properly configured
+      const isGitHubConfigured = !releasesError && latestAPK?.url;
+      const apkUrl = isGitHubConfigured ? latestAPK.url : null;
       
-      const { data, error } = await supabase.functions.invoke('send-app-link', {
+      const { data, error: emailError } = await supabase.functions.invoke('send-app-link', {
         body: { 
           email: email.trim(),
           appUrl,
-          apkUrl
+          apkUrl,
+          setupRequired: !isGitHubConfigured
         }
       });
 
-      if (error) {
-        throw error;
+      if (emailError) {
+        throw emailError;
       }
 
       toast({
