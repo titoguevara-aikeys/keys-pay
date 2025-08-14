@@ -8,3 +8,9 @@ verify_jwt = true
 
 [functions.sumsub-issue-token]
 verify_jwt = true
+
+[functions.payments-circle-webhook]
+verify_jwt = false
+
+[functions.health]
+verify_jwt = false

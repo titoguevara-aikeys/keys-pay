@@ -1184,6 +1184,30 @@ export type Database = {
         }
         Relationships: []
       }
+      idempotency_keys: {
+        Row: {
+          created_at: string | null
+          key: string
+          payload_hash: string | null
+          provider: string
+          response_status: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          key: string
+          payload_hash?: string | null
+          provider: string
+          response_status?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          key?: string
+          payload_hash?: string | null
+          provider?: string
+          response_status?: number | null
+        }
+        Relationships: []
+      }
       login_sessions: {
         Row: {
           created_at: string
@@ -1307,6 +1331,48 @@ export type Database = {
           title?: string
           type?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      payment_events: {
+        Row: {
+          amount: number | null
+          created_at: string | null
+          currency: string | null
+          event_id: string
+          event_type: string
+          id: string
+          payment_id: string | null
+          processed_at: string | null
+          raw_event: Json
+          status: string
+          wallet_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string | null
+          currency?: string | null
+          event_id: string
+          event_type: string
+          id?: string
+          payment_id?: string | null
+          processed_at?: string | null
+          raw_event: Json
+          status: string
+          wallet_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string | null
+          currency?: string | null
+          event_id?: string
+          event_type?: string
+          id?: string
+          payment_id?: string | null
+          processed_at?: string | null
+          raw_event?: Json
+          status?: string
+          wallet_id?: string | null
         }
         Relationships: []
       }
@@ -2428,6 +2494,10 @@ export type Database = {
       validate_platform_license: {
         Args: Record<PropertyKey, never>
         Returns: boolean
+      }
+      webhook_health_check: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
       }
     }
     Enums: {
