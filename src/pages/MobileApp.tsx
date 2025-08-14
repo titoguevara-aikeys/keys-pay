@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useGitHubReleases } from '@/hooks/useGitHubReleases';
 import { 
   Smartphone, 
   Download, 
@@ -56,6 +57,7 @@ const MobileApp: React.FC = () => {
   const [email, setEmail] = React.useState('');
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const { latestAPK, loading: releasesLoading } = useGitHubReleases();
 
   const handleBetaSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -158,6 +160,7 @@ const MobileApp: React.FC = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            {/* iOS - Still Beta */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button size="lg" className="flex items-center gap-2">
@@ -165,17 +168,11 @@ const MobileApp: React.FC = () => {
                   Download for iOS
                 </Button>
               </DialogTrigger>
-              <DialogTrigger asChild>
-                <Button size="lg" variant="outline" className="flex items-center gap-2">
-                  <PlayCircle className="h-5 w-5" />
-                  Download for Android
-                </Button>
-              </DialogTrigger>
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                   <DialogTitle>Join Keys Pay Beta Testing</DialogTitle>
                   <DialogDescription>
-                    Get early access to the Keys Pay mobile app. We'll send you TestFlight (iOS) or Google Play Internal Testing (Android) invitation links.
+                    Get early access to the Keys Pay mobile app. We'll send you TestFlight (iOS) invitation links.
                   </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleBetaSignup} className="space-y-4">
@@ -217,13 +214,39 @@ const MobileApp: React.FC = () => {
                     </Button>
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    <p>• You'll receive beta testing invitations within 24 hours</p>
-                    <p>• Available for iOS 14.0+ and Android 8.0+</p>
+                    <p>• You'll receive TestFlight invitations within 24 hours</p>
+                    <p>• Available for iOS 14.0+</p>
                     <p>• Beta version includes all core features</p>
+                    <p>• Android APK is available for direct download above</p>
                   </div>
                 </form>
               </DialogContent>
             </Dialog>
+            
+            {/* Android - Direct Download */}
+            {latestAPK ? (
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="flex items-center gap-2" 
+                asChild
+              >
+                <a href={latestAPK.url} download>
+                  <Download className="h-5 w-5" />
+                  Download Android APK
+                </a>
+              </Button>
+            ) : releasesLoading ? (
+              <Button size="lg" variant="outline" disabled>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                Loading APK...
+              </Button>
+            ) : (
+              <Button size="lg" variant="outline" className="flex items-center gap-2" onClick={() => setIsDialogOpen(true)}>
+                <PlayCircle className="h-5 w-5" />
+                Download for Android
+              </Button>
+            )}
           </div>
           
           <div className="flex justify-center gap-6 text-sm text-muted-foreground">
@@ -329,41 +352,60 @@ const MobileApp: React.FC = () => {
           </Card>
         </section>
 
-        {/* Development Status */}
+        {/* Download Status & Latest Version */}
         <section className="mb-12">
           <Card>
             <CardHeader>
-              <CardTitle>Development Status</CardTitle>
+              <CardTitle>Download Status</CardTitle>
               <CardDescription>
-                Current progress and upcoming releases
+                Latest builds and availability
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-medium">Beta Testing (iOS/Android)</h4>
-                    <p className="text-sm text-muted-foreground">Internal testing with core features</p>
+                    <h4 className="font-medium">Android APK</h4>
+                    <p className="text-sm text-muted-foreground">
+                      {latestAPK ? `${latestAPK.version} - Direct download available` : 'Automated builds via GitHub Actions'}
+                    </p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800 border-green-200">Complete</Badge>
+                  <Badge className="bg-green-100 text-green-800 border-green-200">Available</Badge>
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-medium">App Store Submission</h4>
-                    <p className="text-sm text-muted-foreground">Preparing for public release</p>
+                    <h4 className="font-medium">iOS TestFlight</h4>
+                    <p className="text-sm text-muted-foreground">Beta testing program</p>
                   </div>
-                  <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">In Progress</Badge>
+                  <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">Beta Only</Badge>
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-medium">Public Release</h4>
-                    <p className="text-sm text-muted-foreground">Available on App Store and Play Store</p>
+                    <h4 className="font-medium">Play Store Release</h4>
+                    <p className="text-sm text-muted-foreground">Public release submission</p>
                   </div>
                   <Badge variant="outline">Coming Soon</Badge>
                 </div>
               </div>
+              
+              {latestAPK && (
+                <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+                  <h4 className="font-medium mb-2">Latest Android Version</h4>
+                  <div className="text-sm space-y-1">
+                    <p><strong>Version:</strong> {latestAPK.version}</p>
+                    <p><strong>Size:</strong> {(latestAPK.size / 1024 / 1024).toFixed(2)} MB</p>
+                    <p><strong>Built:</strong> {new Date(latestAPK.releaseDate).toLocaleDateString()}</p>
+                  </div>
+                  <Button className="mt-3" asChild>
+                    <a href={latestAPK.url} download>
+                      <Download className="h-4 w-4 mr-2" />
+                      Download Latest APK
+                    </a>
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         </section>

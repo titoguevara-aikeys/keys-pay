@@ -91,6 +91,72 @@ jobs:
           name: AIKEYS-release.aab
           path: android/app/build/outputs/bundle/release/*.aab
 
+      # Create GitHub Release with APK
+      - name: Get version info
+        id: version
+        run: |
+          echo "tag=$(git describe --tags --abbrev=0 2>/dev/null || echo 'v1.0.0')" >> $GITHUB_OUTPUT
+          echo "commit_count=$(git rev-list --count HEAD)" >> $GITHUB_OUTPUT
+          echo "short_sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "build_date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: "build-${{ steps.version.outputs.build_date }}-${{ github.run_number }}"
+          release_name: "AIKEYS Wallet ${{ steps.version.outputs.tag }}-${{ steps.version.outputs.commit_count }} (${{ steps.version.outputs.build_date }})"
+          body: |
+            ## AIKEYS Wallet Android App
+            
+            **Version:** ${{ steps.version.outputs.tag }}-${{ steps.version.outputs.commit_count }}
+            **Build Date:** ${{ steps.version.outputs.build_date }}
+            **Commit:** ${{ steps.version.outputs.short_sha }}
+            
+            ### Download Links
+            - **Debug APK**: For testing and development
+            - **Release APK**: Production-ready signed version (if available)
+            
+            ### Installation Instructions
+            1. Download the APK file
+            2. Enable "Install from Unknown Sources" in Android Settings
+            3. Install the APK file
+            4. Open AIKEYS Wallet app
+            
+            ### What's New
+            - Latest features from web platform
+            - Auto-versioning with daily builds
+            - Optimized performance and security
+            
+            **Note:** This is an automated build from the latest code changes.
+          draft: false
+          prerelease: false
+
+      # Upload Debug APK to Release
+      - name: Upload Debug APK to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: android/app/build/outputs/apk/debug/app-debug.apk
+          asset_name: AIKEYS-Wallet-Debug-${{ steps.version.outputs.build_date }}.apk
+          asset_content_type: application/vnd.android.package-archive
+
+      # Upload Release APK to Release (if available)
+      - name: Upload Release APK to Release
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: android/app/build/outputs/apk/release/app-release.apk
+          asset_name: AIKEYS-Wallet-Release-${{ steps.version.outputs.build_date }}.apk
+          asset_content_type: application/vnd.android.package-archive
+
       # Play Store Upload
       - name: Upload to Play Store
         if: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON != '' }}
@@ -100,4 +166,4 @@ jobs:
           packageName: ${{ env.PACKAGE_NAME }}
           releaseFiles: android/app/build/outputs/bundle/release/*.aab
           track: ${{ secrets.PLAY_TRACK || 'internal' }}
-          status: ${{ secrets.PLAY_RELEASE_STATUS || 'draft' }}
+          status: ${{ secrets.PLAY_RELEASE_STATUS || 'draft' }
