@@ -75,10 +75,14 @@ const MobileApp: React.FC = () => {
     try {
       const appUrl = window.location.origin;
       
+      // Get the latest APK download URL if available
+      const apkUrl = latestAPK?.url;
+      
       const { data, error } = await supabase.functions.invoke('send-app-link', {
         body: { 
           email: email.trim(),
-          appUrl 
+          appUrl,
+          apkUrl
         }
       });
 

@@ -12,6 +12,7 @@ const corsHeaders = {
 interface SendLinkRequest {
   email: string;
   appUrl: string;
+  apkUrl?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -21,25 +22,32 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, appUrl }: SendLinkRequest = await req.json();
+    const { email, appUrl, apkUrl }: SendLinkRequest = await req.json();
 
     console.log(`Sending app link to: ${email}`);
 
     const emailResponse = await resend.emails.send({
       from: "AIKEYS Wallet <onboarding@resend.dev>",
       to: [email],
-      subject: "AIKEYS Wallet - Test Advanced Security Features",
+      subject: "AIKEYS Wallet - Download AIKEYS Wallet App",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h1 style="color: #1a1a1a; margin-bottom: 20px;">🔐 AIKEYS Wallet Security Testing</h1>
+          <h1 style="color: #1a1a1a; margin-bottom: 20px;">📱 AIKEYS Wallet App Download</h1>
           
           <p style="font-size: 16px; line-height: 1.6; color: #333;">
-            Hi! Here's your AIKEYS Wallet app link for testing the advanced security features:
+            Hi! Here's your AIKEYS Wallet app download:
           </p>
           
-          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="margin: 0 0 10px 0; color: #1a1a1a;">🔗 App Link:</h3>
-            <a href="${appUrl}" style="color: #2563eb; font-weight: bold; text-decoration: none; font-size: 18px;">${appUrl}</a>
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;">
+            ${apkUrl ? `
+              <h3 style="margin: 0 0 15px 0; color: #1a1a1a;">📥 Download Android App (APK)</h3>
+              <a href="${apkUrl}" style="display: inline-block; background: #22c55e; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px;">Download APK</a>
+              <p style="margin: 10px 0 0 0; font-size: 12px; color: #666;">Click to download and install the app on your Android device</p>
+            ` : `
+              <h3 style="margin: 0 0 15px 0; color: #1a1a1a;">🌐 Web App Access</h3>
+              <a href="${appUrl}" style="display: inline-block; background: #3b82f6; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px;">Open Web App</a>
+              <p style="margin: 10px 0 0 0; font-size: 12px; color: #666;">APK download will be available once GitHub releases are set up</p>
+            `}
           </div>
           
           <h3 style="color: #1a1a1a; margin-top: 30px;">🧪 Security Features to Test:</h3>
