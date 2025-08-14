@@ -41,17 +41,31 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;">
             ${apkUrl ? `
               <h3 style="margin: 0 0 15px 0; color: #1a1a1a;">📥 Download Android App (APK)</h3>
-              <a href="${apkUrl}" style="display: inline-block; background: #22c55e; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px;">Download APK</a>
-              <p style="margin: 10px 0 0 0; font-size: 12px; color: #666;">Click to download and install the app on your Android device</p>
+              <a href="${apkUrl}" style="display: inline-block; background: #22c55e; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px; font-size: 16px;">📱 Download APK</a>
+              <p style="margin: 10px 0 0 0; font-size: 14px; color: #666;">Click to download and install the AIKEYS Wallet app on your Android device</p>
+              <p style="margin: 10px 0 0 0; font-size: 12px; color: #999;">Compatible with Android 8.0+ • File size: ~15MB</p>
             ` : `
-              <h3 style="margin: 0 0 15px 0; color: #1a1a1a;">🌐 Web App Access</h3>
-              <a href="${appUrl}" style="display: inline-block; background: #3b82f6; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px;">Open Web App</a>
-              <p style="margin: 10px 0 0 0; font-size: 12px; color: #666;">APK download will be available once GitHub releases are set up</p>
+              <h3 style="margin: 0 0 15px 0; color: #f59e0b;">⚠️ APK Download Not Available Yet</h3>
+              <div style="background: #fef3c7; border: 1px solid #f59e0b; padding: 15px; border-radius: 6px; margin: 20px 0;">
+                <p style="margin: 0; color: #92400e; font-weight: bold;">
+                  🔧 Setup Required: GitHub releases need to be configured first
+                </p>
+              </div>
+              <h4 style="color: #1a1a1a; margin: 20px 0 10px 0;">📋 Quick Setup Steps:</h4>
+              <ol style="text-align: left; margin: 0 auto; display: inline-block; color: #333; font-size: 14px;">
+                <li>Export project to GitHub</li>
+                <li>Add Android signing secrets</li>
+                <li>Push to main branch</li>
+                <li>APK will be automatically built</li>
+              </ol>
+              <br><br>
+              <a href="${appUrl}" style="display: inline-block; background: #3b82f6; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px;">🌐 Use Web App Meanwhile</a>
+              <p style="margin: 10px 0 0 0; font-size: 12px; color: #666;">Access the full AIKEYS Wallet experience in your browser</p>
             `}
           </div>
           
-          <h3 style="color: #1a1a1a; margin-top: 30px;">🧪 Security Features to Test:</h3>
-          <ul style="line-height: 1.8; color: #333;">
+          <h3 style="color: #1a1a1a; margin-top: 30px;">🧪 Features to Test:</h3>
+          <ul style="line-height: 1.8; color: #333; text-align: left;">
             <li><strong>Two-Factor Authentication (2FA)</strong> - Set up and verify with authenticator app</li>
             <li><strong>Biometric Authentication</strong> - Test fingerprint/face recognition</li>
             <li><strong>Device Management</strong> - View and manage trusted devices</li>
@@ -72,7 +86,7 @@ const handler = async (req: Request): Promise<Response> => {
           <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
           
           <p style="font-size: 12px; color: #888;">
-            This email was sent from your AIKEYS Wallet security testing system.
+            This email was sent from your AIKEYS Wallet testing system. Once GitHub releases are configured, you'll receive direct APK download links.
           </p>
         </div>
       `,
