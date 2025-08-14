@@ -23,8 +23,8 @@ export const useGitHubReleases = () => {
   useEffect(() => {
     const fetchReleases = async () => {
       try {
-        // This would need to be updated with your actual GitHub repo
-        const response = await fetch('https://api.github.com/repos/YOUR_USERNAME/YOUR_REPO/releases');
+        // Replace with your actual GitHub repo URL
+        const response = await fetch('https://api.github.com/repos/YOUR_USERNAME/YOUR_REPO_NAME/releases');
         
         if (!response.ok) {
           throw new Error('Failed to fetch releases');
