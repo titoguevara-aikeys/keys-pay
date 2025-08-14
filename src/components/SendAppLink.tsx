@@ -26,6 +26,8 @@ export const SendAppLink: React.FC = () => {
     
     try {
       const appUrl = window.location.origin;
+      console.log('SendAppLink: Starting process for:', email);
+      console.log('SendAppLink: App URL:', appUrl);
       
       const { data, error } = await supabase.functions.invoke('send-app-link', {
         body: { 
@@ -33,6 +35,8 @@ export const SendAppLink: React.FC = () => {
           appUrl 
         }
       });
+
+      console.log('SendAppLink: Response:', { data, error });
 
       if (error) {
         throw error;

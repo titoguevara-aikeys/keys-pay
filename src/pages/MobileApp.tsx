@@ -74,10 +74,16 @@ const MobileApp: React.FC = () => {
     
     try {
       const appUrl = window.location.origin;
+      console.log('Starting beta signup process for:', email);
+      console.log('App URL:', appUrl);
       
       // Check if GitHub releases are properly configured
       const isGitHubConfigured = !releasesError && latestAPK?.url;
       const apkUrl = isGitHubConfigured ? latestAPK.url : null;
+      
+      console.log('GitHub configured:', isGitHubConfigured);
+      console.log('APK URL:', apkUrl);
+      console.log('Releases error:', releasesError);
       
       const { data, error: emailError } = await supabase.functions.invoke('send-app-link', {
         body: { 
@@ -88,7 +94,10 @@ const MobileApp: React.FC = () => {
         }
       });
 
+      console.log('Supabase function response:', { data, error: emailError });
+
       if (emailError) {
+        console.error('Email error:', emailError);
         throw emailError;
       }
 
