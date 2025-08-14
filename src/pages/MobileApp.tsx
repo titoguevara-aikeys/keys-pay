@@ -253,6 +253,7 @@ const MobileApp: React.FC = () => {
             <span>✓ Free Download</span>
             <span>✓ 256-bit Encryption</span>
             <span>✓ SAMA Compliant</span>
+            {latestAPK && <span>✓ Latest: {new Date(latestAPK.releaseDate).toLocaleDateString()}</span>}
           </div>
         </section>
 
