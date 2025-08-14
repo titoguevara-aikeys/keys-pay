@@ -165,6 +165,12 @@ const MobileApp: React.FC = () => {
                   Download for iOS
                 </Button>
               </DialogTrigger>
+              <DialogTrigger asChild>
+                <Button size="lg" variant="outline" className="flex items-center gap-2">
+                  <PlayCircle className="h-5 w-5" />
+                  Download for Android
+                </Button>
+              </DialogTrigger>
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                   <DialogTitle>Join Keys Pay Beta Testing</DialogTitle>
@@ -218,10 +224,6 @@ const MobileApp: React.FC = () => {
                 </form>
               </DialogContent>
             </Dialog>
-            <Button size="lg" variant="outline" className="flex items-center gap-2" onClick={() => setIsDialogOpen(true)}>
-              <PlayCircle className="h-5 w-5" />
-              Download for Android
-            </Button>
           </div>
           
           <div className="flex justify-center gap-6 text-sm text-muted-foreground">
