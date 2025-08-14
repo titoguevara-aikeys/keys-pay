@@ -1,0 +1,103 @@
+
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.TimeZone
+
+def safeExec(String cmd, String fallback) {
+    try {
+        def p = ["bash","-lc", cmd].execute()
+        p.waitFor()
+        return p.in.text.trim() ? p.in.text.trim() : fallback
+    } catch (Exception ignored) { return fallback }
+}
+
+def latestTag   = safeExec("git describe --tags --abbrev=0", "v0.0")
+def commitCount = safeExec("git rev-list --count HEAD", "1").toInteger()
+
+// Days since Unix epoch (UTC)
+def nowUtc = new Date()
+def daysSinceEpoch = (nowUtc.getTime() / 86_400_000L) as int
+
+// CI build index (up to 99 per day)
+def runNumEnv = System.getenv("GITHUB_RUN_NUMBER")
+def dailyIndex = (runNumEnv ? runNumEnv.toInteger() : 0) % 100
+
+// Monotonically increasing versionCode
+def dailyVersionCode = daysSinceEpoch * 100 + dailyIndex
+
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.aikeys.wallet'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.aikeys.wallet"
+        minSdk 24
+        targetSdk 34
+
+        versionCode dailyVersionCode
+        versionName "${latestTag}-${commitCount}"
+
+        buildConfigField "String", "AIKEYS_VERSION_INFO",
+            "\"tag=${latestTag}, commits=${commitCount}, days=${daysSinceEpoch}, idx=${dailyIndex}\""
+        
+        buildConfigField "String", "AIKEYS_BASE_URL", "\"https://aikeys-hub.com\""
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            def ksPath = System.getenv("ANDROID_KEYSTORE_PATH") ?: project.findProperty("ANDROID_KEYSTORE_PATH")
+            def ksPass = System.getenv("ANDROID_KEYSTORE_PASSWORD") ?: project.findProperty("ANDROID_KEYSTORE_PASSWORD")
+            def kAlias = System.getenv("ANDROID_KEY_ALIAS") ?: project.findProperty("ANDROID_KEY_ALIAS")
+            def kPass  = System.getenv("ANDROID_KEY_PASSWORD") ?: project.findProperty("ANDROID_KEY_PASSWORD")
+
+            if (ksPath && ksPass && kAlias && kPass) {
+                storeFile file(ksPath)
+                storePassword ksPass
+                keyAlias kAlias
+                keyPassword kPass
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.core:core-splashscreen:1.0.1'
+    
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
