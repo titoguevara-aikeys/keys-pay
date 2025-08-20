@@ -1,0 +1,124 @@
+{
+  "info": {
+    "name": "Keys Pay Aggregator API",
+    "description": "Dubai DED compliant aggregator platform for virtual assets and financial services",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/keyspay",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Create On-Ramp Session",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fiatCurrency\": \"AED\",\n  \"fiatAmount\": 500,\n  \"asset\": \"BTC\",\n  \"country\": \"AE\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/ramp/onramp/session",
+          "host": ["{{baseUrl}}"],
+          "path": ["ramp", "onramp", "session"]
+        }
+      }
+    },
+    {
+      "name": "Create Off-Ramp Session",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"asset\": \"USDT\",\n  \"assetAmount\": 1000,\n  \"payoutCurrency\": \"AED\",\n  \"country\": \"AE\",\n  \"payoutMethod\": \"bank_transfer\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/ramp/offramp/session",
+          "host": ["{{baseUrl}}"],
+          "path": ["ramp", "offramp", "session"]
+        }
+      }
+    },
+    {
+      "name": "Apply for IBAN",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"clientId\": \"test-client-123\",\n  \"accountName\": \"Test Business Account\",\n  \"currency\": \"EUR\",\n  \"country\": \"AE\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/banking/iban/apply",
+          "host": ["{{baseUrl}}"],
+          "path": ["banking", "iban", "apply"]
+        }
+      }
+    },
+    {
+      "name": "Get Payout Quote",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sourceCurrency\": \"AED\",\n  \"targetCurrency\": \"USD\",\n  \"amount\": 1000\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/payouts/quote",
+          "host": ["{{baseUrl}}"],
+          "path": ["payouts", "quote"]
+        }
+      }
+    },
+    {
+      "name": "Get Provider Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/providers",
+          "host": ["{{baseUrl}}"],
+          "path": ["providers"]
+        }
+      }
+    }
+  ]
+}

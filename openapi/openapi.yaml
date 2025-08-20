@@ -1,0 +1,245 @@
+openapi: 3.0.0
+info:
+  title: Keys Pay Aggregator API
+  version: 1.0.0
+  description: Dubai DED compliant aggregator platform for virtual assets and financial services
+  contact:
+    name: Keys Pay Support
+    email: support@keyspay.com
+  license:
+    name: Proprietary
+    url: https://keyspay.com/terms
+
+servers:
+  - url: https://api.keyspay.com
+    description: Production server
+  - url: http://localhost:3000/api/keyspay
+    description: Development server
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /ramp/onramp/session:
+    post:
+      summary: Create Transak on-ramp session
+      description: Create cryptocurrency purchase session via Transak (MoR)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - fiatCurrency
+                - fiatAmount
+                - asset
+                - country
+              properties:
+                fiatCurrency:
+                  type: string
+                  minLength: 3
+                  maxLength: 3
+                  example: "AED"
+                fiatAmount:
+                  type: number
+                  minimum: 50
+                  maximum: 50000
+                  example: 500
+                asset:
+                  type: string
+                  example: "BTC"
+                country:
+                  type: string
+                  minLength: 2
+                  maxLength: 2
+                  example: "AE"
+      responses:
+        '200':
+          description: Session created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  provider:
+                    type: string
+                    example: "TRANSAK"
+                  sessionId:
+                    type: string
+                  checkoutUrl:
+                    type: string
+                    format: uri
+                  ref:
+                    type: string
+                  disclaimer:
+                    type: string
+                  merchantOfRecord:
+                    type: string
+
+  /ramp/offramp/session:
+    post:
+      summary: Create Guardarian off-ramp session
+      description: Create cryptocurrency sale session via Guardarian (MoR)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - asset
+                - assetAmount
+                - payoutCurrency
+                - country
+                - payoutMethod
+              properties:
+                asset:
+                  type: string
+                  example: "USDT"
+                assetAmount:
+                  type: number
+                  example: 1000
+                payoutCurrency:
+                  type: string
+                  example: "AED"
+                country:
+                  type: string
+                  example: "AE"
+                payoutMethod:
+                  type: string
+                  enum: ["bank_transfer", "card", "mobile_money"]
+      responses:
+        '200':
+          description: Session created successfully
+
+  /banking/iban/apply:
+    post:
+      summary: Apply for virtual IBAN via OpenPayd
+      description: Submit IBAN application to OpenPayd (MoR)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - clientId
+                - accountName
+                - currency
+                - country
+              properties:
+                clientId:
+                  type: string
+                accountName:
+                  type: string
+                currency:
+                  type: string
+                  example: "EUR"
+                country:
+                  type: string
+                  example: "AE"
+      responses:
+        '200':
+          description: Application submitted successfully
+
+  /payouts/quote:
+    post:
+      summary: Get payout quote from Nium
+      description: Request FX quote for cross-border payout via Nium (MoR)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - sourceCurrency
+                - targetCurrency
+                - amount
+              properties:
+                sourceCurrency:
+                  type: string
+                  example: "AED"
+                targetCurrency:
+                  type: string
+                  example: "USD"
+                amount:
+                  type: number
+                  example: 1000
+      responses:
+        '200':
+          description: Quote generated successfully
+
+  /payouts/execute:
+    post:
+      summary: Execute payout via Nium
+      description: Execute cross-border payout using Nium quote (MoR)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - quoteId
+                - reference
+              properties:
+                quoteId:
+                  type: string
+                reference:
+                  type: string
+      responses:
+        '200':
+          description: Payout executed successfully
+
+  /providers:
+    get:
+      summary: Get provider status
+      description: Real-time status of all integrated providers
+      responses:
+        '200':
+          description: Provider status retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  summary:
+                    type: object
+                  providers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        health:
+                          type: string
+                          enum: ["up", "degraded", "down"]
+                        score:
+                          type: number
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
