@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
-import { createNiumProvider } from '@/src/lib/keyspay/providers/nium';
-import { defaultRateLimiter } from '@/src/lib/keyspay/security';
-import { logger } from '@/src/lib/keyspay/logger';
+import { createNiumProvider } from '@/lib/keyspay/providers/nium';
+import { defaultRateLimiter } from '@/lib/keyspay/security';
+import { logger } from '@/lib/keyspay/logger';
 import { z } from 'zod';
 
 const PayoutExecuteSchema = z.object({
@@ -11,7 +11,7 @@ const PayoutExecuteSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const clientIP = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
+  const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
   const log = logger.child({ endpoint: 'payout-execute', clientIP });
   
   try {
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     const nium = createNiumProvider();
     
     // Execute payout
-    const execution = await nium.executePayout(validatedRequest);
+    const execution = await nium.executePayout(validatedRequest as any);
     
     log.info({ ref: execution.ref, status: execution.status }, 'Payout execution initiated');
 

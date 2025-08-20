@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
-import { createTransakProvider } from '../../../../../lib/keyspay/providers/transak';
-import { generateTransactionRef, defaultRateLimiter } from '../../../../../lib/keyspay/security';
-import { logger } from '../../../../../lib/keyspay/logger';
+import { createTransakProvider } from '@/lib/keyspay/providers/transak';
+import { generateTransactionRef, defaultRateLimiter } from '@/lib/keyspay/security';
+import { logger } from '@/lib/keyspay/logger';
 import { z } from 'zod';
 
 const OnRampRequestSchema = z.object({
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     const transak = createTransakProvider();
     
     // Create session
-    const session = await transak.createOnRampSession(validatedRequest);
+    const session = await transak.createOnRampSession(validatedRequest as any);
     
     log.info({ sessionId: session.sessionId, ref: session.ref }, 'On-ramp session created');
 

@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
-import { createOpenPaydProvider } from '@/src/lib/keyspay/providers/openpayd';
-import { defaultRateLimiter } from '@/src/lib/keyspay/security';
-import { logger } from '@/src/lib/keyspay/logger';
+import { createOpenPaydProvider } from '@/lib/keyspay/providers/openpayd';
+import { defaultRateLimiter } from '@/lib/keyspay/security';
+import { logger } from '@/lib/keyspay/logger';
 import { z } from 'zod';
 
 const IBANApplicationSchema = z.object({
@@ -18,7 +18,7 @@ const IBANApplicationSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const clientIP = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
+  const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
   const log = logger.child({ endpoint: 'iban-apply', clientIP });
   
   try {
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     const openpayd = createOpenPaydProvider();
     
     // Create application
-    const application = await openpayd.applyForIBAN(validatedRequest);
+    const application = await openpayd.applyForIBAN(validatedRequest as any);
     
     log.info({ applicationId: application.applicationId }, 'IBAN application created');
 

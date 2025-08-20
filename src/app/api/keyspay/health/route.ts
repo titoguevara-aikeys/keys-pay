@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { logger } from '../../../lib/keyspay/logger';
+import { logger } from '@/lib/keyspay/logger';
 
 export async function GET(request: NextRequest) {
   const start = Date.now();

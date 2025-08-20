@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
-import { createNiumProvider } from '@/src/lib/keyspay/providers/nium';
-import { defaultRateLimiter } from '@/src/lib/keyspay/security';
-import { logger } from '@/src/lib/keyspay/logger';
+import { createNiumProvider } from '@/lib/keyspay/providers/nium';
+import { defaultRateLimiter } from '@/lib/keyspay/security';
+import { logger } from '@/lib/keyspay/logger';
 import { z } from 'zod';
 
 const PayoutQuoteSchema = z.object({
@@ -13,7 +13,7 @@ const PayoutQuoteSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const clientIP = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
+  const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
   const log = logger.child({ endpoint: 'payout-quote', clientIP });
   
   try {
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     const nium = createNiumProvider();
     
     // Get quote
-    const quote = await nium.getPayoutQuote(validatedRequest);
+    const quote = await nium.getPayoutQuote(validatedRequest as any);
     
     log.info({ quoteId: quote.quoteId, rate: quote.rate }, 'Payout quote created');
 

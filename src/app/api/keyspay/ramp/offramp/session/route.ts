@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
-import { createGuardarianProvider } from '@/src/lib/keyspay/providers/guardarian';
-import { defaultRateLimiter } from '@/src/lib/keyspay/security';
-import { logger } from '@/src/lib/keyspay/logger';
+import { createGuardarianProvider } from '@/lib/keyspay/providers/guardarian';
+import { defaultRateLimiter } from '@/lib/keyspay/security';
+import { logger } from '@/lib/keyspay/logger';
 import { z } from 'zod';
 
 const OffRampRequestSchema = z.object({
@@ -16,7 +16,7 @@ const OffRampRequestSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const clientIP = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
+  const clientIP = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
   const log = logger.child({ endpoint: 'offramp-session', clientIP });
   
   try {
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     const guardarian = createGuardarianProvider();
     
     // Create session
-    const session = await guardarian.createOffRampSession(validatedRequest);
+    const session = await guardarian.createOffRampSession(validatedRequest as any);
     
     log.info({ sessionId: session.sessionId, ref: session.ref }, 'Off-ramp session created');
 
