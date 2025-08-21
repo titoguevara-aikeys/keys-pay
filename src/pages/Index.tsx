@@ -33,13 +33,13 @@ export default function Index() {
       <section className="relative overflow-hidden py-20 px-4">
         <div className="container mx-auto text-center">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <Shield className="h-8 w-8 text-primary" />
+            <img src="/lovable-uploads/4326dc21-0939-4654-8586-fba79c3b8f84.png?v=2" alt="Keys Pay Logo" className="h-10 w-10" />
             <Badge variant="secondary" className="px-4 py-2 text-sm font-medium">
               Dubai DED License 1483958 · CR 2558995
             </Badge>
           </div>
           
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent tracking-wide">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent tracking-wide leading-tight">
             Keys Pay Platform
           </h1>
           
