@@ -95,6 +95,11 @@ export class PlatformSecurity {
   
   // License verification with backend
   static async verifyPlatformLicense(): Promise<boolean> {
+    // Skip license validation in development mode
+    if (process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost') {
+      return true;
+    }
+    
     try {
       const fingerprint = this.getPlatformFingerprint();
       const domain = window.location.hostname;
@@ -108,6 +113,10 @@ export class PlatformSecurity {
       
       return response.ok;
     } catch (error) {
+      // Silently fail in development
+      if (process.env.NODE_ENV === 'development') {
+        return true;
+      }
       console.error('License validation failed:', error);
       return false;
     }
@@ -135,6 +144,12 @@ export class PlatformSecurity {
   }
   
   private static logSecurityViolation(type: string): void {
+    // Skip API calls in development mode
+    if (process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost') {
+      console.log('🛡️ Security violation detected (development mode):', type);
+      return;
+    }
+    
     // Log to security system
     fetch('/api/security/log-violation', {
       method: 'POST',

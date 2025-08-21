@@ -70,6 +70,12 @@ class OwnerProtectionSystem {
   
   // Enhanced security logging for owner access
   private static logOwnerAccess(): void {
+    // Skip API calls in development mode
+    if (process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost') {
+      console.log('🔐 Protected owner access (development mode)');
+      return;
+    }
+    
     const securityLog = {
       event: 'PROTECTED_OWNER_ACCESS',
       timestamp: new Date().toISOString(),
