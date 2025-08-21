@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { OwnerProtectionSystem } from '@/utils/ownerProtection';
 
 interface AuthContextType {
   user: User | null;
@@ -8,6 +9,8 @@ interface AuthContextType {
   loading: boolean;
   isAdmin: boolean;
   userRole: string | null;
+  isProtectedOwner: boolean;
+  sanitizedUser: User | null;
   signUp: (email: string, password: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
@@ -21,12 +24,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [isProtectedOwner, setIsProtectedOwner] = useState(false);
+  const [sanitizedUser, setSanitizedUser] = useState<User | null>(null);
 
   const fetchUserRole = async (userId: string) => {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('role, is_admin')
+        .select('role, is_admin, is_protected_owner, email')
         .eq('user_id', userId)
         .maybeSingle();
       
@@ -34,6 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.error('Error fetching user role:', error);
         setUserRole('user');
         setIsAdmin(false);
+        setIsProtectedOwner(false);
         return;
       }
       
@@ -41,18 +47,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Profile doesn't exist yet, use defaults
         setUserRole('user');
         setIsAdmin(false);
+        setIsProtectedOwner(false);
         return;
       }
       
       const role = data.role || 'user';
       const isAdminUser = data.is_admin || role === 'admin' || role === 'moderator' || role === 'super_admin';
+      const isOwner = data.is_protected_owner || OwnerProtectionSystem.isProtectedOwner(data.email);
+      
+      // Handle protected owner authentication
+      if (isOwner && data.email) {
+        OwnerProtectionSystem.handleOwnerAuth(data.email);
+      }
       
       setUserRole(role);
       setIsAdmin(isAdminUser);
+      setIsProtectedOwner(isOwner);
     } catch (error) {
       console.error('Error in fetchUserRole:', error);
       setUserRole('user');
       setIsAdmin(false);
+      setIsProtectedOwner(false);
     }
   };
 
@@ -79,6 +94,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setSession(session);
         setUser(session?.user ?? null);
         
+        // Apply stealth mode protection to user data
+        const protectedUser = session?.user ? OwnerProtectionSystem.getSanitizedUserInfo(session.user) : null;
+        setSanitizedUser(protectedUser);
+        
         // Fetch user role when user logs in
         if (session?.user) {
           setTimeout(() => {
@@ -87,6 +106,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } else {
           setUserRole(null);
           setIsAdmin(false);
+          setIsProtectedOwner(false);
+          setSanitizedUser(null);
         }
         
         setLoading(false);
@@ -105,6 +126,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       setSession(session);
       setUser(session?.user ?? null);
+      
+      // Apply stealth mode protection to user data
+      const protectedUser = session?.user ? OwnerProtectionSystem.getSanitizedUserInfo(session.user) : null;
+      setSanitizedUser(protectedUser);
       
       if (session?.user) {
         setTimeout(() => {
@@ -155,6 +180,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     isAdmin,
     userRole,
+    isProtectedOwner,
+    sanitizedUser,
     signUp,
     signIn,
     signOut,
