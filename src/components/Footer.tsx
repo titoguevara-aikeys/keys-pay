@@ -44,9 +44,8 @@ export const Footer = () => {
                 The native utility token powering the entire KEYS ecosystem. Built on Solana blockchain for fast, secure, and cost-effective transactions with comprehensive utility.
               </p>
               <div className="space-y-1 text-xs text-muted-foreground">
-                <p>License No: VARA-VAS-001-2024</p>
-                <p>Registered Address: Gate Village 10, Level 2, DIFC, Dubai, UAE</p>
-                <p>Regulatory Authority: UAE Virtual Asset Regulatory Authority (VARA)</p>
+                <p>Keys Pay operates under AIKEYS (Dubai DED License 1483958, CR 2558995)</p>
+                <p>Technology platform - All services provided by licensed third-party providers</p>
               </div>
               
               {/* App Download Section */}
@@ -178,9 +177,8 @@ export const Footer = () => {
         <div className="py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="space-y-1">
-              <CopyrightNotice />
               <div className="text-xs text-muted-foreground">
-                VARA License No: VARA-VAS-001-2024 | Platform Version: 1.0.0
+                Keys Pay operates under AIKEYS (Dubai DED License 1483958, CR 2558995)
               </div>
             </div>
             
@@ -193,35 +191,23 @@ export const Footer = () => {
               <a href="#" className="hover:text-foreground">Regulatory</a>
             </div>
             
-            {/* Company Info */}
+            {/* Powered By */}
             <div className="text-xs text-muted-foreground text-center md:text-right">
-              <p>KEYS Fintech Solutions DMCC</p>
-              <p>Gate Village 10, Level 2, DIFC, Dubai, UAE</p>
-              <p>Regulated by UAE Virtual Asset Regulatory Authority (VARA)</p>
+              <div className="flex items-center gap-2 justify-center md:justify-end">
+                <span>Powered by</span>
+                <span className="px-2 py-1 bg-muted rounded">Ramp</span>
+                <span className="px-2 py-1 bg-muted rounded">Nium</span>
+              </div>
             </div>
           </div>
           
-          {/* Disclaimer */}
+          {/* Aggregator Disclaimer */}
           <div className="mt-4 pt-4 border-t border-border">
             <p className="text-xs text-muted-foreground text-center">
-              KEYS is a VARA-compliant virtual asset service provider in the UAE. Cryptocurrency investments are subject to market risk. 
-              Past performance is not indicative of future results. Please read our risk disclosure statement.
+              Keys Pay is an aggregator technology platform. All payments, card issuing, FX, and virtual asset services are executed by regulated third-party providers. Keys Pay does not custody client funds or digital assets and is not Merchant of Record.
             </p>
           </div>
           
-          {/* IP Protection Notice */}
-          <div className="mt-4 pt-4 border-t border-border">
-            <div className="space-y-2">
-              <TrademarksNotice className="text-center" />
-              <PatentNotice className="text-center" />
-              <p className="text-xs text-muted-foreground text-center opacity-60">
-                Proprietary Software - Protected by Intellectual Property Laws
-              </p>
-            </div>
-          </div>
-          
-          {/* Hidden watermark for IP protection */}
-          <CopyrightNotice variant="watermark" />
         </div>
       </div>
     </footer>
