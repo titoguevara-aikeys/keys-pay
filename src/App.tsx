@@ -43,6 +43,12 @@ import KeyspayAdmin from "./pages/keyspay/admin";
 import KeyspayBuy from "./pages/keyspay/buy";
 import KeyspaySell from "./pages/keyspay/sell";
 
+// Import Admin components
+import ProvidersIndexPage from "./pages/admin/ProvidersIndex";
+import NiumAdminPage from "./pages/admin/NiumAdmin";
+import PaymentsSendPage from "./pages/PaymentsSend";
+import CollectionsAccountsPage from "./pages/CollectionsAccounts";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -141,6 +147,26 @@ const App = () => (
             <Route path="/keyspay/sell" element={
               <ProtectedRoute>
                 <KeyspaySell />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/providers" element={
+              <AdminRoute>
+                <ProvidersIndexPage />
+              </AdminRoute>
+            } />
+            <Route path="/admin/providers/nium" element={
+              <AdminRoute>
+                <NiumAdminPage />
+              </AdminRoute>
+            } />
+            <Route path="/payments/send" element={
+              <ProtectedRoute>
+                <PaymentsSendPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/collections/accounts" element={
+              <ProtectedRoute>
+                <CollectionsAccountsPage />
               </ProtectedRoute>
             } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
