@@ -43,17 +43,11 @@ This script will:
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/f44c23a1-66a8-4cd0-9d92-d6761abf4d0a
+This is an AIKEYS Financial Platform Enterprise application.
 
 ## How can I edit this code?
 
 There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/f44c23a1-66a8-4cd0-9d92-d6761abf4d0a) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
 
 **Use your preferred IDE**
 
@@ -168,12 +162,8 @@ The system defaults to production mode for maximum security. Beta mode can only 
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/f44c23a1-66a8-4cd0-9d92-d6761abf4d0a) and click on Share -> Publish.
+Follow standard deployment procedures for React applications with Supabase backend integration.
 
-## Can I connect a custom domain to my Lovable project?
+## Custom Domain Configuration
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Configure custom domains through your hosting provider's settings panel.

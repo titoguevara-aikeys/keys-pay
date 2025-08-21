@@ -140,7 +140,7 @@ export const MerchantPayments = () => {
 
   const handlePayment = (merchant: Merchant) => {
     if (merchant.id === 'keys-travel') {
-      window.open('https://lovable.dev/projects/e3ec21cf-4580-4c05-8f63-7c563759371b', '_blank');
+      window.open('#', '_blank');
       toast({
         title: "Redirecting to Keys Travel",
         description: "Opening Keys Travel Platform in new tab...",
