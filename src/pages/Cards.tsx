@@ -1,7 +1,7 @@
 import React from 'react';
 import Navigation from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
-import EnhancedCardManagement from '@/components/EnhancedCardManagement';
+import NiumCardManagement from '@/components/NiumCardManagement';
 
 const Cards = () => {
   return (
@@ -9,7 +9,7 @@ const Cards = () => {
       <Navigation />
       <div className="p-6">
         <div className="max-w-7xl mx-auto">
-          <EnhancedCardManagement />
+          <NiumCardManagement />
         </div>
       </div>
       <Footer />
