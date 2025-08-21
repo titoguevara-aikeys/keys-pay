@@ -45,36 +45,8 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
   };
 
   const performSecurityCheck = async () => {
-    try {
-      const profile = SecurityCore.getRiskProfile();
-      setRiskProfile(profile);
-      
-      if (profile) {
-        setSecurityScore(profile.score);
-        
-        // Determine security level based on risk score
-        if (profile.score < 30) {
-          setSecurityLevel('low');
-        } else if (profile.score < 60) {
-          setSecurityLevel('medium');
-        } else if (profile.score < 85) {
-          setSecurityLevel('high');
-          setRequireStepUp(true);
-        } else {
-          setSecurityLevel('critical');
-          setRequireStepUp(true);
-          
-          // Show non-intrusive security notice
-          toast({
-            title: "Enhanced Security Active",
-            description: "Additional verification may be required for sensitive actions.",
-            variant: "default",
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Security check failed:', error);
-    }
+    // DISABLED FOR DEVELOPMENT
+    console.log('🔓 Security checks disabled for development');
   };
 
   const requestStepUpAuth = async (reason: string): Promise<boolean> => {
@@ -107,13 +79,9 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
     }
   };
 
-  // Continuous security monitoring (background)
+  // Continuous security monitoring DISABLED for development
   useEffect(() => {
-    const securityMonitor = setInterval(async () => {
-      await performSecurityCheck();
-    }, 60000); // Check every minute
-
-    return () => clearInterval(securityMonitor);
+    console.log('🔓 Security monitoring completely disabled for development');
   }, []);
 
   // Monitor for security events
