@@ -49,6 +49,7 @@ import { NiumVirtualCard } from './NiumVirtualCard';
 import { NiumCreateCardDialog } from './NiumCreateCardDialog';
 import { NiumPhysicalCardOrder } from './NiumPhysicalCardOrder';
 import { CardsSkeleton } from './skeletons/CardsSkeleton';
+import { KeysPayCardShowcase } from './KeysPayCardShowcase';
 
 const NiumCardManagement = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -290,17 +291,13 @@ const NiumCardManagement = () => {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8">
-                  <CreditCard className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="font-medium mb-2">No Keys Pay Cards</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Create your first Keys Pay card to start making secure payments.
-                  </p>
-                  <Button onClick={handleCreateDialog}>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create First Card
-                  </Button>
-                </div>
+                <KeysPayCardShowcase 
+                  onSelectCard={(cardId) => {
+                    // Handle card tier selection - could open create dialog with selected tier
+                    handleCreateDialog();
+                  }}
+                  onCreateCard={handleCreateDialog}
+                />
               )}
             </CardContent>
           </Card>
@@ -366,22 +363,30 @@ const NiumCardManagement = () => {
               ))}
             </div>
           ) : (
-            <Card className="p-12 text-center">
-              <CardContent className="space-y-4">
-                <CreditCard className="h-12 w-12 text-muted-foreground mx-auto" />
-                <div>
-                  <h3 className="text-lg font-medium">No Cards Found</h3>
-                  <p className="text-muted-foreground">
-                    {cardFilters.status !== 'all' || cardFilters.type !== 'all' 
-                      ? 'No cards match your current filters.'
-                      : 'Create your first Keys Pay card to get started.'
-                    }
-                  </p>
-                </div>
-                <Button onClick={handleCreateDialog}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create New Card
-                </Button>
+            <Card>
+              <CardContent className="p-6">
+                {cardFilters.status !== 'all' || cardFilters.type !== 'all' ? (
+                  <div className="text-center py-8 space-y-4">
+                    <CreditCard className="h-12 w-12 text-muted-foreground mx-auto" />
+                    <div>
+                      <h3 className="text-lg font-medium">No Cards Match Filters</h3>
+                      <p className="text-muted-foreground">
+                        No cards match your current filters. Try adjusting your search criteria.
+                      </p>
+                    </div>
+                    <Button onClick={handleCreateDialog}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create New Card
+                    </Button>
+                  </div>
+                ) : (
+                  <KeysPayCardShowcase 
+                    onSelectCard={(cardId) => {
+                      handleCreateDialog();
+                    }}
+                    onCreateCard={handleCreateDialog}
+                  />
+                )}
               </CardContent>
             </Card>
           )}

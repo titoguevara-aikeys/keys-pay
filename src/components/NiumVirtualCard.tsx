@@ -226,13 +226,13 @@ export const NiumVirtualCard: React.FC<NiumVirtualCardProps> = ({
           )}
         </div>
 
-        {/* NIUM Branding */}
+        {/* Keys Pay Branding */}
         <div className="absolute top-4 right-4 opacity-30">
           <CreditCard className="h-8 w-8" />
         </div>
         
         <div className="absolute bottom-2 right-4">
-          <span className="text-xs text-gray-400">Powered by NIUM</span>
+          <span className="text-xs text-gray-400">Powered by Keys Pay</span>
         </div>
       </CardContent>
     </Card>
