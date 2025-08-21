@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { OwnerProtectionSystem } from '@/utils/ownerProtection';
 
 interface AuthContextType {
   user: User | null;
@@ -53,12 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       const role = data.role || 'user';
       const isAdminUser = data.is_admin || role === 'admin' || role === 'moderator' || role === 'super_admin';
-      const isOwner = data.is_protected_owner || OwnerProtectionSystem.isProtectedOwner(data.email);
-      
-      // Handle protected owner authentication
-      if (isOwner && data.email) {
-        OwnerProtectionSystem.handleOwnerAuth(data.email);
-      }
+      const isOwner = data.is_protected_owner || false;
       
       setUserRole(role);
       setIsAdmin(isAdminUser);
@@ -93,10 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log('Auth state change:', event, session);
         setSession(session);
         setUser(session?.user ?? null);
-        
-        // Apply stealth mode protection to user data
-        const protectedUser = session?.user ? OwnerProtectionSystem.getSanitizedUserInfo(session.user) : null;
-        setSanitizedUser(protectedUser);
+        setSanitizedUser(session?.user ?? null);
         
         // Fetch user role when user logs in
         if (session?.user) {
@@ -126,10 +117,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       setSession(session);
       setUser(session?.user ?? null);
-      
-      // Apply stealth mode protection to user data
-      const protectedUser = session?.user ? OwnerProtectionSystem.getSanitizedUserInfo(session.user) : null;
-      setSanitizedUser(protectedUser);
+      setSanitizedUser(session?.user ?? null);
       
       if (session?.user) {
         setTimeout(() => {

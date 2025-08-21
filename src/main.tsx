@@ -4,9 +4,8 @@ import App from './App.tsx'
 import './index.css'
 import { WebVitals } from './components/WebVitals'
 
-// Only import security modules in production to prevent auth interference
+// Security modules disabled for development
 if (process.env.NODE_ENV === 'production') {
-  import('./lib/platformSecurity')
   import('./utils/ownerProtection')
 }
 
