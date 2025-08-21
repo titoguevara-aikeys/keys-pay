@@ -79,7 +79,7 @@ const FamilyDashboardComponent = () => {
   }, []);
 
   const handleRemoveMember = useCallback(async (member: NiumFamilyMember) => {
-    if (!confirm(`Are you sure you want to suspend ${member.firstName} ${member.lastName}? This will block their NIUM card and account access.`)) {
+    if (!confirm(`Are you sure you want to suspend ${member.firstName} ${member.lastName}? This will block their Keys Pay card and account access.`)) {
       return;
     }
 
@@ -87,7 +87,7 @@ const FamilyDashboardComponent = () => {
       await suspendFamilyMember.mutateAsync(member.id);
       toast({
         title: 'Family member suspended',
-        description: `${member.firstName} ${member.lastName} has been suspended via NIUM sandbox.`,
+        description: `${member.firstName} ${member.lastName} has been suspended via Keys Pay sandbox.`,
       });
     } catch (error: any) {
       toast({
@@ -136,9 +136,9 @@ const FamilyDashboardComponent = () => {
       {/* Header with NIUM Status */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">NIUM Family Dashboard</h1>
+          <h1 className="text-3xl font-bold">Keys Pay Family Dashboard</h1>
           <div className="flex items-center gap-2">
-            <p className="text-muted-foreground">Powered by NIUM Sandbox</p>
+            <p className="text-muted-foreground">Powered by Keys Pay Sandbox</p>
             {healthStatus?.ok ? (
               <Badge variant="outline" className="text-green-600 border-green-200">
                 ✓ Connected
@@ -152,7 +152,7 @@ const FamilyDashboardComponent = () => {
         </div>
         <Button onClick={handleAddDialog}>
           <Plus className="h-4 w-4 mr-2" />
-          Add Family Member via NIUM
+          Add Family Member via Keys Pay
         </Button>
       </div>
 

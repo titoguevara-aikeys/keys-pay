@@ -396,8 +396,8 @@ export default function NiumAdminPage() {
               </Link>
             </Button>
             <div>
-              <h1 className="text-3xl font-bold">NIUM Provider Admin</h1>
-              <p className="text-muted-foreground">Manage NIUM sandbox integration</p>
+          <h1 className="text-3xl font-bold">Keys Pay Provider Admin</h1>
+          <p className="text-muted-foreground">Manage Keys Pay sandbox integration</p>
             </div>
           </div>
           <div className="flex gap-2">
@@ -436,7 +436,7 @@ export default function NiumAdminPage() {
         <Card>
           <CardHeader>
             <CardTitle>Webhook Configuration</CardTitle>
-            <CardDescription>Register this URL in your NIUM dashboard</CardDescription>
+            <CardDescription>Register this URL in your Keys Pay dashboard</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2">

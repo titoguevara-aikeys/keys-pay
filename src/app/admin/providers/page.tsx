@@ -22,11 +22,11 @@ export default function ProvidersIndexPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-500" />
-              NIUM
+              Keys Pay
               <Badge variant="secondary">Sandbox Connected</Badge>
             </CardTitle>
             <CardDescription>
-              Cards, Payouts & FX services via NIUM sandbox environment
+              Cards, Payouts & FX services via Keys Pay sandbox environment
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -151,7 +151,7 @@ export default function ProvidersIndexPage() {
             <div className="space-y-2">
               <h3 className="font-medium">Active Providers</h3>
               <div className="space-y-1">
-                <Badge variant="default" className="mr-2">NIUM</Badge>
+                <Badge variant="default" className="mr-2">Keys Pay</Badge>
                 <Badge variant="default">Ramp</Badge>
               </div>
             </div>

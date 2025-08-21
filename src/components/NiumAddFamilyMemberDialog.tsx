@@ -75,7 +75,7 @@ export const NiumAddFamilyMemberDialog: React.FC<NiumAddFamilyMemberDialogProps>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CreditCard className="h-5 w-5" />
-            Add Family Member via NIUM
+            Add Family Member via Keys Pay
           </DialogTitle>
         </DialogHeader>
         
@@ -172,7 +172,7 @@ export const NiumAddFamilyMemberDialog: React.FC<NiumAddFamilyMemberDialogProps>
           <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
             <h4 className="font-medium text-blue-900 mb-2">What will be created:</h4>
             <ul className="text-sm text-blue-800 space-y-1">
-              <li>• NIUM sandbox account with virtual IBAN</li>
+              <li>• Keys Pay sandbox account with virtual IBAN</li>
               <li>• Virtual debit card for online purchases</li>
               <li>• Spending controls and transaction monitoring</li>
               <li>• Real-time activity notifications</li>
@@ -195,7 +195,7 @@ export const NiumAddFamilyMemberDialog: React.FC<NiumAddFamilyMemberDialogProps>
               {addFamilyMember.isPending ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Creating via NIUM...
+                  Creating via Keys Pay...
                 </>
               ) : (
                 'Create Account & Card'

@@ -196,7 +196,7 @@ export const Footer = () => {
               <div className="flex items-center gap-2 justify-center md:justify-end">
                 <span>Powered by</span>
                 <span className="px-2 py-1 bg-muted rounded">Ramp</span>
-                <span className="px-2 py-1 bg-muted rounded">Nium</span>
+                <span className="px-2 py-1 bg-muted rounded">Keys Pay</span>
               </div>
             </div>
           </div>

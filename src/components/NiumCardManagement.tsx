@@ -158,7 +158,7 @@ const NiumCardManagement = () => {
             <div className="flex items-center gap-2 mt-2">
               <div className={`w-2 h-2 rounded-full ${healthCheck.ok ? 'bg-green-500' : 'bg-red-500'}`} />
               <span className="text-sm text-muted-foreground">
-                NIUM Sandbox {healthCheck.ok ? 'Connected' : 'Disconnected'}
+                Keys Pay Sandbox {healthCheck.ok ? 'Connected' : 'Disconnected'}
               </span>
             </div>
           )}
@@ -292,9 +292,9 @@ const NiumCardManagement = () => {
               ) : (
                 <div className="text-center py-8">
                   <CreditCard className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="font-medium mb-2">No NIUM Cards</h3>
+                  <h3 className="font-medium mb-2">No Keys Pay Cards</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Create your first NIUM card to start making secure payments.
+                    Create your first Keys Pay card to start making secure payments.
                   </p>
                   <Button onClick={handleCreateDialog}>
                     <Plus className="h-4 w-4 mr-2" />
@@ -374,7 +374,7 @@ const NiumCardManagement = () => {
                   <p className="text-muted-foreground">
                     {cardFilters.status !== 'all' || cardFilters.type !== 'all' 
                       ? 'No cards match your current filters.'
-                      : 'Create your first NIUM card to get started.'
+                      : 'Create your first Keys Pay card to get started.'
                     }
                   </p>
                 </div>
