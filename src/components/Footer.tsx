@@ -36,8 +36,7 @@ export const Footer = () => {
               <div className="flex items-center gap-3">
                 <img src="/lovable-uploads/4326dc21-0939-4654-8586-fba79c3b8f84.png?v=2" alt="Keys Pay Logo" className="h-8 w-8" />
                 <div className="flex flex-col">
-                  <h3 className="text-lg font-semibold text-white">KEYS</h3>
-                  <span className="text-xs text-gray-400 -mt-1">Fintech Solutions</span>
+                  <h3 className="text-lg font-semibold text-white">Keys Pay</h3>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">

@@ -72,7 +72,6 @@ const MockAuth = () => {
               />
               <div className="flex flex-col">
                 <span className="text-2xl font-bold text-foreground">Keys Pay</span>
-                <span className="text-sm text-muted-foreground -mt-1">Fintech Solutions</span>
               </div>
             </div>
           </div>
