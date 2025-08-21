@@ -140,10 +140,11 @@ export const MerchantPayments = () => {
 
   const handlePayment = (merchant: Merchant) => {
     if (merchant.id === 'keys-travel') {
-      window.open('#', '_blank');
+      // Internal travel booking system
+      setSelectedMerchant(merchant);
       toast({
-        title: "Redirecting to Keys Travel",
-        description: "Opening Keys Travel Platform in new tab...",
+        title: "Keys Travel",
+        description: "Accessing internal travel booking system...",
       });
     } else {
       setSelectedMerchant(merchant);
