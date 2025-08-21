@@ -4,8 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChoreManager } from './ChoreManager';
 import { AllowanceManager } from './AllowanceManager';
 import { SavingsGoals } from './SavingsGoals';
-import { ChildAccountCard } from './ChildAccountCard';
-import { EditFamilyMemberDialog } from './EditFamilyMemberDialog';
+import { NiumChildAccountCard } from './NiumChildAccountCard';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -20,25 +19,32 @@ import {
   AlertCircle,
   Plus
 } from 'lucide-react';
-import { useFamilyMembers, useRemoveFamilyMember } from '@/hooks/useFamilyMembers';
-import { useFamilyStats, useFamilyActivity } from '@/hooks/useFamilyActivity';
-import { AddFamilyMemberDialog } from './AddFamilyMemberDialog';
-import { TransferMoneyDialog } from './TransferMoneyDialog';
+import { 
+  useNiumFamilyMembers, 
+  useSuspendNiumMember, 
+  useNiumFamilyStats, 
+  useNiumFamilyActivity,
+  useNiumFamilyHealth 
+} from '@/hooks/useNiumFamily';
+import { NiumAddFamilyMemberDialog } from './NiumAddFamilyMemberDialog';
+import { NiumEditFamilyMemberDialog } from './NiumEditFamilyMemberDialog';
+import { NiumTransferMoneyDialog } from './NiumTransferMoneyDialog';
 import { useToast } from '@/hooks/use-toast';
 import { FamilySkeleton } from './skeletons/FamilySkeleton';
 
-import type { FamilyMember } from '@/hooks/useFamilyMembers';
+import type { NiumFamilyMember } from '@/lib/nium/family-api';
 
 const FamilyDashboardComponent = () => {
   const { toast } = useToast();
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showTransferDialog, setShowTransferDialog] = useState(false);
-  const [selectedMember, setSelectedMember] = useState<FamilyMember | null>(null);
-  const { data: familyMembers, isLoading } = useFamilyMembers();
-  const { data: familyStats } = useFamilyStats();
-  const { data: recentActivity } = useFamilyActivity(10);
-  const removeFamilyMember = useRemoveFamilyMember();
+  const [selectedMember, setSelectedMember] = useState<NiumFamilyMember | null>(null);
+  const { data: familyMembers, isLoading } = useNiumFamilyMembers();
+  const { data: familyStats } = useNiumFamilyStats();
+  const { data: recentActivity } = useNiumFamilyActivity(10);
+  const { data: healthStatus } = useNiumFamilyHealth();
+  const suspendFamilyMember = useSuspendNiumMember();
 
   // Memoized stats to prevent unnecessary recalculations
   const dashboardStats = useMemo(() => ({
@@ -72,32 +78,32 @@ const FamilyDashboardComponent = () => {
     setShowTransferDialog(false);
   }, []);
 
-  const handleRemoveMember = useCallback(async (member: FamilyMember) => {
-    if (!confirm(`Are you sure you want to remove ${member.child_profile?.first_name} ${member.child_profile?.last_name} from your family controls? This action cannot be undone.`)) {
+  const handleRemoveMember = useCallback(async (member: NiumFamilyMember) => {
+    if (!confirm(`Are you sure you want to suspend ${member.firstName} ${member.lastName}? This will block their NIUM card and account access.`)) {
       return;
     }
 
     try {
-      await removeFamilyMember.mutateAsync(member.id);
+      await suspendFamilyMember.mutateAsync(member.id);
       toast({
-        title: 'Family member removed',
-        description: `${member.child_profile?.first_name} ${member.child_profile?.last_name} has been removed from your family controls.`,
+        title: 'Family member suspended',
+        description: `${member.firstName} ${member.lastName} has been suspended via NIUM sandbox.`,
       });
     } catch (error: any) {
       toast({
-        title: 'Error removing family member',
+        title: 'Error suspending family member',
         description: error.message || 'Please try again.',
         variant: 'destructive',
       });
     }
-  }, [removeFamilyMember, toast]);
+  }, [suspendFamilyMember, toast]);
 
-  const handleEditMember = useCallback((member: FamilyMember) => {
+  const handleEditMember = useCallback((member: NiumFamilyMember) => {
     setSelectedMember(member);
     setShowEditDialog(true);
   }, []);
 
-  const handleTransferMoney = useCallback((member: FamilyMember) => {
+  const handleTransferMoney = useCallback((member: NiumFamilyMember) => {
     setSelectedMember(member);
     setShowTransferDialog(true);
   }, []);
@@ -127,15 +133,26 @@ const FamilyDashboardComponent = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Header with NIUM Status */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Family Dashboard</h1>
-          <p className="text-muted-foreground">Complete family finance management in one place</p>
+          <h1 className="text-3xl font-bold">NIUM Family Dashboard</h1>
+          <div className="flex items-center gap-2">
+            <p className="text-muted-foreground">Powered by NIUM Sandbox</p>
+            {healthStatus?.ok ? (
+              <Badge variant="outline" className="text-green-600 border-green-200">
+                ✓ Connected
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="text-yellow-600 border-yellow-200">
+                ⚡ Mock Mode
+              </Badge>
+            )}
+          </div>
         </div>
         <Button onClick={handleAddDialog}>
           <Plus className="h-4 w-4 mr-2" />
-          Add Family Member
+          Add Family Member via NIUM
         </Button>
       </div>
 
@@ -224,13 +241,13 @@ const FamilyDashboardComponent = () => {
                         {getActivityIcon(activity.activity_type)}
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-sm">
-                            {activity.child_profile?.first_name} {activity.child_profile?.last_name}
+                            {activity.child_name}
                           </p>
                           <p className="text-sm text-muted-foreground truncate">{activity.description}</p>
                         </div>
                         <div className="text-right">
                           {activity.amount && (
-                            <p className="text-sm font-medium text-green-600">+${activity.amount}</p>
+                            <p className="text-sm font-medium text-green-600">+{activity.currency} {activity.amount}</p>
                           )}
                           <p className="text-xs text-muted-foreground">
                             {new Date(activity.created_at).toLocaleDateString()}
@@ -337,12 +354,12 @@ const FamilyDashboardComponent = () => {
           {familyMembers && familyMembers.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {familyMembers.map((member) => (
-                <ChildAccountCard 
+                <NiumChildAccountCard 
                   key={member.id} 
                   member={member}
                   onEdit={handleEditMember}
                   onTransfer={handleTransferMoney}
-                  onRemove={handleRemoveMember}
+                  onSuspend={handleRemoveMember}
                 />
               ))}
             </div>
@@ -367,18 +384,18 @@ const FamilyDashboardComponent = () => {
       </Tabs>
 
       {/* Dialogs */}
-      <AddFamilyMemberDialog 
+      <NiumAddFamilyMemberDialog 
         open={showAddDialog}
         onClose={handleCloseAddDialog}
       />
       
-      <EditFamilyMemberDialog 
+      <NiumEditFamilyMemberDialog 
         open={showEditDialog}
         onClose={handleCloseEditDialog}
         member={selectedMember}
       />
       
-      <TransferMoneyDialog 
+      <NiumTransferMoneyDialog 
         open={showTransferDialog}
         onClose={handleCloseTransferDialog}
         member={selectedMember}
