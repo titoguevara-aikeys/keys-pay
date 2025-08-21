@@ -129,15 +129,6 @@ const MockAuth = () => {
                   </Alert>
                 )}
 
-                <Button
-                  type="button"
-                  onClick={handleDemoLogin}
-                  variant="outline"
-                  className="w-full"
-                  disabled={loading}
-                >
-                  Fill Demo Credentials
-                </Button>
 
                 <Button
                   type="submit" 
@@ -201,14 +192,6 @@ const MockAuth = () => {
             </TabsContent>
           </Tabs>
 
-          <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-            <h3 className="text-sm font-medium mb-2">Demo Credentials:</h3>
-            <div className="text-xs text-muted-foreground space-y-1">
-              <div>Email: tito.guevara@gmail.com</div>
-              <div>Password: M@ski110525</div>
-              <div>Role: Admin</div>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </div>
