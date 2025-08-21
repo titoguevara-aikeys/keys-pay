@@ -28,26 +28,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .from('profiles')
         .select('role')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
       
       if (error) {
         console.error('Error fetching user role:', error);
+        setUserRole('user');
+        setIsAdmin(false);
         return;
       }
       
-      setUserRole(data?.role || 'user');
-      // TEMPORARILY ALLOWING ALL USERS AS ADMIN FOR DEBUGGING
-      // TODO: Restore proper admin check once super admin access is confirmed
-      setIsAdmin(true); // data?.role === 'admin' || data?.role === 'moderator' || data?.role === 'super_admin');
+      const role = data?.role || 'user';
+      setUserRole(role);
+      setIsAdmin(role === 'admin' || role === 'moderator' || role === 'super_admin');
     } catch (error) {
       console.error('Error in fetchUserRole:', error);
+      setUserRole('user');
+      setIsAdmin(false);
     }
   };
 
   useEffect(() => {
-    // Set up auth state listener FIRST
+    let isMounted = true;
+    
+    // Test Supabase client connection first
+    const testConnection = async () => {
+      try {
+        await supabase.auth.getSession();
+      } catch (error) {
+        console.error('Supabase client test failed:', error);
+      }
+    };
+    
+    testConnection();
+    
+    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        if (!isMounted) return;
+        
+        console.log('Auth state change:', event, session);
         setSession(session);
         setUser(session?.user ?? null);
         
@@ -55,7 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (session?.user) {
           setTimeout(() => {
             fetchUserRole(session.user.id);
-          }, 0);
+          }, 100);
         } else {
           setUserRole(null);
           setIsAdmin(false);
@@ -65,21 +84,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     );
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (!isMounted) return;
+      
+      if (error) {
+        console.error('Error getting session:', error);
+        setLoading(false);
+        return;
+      }
+      
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
         setTimeout(() => {
           fetchUserRole(session.user.id);
-        }, 0);
+        }, 100);
       }
       
       setLoading(false);
+    }).catch(error => {
+      console.error('Session check failed:', error);
+      setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signUp = async (email: string, password: string) => {
