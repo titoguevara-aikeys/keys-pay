@@ -1,0 +1,202 @@
+{
+  "info": {
+    "name": "Keys Pay API (Launch Build)",
+    "description": "Keys Pay Platform - Final Aug 2025 Launch Build\nDubai DED License 1483958, CR 2558995\nAggregator model (non-custodial)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "patch": 0
+    }
+  },
+  "variable": [
+    {
+      "key": "RAMP_BASE_URL",
+      "value": "https://api.ramp.network",
+      "type": "string"
+    },
+    {
+      "key": "RAMP_API_KEY", 
+      "value": "your_ramp_api_key",
+      "type": "string"
+    },
+    {
+      "key": "NIUM_BASE_URL",
+      "value": "https://sandbox.nium.com/api",
+      "type": "string"
+    },
+    {
+      "key": "NIUM_API_KEY",
+      "value": "your_nium_api_key", 
+      "type": "string"
+    },
+    {
+      "key": "OPENPAYD_BASE_URL",
+      "value": "https://sandbox.openpayd.com",
+      "type": "string"
+    },
+    {
+      "key": "OPENPAYD_API_KEY",
+      "value": "your_openpayd_api_key",
+      "type": "string"
+    },
+    {
+      "key": "baseUrl",
+      "value": "https://keys-pay.ai/api",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "noauth"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Buy Crypto (Ramp)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{RAMP_API_KEY}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": \"100\",\n  \"currency\": \"AED\",\n  \"asset\": \"BTC\",\n  \"country\": \"AE\"\n}"
+        },
+        "url": {
+          "raw": "{{RAMP_BASE_URL}}/buy",
+          "host": ["{{RAMP_BASE_URL}}"],
+          "path": ["buy"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Issue Card (Nium)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization", 
+            "value": "Bearer {{NIUM_API_KEY}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer_id\": \"12345\",\n  \"card_type\": \"virtual\"\n}"
+        },
+        "url": {
+          "raw": "{{NIUM_BASE_URL}}/cards",
+          "host": ["{{NIUM_BASE_URL}}"], 
+          "path": ["cards"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Payout Quote (Nium)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{NIUM_API_KEY}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"source_currency\": \"AED\",\n  \"target_currency\": \"USD\",\n  \"amount\": 1000\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/payouts/quote",
+          "host": ["{{baseUrl}}"],
+          "path": ["payouts", "quote"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Execute Payout (Nium)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{NIUM_API_KEY}}"
+          },
+          {
+            "key": "Content-Type", 
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"quote_id\": \"q_demo\",\n  \"reference\": \"PAY-2024-001\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/payouts/execute",
+          "host": ["{{baseUrl}}"],
+          "path": ["payouts", "execute"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Coming Soon — IBAN (OpenPayd)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{OPENPAYD_API_KEY}}"
+          }
+        ],
+        "url": {
+          "raw": "{{OPENPAYD_BASE_URL}}/accounts",
+          "host": ["{{OPENPAYD_BASE_URL}}"],
+          "path": ["accounts"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Provider Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/providers",
+          "host": ["{{baseUrl}}"],
+          "path": ["providers"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

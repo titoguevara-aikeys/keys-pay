@@ -1,169 +1,108 @@
-# AIKEYS Financial Platform
+# 🚀 Keys Pay Platform
 
-A comprehensive financial platform built with modern web technologies.
+**Final Launch Build - August 2025**
 
-## Seeding an Admin (Supabase)
+Keys Pay is a DED-compliant aggregator platform for virtual assets and financial services, operating under AIKEYS (Trade License 1483958, CR 2558995, Dubai Department of Economy & Tourism).
 
-To promote an existing user to admin status, you'll need to update both the database and auth metadata:
+## 📋 Overview
 
-### Getting User ID from Supabase Dashboard
+Keys Pay operates as a **non-custodial aggregator** - we do not hold client funds or crypto assets. All payments, custody, and settlement are executed by regulated third-party providers.
 
-1. Go to your [Supabase Dashboard](https://supabase.com/dashboard)
-2. Navigate to Authentication > Users
-3. Find your user and copy their UUID (User ID)
+### Licensed Providers
+- **🟢 RAMP** - On-ramp widget (LIVE)
+- **🟢 NIUM** - Card issuing & payouts (LIVE) 
+- **🟡 OpenPayd** - eIBAN accounts (Coming Soon)
+- **⚪ Guardarian** - Optional off-ramp failover (Disabled)
 
-### Setup Environment Variables
+## 🏗️ Architecture
 
-Add these to your `.env` file:
-
-```bash
-# Prefer USER_ID if available (more direct)
-ADMIN_USER_ID=your-user-uuid-here
-# OR use email as fallback
-ADMIN_EMAIL=admin@example.com
-
-# Required Supabase credentials
-SUPABASE_URL=your-supabase-url
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
+Client → Keys Pay API → Provider APIs
+                     ↓
+              Compliance Layer
+                     ↓
+               Audit & Logging
 ```
 
-### Run the Seeding Script
+## 🚀 Quick Start
 
-```bash
-npm run seed:admin
+1. **Environment Setup**
+   ```bash
+   cp .env.sample .env
+   # Update with your API keys
+   ```
+
+2. **Docker Deploy**
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **Health Check**
+   ```bash
+   curl http://localhost:8080/api/health
+   ```
+
+## 📊 API Endpoints
+
+| Path | Provider | Status | Description |
+|------|----------|--------|-------------|
+| `/api/buy-crypto` | Ramp | 🟢 Live | On-ramp widget |
+| `/api/cards` | Nium | 🟢 Live | Card issuing |
+| `/api/payouts` | Nium | 🟢 Live | Cross-border payouts |
+| `/api/iban` | OpenPayd | 🟡 Soon | Virtual IBAN accounts |
+| `/api/offramp` | Guardarian | ⚪ Optional | Failover off-ramp |
+
+## 🔐 Security
+
+- **HMAC Authentication** - All client requests signed
+- **Webhook Verification** - Provider webhooks verified
+- **TLS 1.3 Enforced** - End-to-end encryption
+- **PCI DSS Aligned** - Card flow security
+- **Audit Logging** - Comprehensive compliance logs
+
+## 🏛️ Compliance
+
+**Legal Entity**: AIKEYS  
+**Trade License**: 1483958  
+**CR Number**: 2558995  
+**Authority**: Dubai Department of Economy & Tourism (DED)  
+**Reference Code**: 12345  
+
+### Regulatory Status
+- ✅ DED licensed aggregator
+- ✅ Non-custodial model
+- ✅ Third-party MoR compliance
+- ❌ No VARA license required (aggregator model)
+
+## 🧪 Testing
+
+Import the Postman collection from `postman/KeysPay-Launch.collection.json` to test all endpoints.
+
+## 🐳 Docker
+
+Production deployment via Docker:
+
+```yaml
+services:
+  keys-pay:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - DED_LICENSE=1483958
+      - CR_NUMBER=2558995
 ```
 
-This script will:
-- Look up the user by ID (preferred) or email (fallback)
-- Create/update their profile with `is_admin = true`
-- Add admin role to their auth metadata (`roles: ['admin'], is_admin: true`)
-- Print success confirmation
+## 📚 Documentation
 
-**Security Note**: The service role key is only used server-side in this script, never exposed to the client.
+- `/docs/overview.md` - Platform architecture
+- `/docs/quickstart.md` - Setup guide
+- `/openapi/openapi.yaml` - API specification
 
-## Project info
+## ⚖️ Legal Disclaimer
 
-This is an AIKEYS Financial Platform Enterprise application.
+Keys Pay operates under AIKEYS (Trade License 1483958, CR 2558995, DED Dubai). Keys Pay is an aggregator platform. All payments, custody, and settlement are executed by regulated third-party providers. Keys Pay does not take custody of client funds or crypto assets.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-- Supabase (Backend & Database)
-
-## Beta flags & safety
-
-This platform implements server-controlled security monitoring with enterprise-grade safety controls.
-
-### Environment Variables
-
-```bash
-# Security monitoring control (production default: true)
-FORCE_FULL_MONITORING=true
-
-# Temporary admin API authentication (replace with proper RBAC)
-VITE_ADMIN_API_SECRET=your-secure-secret
-
-# Feature flag storage backend
-FLAG_STORE=supabase
-
-# Override specific flags via environment (bypasses database)
-FLAG_BETA_MONITORING=on
-```
-
-### Admin API Endpoints
-
-#### GET /api/admin/flags
-Returns current flag status and system configuration.
-
-**Headers:** `x-admin-secret: your-secret`
-
-**Response:**
-```json
-{
-  "flags": { "beta_monitoring": "on" },
-  "force_full_monitoring": false,
-  "store": "supabase"
-}
-```
-
-#### POST /api/admin/flags  
-Updates feature flags (admin only).
-
-**Headers:** 
-- `x-admin-secret: your-secret`
-- `Content-Type: application/json`
-
-**Body:**
-```json
-{
-  "key": "beta_monitoring",
-  "value": "on"
-}
-```
-
-### Override Priority
-
-1. **Environment override** (`FORCE_FULL_MONITORING=true`) - Highest priority
-2. **Database flags** (admin-controlled via API) - Standard operation  
-3. **Safe defaults** (30s monitoring) - Fallback
-
-### Security Monitoring Intervals
-
-- **Production mode:** 30 seconds (comprehensive security checks)
-- **Beta mode:** 5 minutes (optimized for development performance)
-
-The system defaults to production mode for maximum security. Beta mode can only be enabled by admins through the secure API, and is automatically disabled if `FORCE_FULL_MONITORING=true`.
-
-## How can I deploy this project?
-
-Follow standard deployment procedures for React applications with Supabase backend integration.
-
-## Custom Domain Configuration
-
-Configure custom domains through your hosting provider's settings panel.
+**© 2025 AIKEYS - Dubai DED License 1483958**

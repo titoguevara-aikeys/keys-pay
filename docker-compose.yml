@@ -1,57 +1,52 @@
 version: "3.9"
 
+# =========================
+# KEYS PAY — DOCKER COMPOSE
+# =========================
+# Final: Aug 2025 Launch Build
+# Legal: Dubai Department of Economy & Tourism (DED)
+# License No.: 1483958
+# CR No.: 2558995
+# =========================
+
 services:
-  web:
+  keys-pay:
     build: .
-    container_name: keyspay-web
+    container_name: keys-pay-platform
+    env_file: .env
     ports:
-      - "3000:3000"
-    env_file:
-      - .env
+      - "8080:8080"
+    depends_on:
+      - postgres
     environment:
       - NODE_ENV=production
-    depends_on:
-      - db
+      - DED_LICENSE=1483958
+      - CR_NUMBER=2558995
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
     restart: unless-stopped
-
-  db:
-    image: postgres:14-alpine
-    container_name: keyspay-db
+    
+  postgres:
+    image: postgres:15-alpine
+    container_name: keys-pay-db
     environment:
       POSTGRES_USER: keys
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: keyspay
+      POSTGRES_PASSWORD: keys_pass
+      POSTGRES_DB: keys_pay
     volumes:
-      - dbdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U keys -d keyspay"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    restart: unless-stopped
-
-  redis:
-    image: redis:7-alpine
-    container_name: keyspay-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redisdata:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD-SHELL", "pg_isready -U keys -d keys_pay"]
       interval: 30s
       timeout: 10s
       retries: 3
     restart: unless-stopped
 
 volumes:
-  dbdata:
-  redisdata:
+  pgdata:
