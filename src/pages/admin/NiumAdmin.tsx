@@ -85,13 +85,18 @@ export default function NiumAdminPage() {
     try {
       // Try actual API first, fallback to mock
       let response;
+      let data;
       try {
         response = await fetch('/api/nium/health');
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        data = await response.json();
       } catch {
         // Fallback to mock API for development
         const { MockNiumAPI } = await import('@/lib/nium/mock-api');
         const mockApi = new MockNiumAPI();
-        const data = await mockApi.health();
+        data = await mockApi.health();
         setHealth(data);
         
         if (data.ok) {
@@ -104,7 +109,6 @@ export default function NiumAdminPage() {
         return;
       }
       
-      const data = await response.json();
       setHealth(data);
       
       if (data.ok) {
@@ -155,6 +159,9 @@ export default function NiumAdminPage() {
             }
           })
         });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
         data = await response.json();
       } catch {
         // Fallback to mock API
@@ -218,6 +225,9 @@ export default function NiumAdminPage() {
         });
         
         const response = await fetch(`/api/nium/payouts/quote?${params}`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
         data = await response.json();
       } catch {
         // Fallback to mock API
@@ -280,6 +290,9 @@ export default function NiumAdminPage() {
             beneficiaryId: payoutForm.beneficiaryId || undefined
           })
         });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
         data = await response.json();
       } catch {
         // Fallback to mock API
@@ -330,6 +343,9 @@ export default function NiumAdminPage() {
         });
         
         const response = await fetch(`/api/nium/payouts/status?${params}`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
         data = await response.json();
       } catch {
         // Fallback to mock API
