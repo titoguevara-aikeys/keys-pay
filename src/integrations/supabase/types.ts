@@ -1578,6 +1578,60 @@ export type Database = {
         }
         Relationships: []
       }
+      nium_payouts: {
+        Row: {
+          amount: number | null
+          created_at: string | null
+          currency: string | null
+          customer_hash_id: string | null
+          status: string | null
+          system_ref: string
+          updated_at: string | null
+          wallet_hash_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string | null
+          currency?: string | null
+          customer_hash_id?: string | null
+          status?: string | null
+          system_ref: string
+          updated_at?: string | null
+          wallet_hash_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string | null
+          currency?: string | null
+          customer_hash_id?: string | null
+          status?: string | null
+          system_ref?: string
+          updated_at?: string | null
+          wallet_hash_id?: string | null
+        }
+        Relationships: []
+      }
+      nium_webhook_events: {
+        Row: {
+          id: string
+          payload: Json
+          received_at: string | null
+          template: string
+        }
+        Insert: {
+          id: string
+          payload: Json
+          received_at?: string | null
+          template: string
+        }
+        Update: {
+          id?: string
+          payload?: Json
+          received_at?: string | null
+          template?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           action_url: string | null
