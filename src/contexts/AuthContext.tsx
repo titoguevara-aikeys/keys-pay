@@ -26,20 +26,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('role')
+        .select('role, is_admin')
         .eq('user_id', userId)
         .maybeSingle();
       
-      if (error) {
+      if (error && error.code !== 'PGRST116') { // PGRST116 is "not found"
         console.error('Error fetching user role:', error);
         setUserRole('user');
         setIsAdmin(false);
         return;
       }
       
-      const role = data?.role || 'user';
+      if (!data) {
+        // Profile doesn't exist yet, use defaults
+        setUserRole('user');
+        setIsAdmin(false);
+        return;
+      }
+      
+      const role = data.role || 'user';
+      const isAdminUser = data.is_admin || role === 'admin' || role === 'moderator' || role === 'super_admin';
+      
       setUserRole(role);
-      setIsAdmin(role === 'admin' || role === 'moderator' || role === 'super_admin');
+      setIsAdmin(isAdminUser);
     } catch (error) {
       console.error('Error in fetchUserRole:', error);
       setUserRole('user');

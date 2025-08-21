@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "13.0.4"
@@ -24,7 +24,7 @@ export type Database = {
           reason: string | null
           resource: string
           success: boolean
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           action: string
@@ -35,7 +35,7 @@ export type Database = {
           reason?: string | null
           resource: string
           success: boolean
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           action?: string
@@ -46,7 +46,7 @@ export type Database = {
           reason?: string | null
           resource?: string
           success?: boolean
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -283,10 +283,40 @@ export type Database = {
         }
         Relationships: []
       }
+      anonymous_access_log: {
+        Row: {
+          access_count: number
+          blocked_until: string | null
+          first_access: string
+          id: string
+          ip_address: unknown | null
+          last_access: string
+          table_name: string
+        }
+        Insert: {
+          access_count?: number
+          blocked_until?: string | null
+          first_access?: string
+          id?: string
+          ip_address?: unknown | null
+          last_access?: string
+          table_name: string
+        }
+        Update: {
+          access_count?: number
+          blocked_until?: string | null
+          first_access?: string
+          id?: string
+          ip_address?: unknown | null
+          last_access?: string
+          table_name?: string
+        }
+        Relationships: []
+      }
       audit_events: {
         Row: {
           actor_email: string | null
-          actor_id: string | null
+          actor_id: string
           created_at: string
           details: Json
           event_type: string
@@ -296,7 +326,7 @@ export type Database = {
         }
         Insert: {
           actor_email?: string | null
-          actor_id?: string | null
+          actor_id: string
           created_at?: string
           details?: Json
           event_type: string
@@ -306,7 +336,7 @@ export type Database = {
         }
         Update: {
           actor_email?: string | null
-          actor_id?: string | null
+          actor_id?: string
           created_at?: string
           details?: Json
           event_type?: string
@@ -413,6 +443,81 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      bookings: {
+        Row: {
+          booking_details: Json | null
+          booking_ref: string | null
+          commission_amount: number | null
+          commission_currency: string | null
+          created_at: string | null
+          currency: string | null
+          deal_id: string | null
+          guest_info: Json | null
+          id: string
+          member_discount: number | null
+          partner_booking_ref: string | null
+          partner_id: string | null
+          payment_method: string | null
+          status: string | null
+          total_price: number
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          booking_details?: Json | null
+          booking_ref?: string | null
+          commission_amount?: number | null
+          commission_currency?: string | null
+          created_at?: string | null
+          currency?: string | null
+          deal_id?: string | null
+          guest_info?: Json | null
+          id?: string
+          member_discount?: number | null
+          partner_booking_ref?: string | null
+          partner_id?: string | null
+          payment_method?: string | null
+          status?: string | null
+          total_price: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          booking_details?: Json | null
+          booking_ref?: string | null
+          commission_amount?: number | null
+          commission_currency?: string | null
+          created_at?: string | null
+          currency?: string | null
+          deal_id?: string | null
+          guest_info?: Json | null
+          id?: string
+          member_discount?: number | null
+          partner_booking_ref?: string | null
+          partner_id?: string | null
+          payment_method?: string | null
+          status?: string | null
+          total_price?: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       budgets: {
         Row: {
@@ -779,6 +884,33 @@ export type Database = {
         }
         Relationships: []
       }
+      commission_config: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          key: string
+          updated_at: string | null
+          value: Json
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string | null
+          value: Json
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string | null
+          value?: Json
+        }
+        Relationships: []
+      }
       crypto_assets: {
         Row: {
           created_at: string
@@ -914,6 +1046,77 @@ export type Database = {
             columns: ["asset_id"]
             isOneToOne: false
             referencedRelation: "crypto_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deals: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          currency: string | null
+          description: string | null
+          destination: string | null
+          external_id: string
+          id: string
+          image_url: string | null
+          is_featured: boolean | null
+          last_seen: string | null
+          member_price: number | null
+          partner_id: string | null
+          public_price: number
+          tags: string[] | null
+          title: string
+          url: string | null
+          valid_from: string | null
+          valid_to: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          destination?: string | null
+          external_id: string
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          last_seen?: string | null
+          member_price?: number | null
+          partner_id?: string | null
+          public_price: number
+          tags?: string[] | null
+          title: string
+          url?: string | null
+          valid_from?: string | null
+          valid_to?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          destination?: string | null
+          external_id?: string
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          last_seen?: string | null
+          member_price?: number | null
+          partner_id?: string | null
+          public_price?: number
+          tags?: string[] | null
+          title?: string
+          url?: string | null
+          valid_from?: string | null
+          valid_to?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deals_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
             referencedColumns: ["id"]
           },
         ]
@@ -1208,6 +1411,62 @@ export type Database = {
         }
         Relationships: []
       }
+      jobs: {
+        Row: {
+          attempts: number | null
+          created_at: string | null
+          error_message: string | null
+          id: string
+          last_run: string | null
+          max_attempts: number | null
+          next_run: string | null
+          partner_id: string | null
+          payload: Json | null
+          result: Json | null
+          status: string | null
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          attempts?: number | null
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          last_run?: string | null
+          max_attempts?: number | null
+          next_run?: string | null
+          partner_id?: string | null
+          payload?: Json | null
+          result?: Json | null
+          status?: string | null
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          attempts?: number | null
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          last_run?: string | null
+          max_attempts?: number | null
+          next_run?: string | null
+          partner_id?: string | null
+          payload?: Json | null
+          result?: Json | null
+          status?: string | null
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jobs_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       login_sessions: {
         Row: {
           created_at: string
@@ -1243,6 +1502,33 @@ export type Database = {
           revoked_at?: string | null
           session_token?: string
           user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      memberships: {
+        Row: {
+          active: boolean
+          created_at: string
+          expires_at: string | null
+          id: string
+          tier: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          tier?: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          tier?: string
           user_id?: string
         }
         Relationships: []
@@ -1331,6 +1617,72 @@ export type Database = {
           title?: string
           type?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      otp_rate_limits: {
+        Row: {
+          attempts: number
+          blocked_until: string | null
+          created_at: string
+          email: string
+          id: string
+          last_attempt: string
+        }
+        Insert: {
+          attempts?: number
+          blocked_until?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          last_attempt?: string
+        }
+        Update: {
+          attempts?: number
+          blocked_until?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          last_attempt?: string
+        }
+        Relationships: []
+      }
+      partners: {
+        Row: {
+          api_key: string | null
+          api_secret: string | null
+          commission_rate: number | null
+          created_at: string | null
+          enabled: boolean | null
+          id: string
+          mock_mode: boolean | null
+          name: string
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          api_key?: string | null
+          api_secret?: string | null
+          commission_rate?: number | null
+          created_at?: string | null
+          enabled?: boolean | null
+          id?: string
+          mock_mode?: boolean | null
+          name: string
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          api_key?: string | null
+          api_secret?: string | null
+          commission_rate?: number | null
+          created_at?: string | null
+          enabled?: boolean | null
+          id?: string
+          mock_mode?: boolean | null
+          name?: string
+          slug?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -1495,6 +1847,47 @@ export type Database = {
           to_user_id?: string | null
         }
         Relationships: []
+      }
+      payments: {
+        Row: {
+          amount: number | null
+          booking_id: string
+          created_at: string
+          currency: string | null
+          id: string
+          provider: string
+          raw: Json | null
+          status: string
+        }
+        Insert: {
+          amount?: number | null
+          booking_id: string
+          created_at?: string
+          currency?: string | null
+          id?: string
+          provider: string
+          raw?: Json | null
+          status: string
+        }
+        Update: {
+          amount?: number | null
+          booking_id?: string
+          created_at?: string
+          currency?: string | null
+          id?: string
+          provider?: string
+          raw?: Json | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       physical_card_orders: {
         Row: {
@@ -1672,6 +2065,77 @@ export type Database = {
         }
         Relationships: []
       }
+      promotion_prices: {
+        Row: {
+          amount: number | null
+          currency: string
+          member_amount: number | null
+          promo_id: string
+        }
+        Insert: {
+          amount?: number | null
+          currency: string
+          member_amount?: number | null
+          promo_id: string
+        }
+        Update: {
+          amount?: number | null
+          currency?: string
+          member_amount?: number | null
+          promo_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "promotion_prices_promo_id_fkey"
+            columns: ["promo_id"]
+            isOneToOne: false
+            referencedRelation: "promotions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      promotions: {
+        Row: {
+          created_at: string
+          ends_at: string | null
+          id: string
+          is_member_only: boolean
+          raw: Json | null
+          score: number
+          source: string
+          starts_at: string | null
+          summary: string | null
+          title: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          is_member_only?: boolean
+          raw?: Json | null
+          score?: number
+          source: string
+          starts_at?: string | null
+          summary?: string | null
+          title: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          is_member_only?: boolean
+          raw?: Json | null
+          score?: number
+          source?: string
+          starts_at?: string | null
+          summary?: string | null
+          title?: string
+          type?: string
+        }
+        Relationships: []
+      }
       qr_payments: {
         Row: {
           account_id: string
@@ -1846,7 +2310,7 @@ export type Database = {
           metadata: Json | null
           risk_score: number | null
           user_agent: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           blocked?: boolean | null
@@ -1860,7 +2324,7 @@ export type Database = {
           metadata?: Json | null
           risk_score?: number | null
           user_agent?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           blocked?: boolean | null
@@ -1874,7 +2338,7 @@ export type Database = {
           metadata?: Json | null
           risk_score?: number | null
           user_agent?: string | null
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -2011,6 +2475,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          stripe_customer_id: string | null
+          subscribed: boolean
+          subscription_end: string | null
+          subscription_tier: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
       }
       transactions: {
         Row: {
@@ -2349,28 +2849,210 @@ export type Database = {
         }
         Relationships: []
       }
+      users: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          is_keyspay_subscriber: boolean | null
+          name: string | null
+          tier: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          is_keyspay_subscriber?: boolean | null
+          name?: string | null
+          tier?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          is_keyspay_subscriber?: boolean | null
+          name?: string | null
+          tier?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      wallet_ledger: {
+        Row: {
+          amount: number
+          booking_id: string | null
+          created_at: string | null
+          currency: string | null
+          description: string | null
+          id: string
+          metadata: Json | null
+          status: string | null
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          booking_id?: string | null
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          status?: string | null
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          booking_id?: string | null
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          status?: string | null
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_ledger_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      webhook_events: {
+        Row: {
+          created_at: string
+          id: string
+          payload: Json
+          processed: boolean
+          provider: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          payload: Json
+          processed?: boolean
+          provider: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          payload?: Json
+          processed?: boolean
+          provider?: string
+        }
+        Relationships: []
+      }
+      wiki_pages: {
+        Row: {
+          ai_summary: string | null
+          extract: string | null
+          fetched_at: string
+          hero_image_url: string | null
+          html: Json | null
+          id: number
+          lang: string
+          sections: Json | null
+          slug: string | null
+          source_url: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          ai_summary?: string | null
+          extract?: string | null
+          fetched_at?: string
+          hero_image_url?: string | null
+          html?: Json | null
+          id?: number
+          lang?: string
+          sections?: Json | null
+          slug?: string | null
+          source_url: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          ai_summary?: string | null
+          extract?: string | null
+          fetched_at?: string
+          hero_image_url?: string | null
+          html?: Json | null
+          id?: number
+          lang?: string
+          sections?: Json | null
+          slug?: string | null
+          source_url?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      wiki_search_cache: {
+        Row: {
+          fetched_at: string
+          id: number
+          lang: string
+          query: string
+          results: Json
+        }
+        Insert: {
+          fetched_at?: string
+          id?: number
+          lang?: string
+          query: string
+          results: Json
+        }
+        Update: {
+          fetched_at?: string
+          id?: number
+          lang?: string
+          query?: string
+          results?: Json
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
       calculate_spending_insights: {
-        Args: { user_id_param: string; period_days?: number }
+        Args: { period_days?: number; user_id_param: string }
         Returns: {
+          avg_transaction: number
           category: string
+          period_end: string
+          period_start: string
           total_amount: number
           transaction_count: number
-          avg_transaction: number
-          period_start: string
-          period_end: string
         }[]
+      }
+      check_anonymous_rate_limit: {
+        Args: { p_ip_address: unknown; p_table_name: string }
+        Returns: boolean
+      }
+      check_otp_rate_limit: {
+        Args: { p_email: string }
+        Returns: Json
+      }
+      cleanup_rate_limit_records: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       create_child_account: {
         Args: {
-          p_parent_id: string
           p_child_email: string
           p_first_name: string
           p_last_name: string
+          p_parent_id: string
           p_relationship_type: string
           p_spending_limit?: number
           p_transaction_limit?: number
@@ -2379,14 +3061,14 @@ export type Database = {
       }
       create_travel_booking: {
         Args: {
-          p_user_id: string
-          p_destination_id: string
           p_account_id: string
           p_booking_type: string
-          p_total_amount: number
           p_departure_date: string
+          p_destination_id: string
           p_return_date?: string
+          p_total_amount: number
           p_travelers_count?: number
+          p_user_id: string
         }
         Returns: Json
       }
@@ -2406,6 +3088,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      is_member: {
+        Args: { u: string }
+        Returns: boolean
+      }
       is_protected_owner: {
         Args: Record<PropertyKey, never>
         Returns: boolean
@@ -2416,38 +3102,38 @@ export type Database = {
       }
       log_audit_event: {
         Args: {
-          p_actor_id: string
           p_actor_email: string
-          p_ip_address: unknown
-          p_event_type: string
+          p_actor_id: string
           p_details?: Json
+          p_event_type: string
+          p_ip_address: unknown
         }
         Returns: string
       }
       log_security_event: {
         Args:
           | {
-              p_event_type: string
-              p_event_description: string
-              p_user_id?: string
-              p_ip_address?: unknown
-              p_user_agent?: string
-              p_device_fingerprint?: string
-              p_location?: string
-              p_risk_score?: number
               p_blocked?: boolean
+              p_device_fingerprint?: string
+              p_event_description: string
+              p_event_type: string
+              p_ip_address?: unknown
+              p_location?: string
               p_metadata?: Json
+              p_risk_score?: number
+              p_user_agent?: string
+              p_user_id?: string
             }
           | {
-              p_user_id: string
-              p_event_type: string
-              p_event_description: string
-              p_ip_address?: unknown
-              p_user_agent?: string
+              p_blocked?: boolean
               p_device_fingerprint?: string
+              p_event_description: string
+              p_event_type: string
+              p_ip_address?: unknown
               p_location?: string
               p_risk_score?: number
-              p_blocked?: boolean
+              p_user_agent?: string
+              p_user_id: string
             }
         Returns: string
       }
@@ -2461,35 +3147,72 @@ export type Database = {
       }
       send_notification: {
         Args: {
-          p_user_id: string
-          p_title: string
-          p_message: string
-          p_type?: string
+          p_action_url?: string
           p_category?: string
           p_data?: Json
-          p_action_url?: string
           p_expires_hours?: number
+          p_message: string
+          p_title: string
+          p_type?: string
+          p_user_id: string
         }
         Returns: string
       }
       transfer_between_accounts: {
         Args: {
-          p_from_account_id: string
-          p_to_account_id: string
           p_amount: number
           p_description?: string
+          p_from_account_id: string
+          p_to_account_id: string
         }
         Returns: Json
       }
       update_feature_flag: {
         Args: {
+          p_actor_email?: string
+          p_actor_id?: string
+          p_ip_address?: unknown
           p_key: string
           p_value: Json
-          p_actor_id?: string
-          p_actor_email?: string
-          p_ip_address?: unknown
         }
         Returns: boolean
+      }
+      upsert_wiki_page: {
+        Args: {
+          p_ai_summary?: string
+          p_extract: string
+          p_fetched_at?: string
+          p_hero_image_url: string
+          p_html: Json
+          p_lang: string
+          p_sections: Json
+          p_source_url: string
+          p_title: string
+        }
+        Returns: {
+          ai_summary: string | null
+          extract: string | null
+          fetched_at: string
+          hero_image_url: string | null
+          html: Json | null
+          id: number
+          lang: string
+          sections: Json | null
+          slug: string | null
+          source_url: string
+          title: string
+          updated_at: string
+        }
+      }
+      upsert_wiki_search_cache: {
+        Args: { p_lang: string; p_query: string; p_results: Json }
+        Returns: {
+          fetched_at: string
+          id: number
+          lang: string
+          query: string
+          results: Json
+        }
       }
       validate_platform_license: {
         Args: Record<PropertyKey, never>
@@ -2502,6 +3225,14 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user" | "super_admin"
+      app_role_enhanced:
+        | "non_member"
+        | "member"
+        | "staff"
+        | "admin"
+        | "super_admin"
+        | "user"
+        | "moderator"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2630,6 +3361,15 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user", "super_admin"],
+      app_role_enhanced: [
+        "non_member",
+        "member",
+        "staff",
+        "admin",
+        "super_admin",
+        "user",
+        "moderator",
+      ],
     },
   },
 } as const
