@@ -1,14 +1,52 @@
 {
   "info": {
     "name": "Keys Pay Aggregator API",
-    "description": "Dubai DED compliant aggregator platform for virtual assets and financial services",
+    "description": "Dubai DED compliant aggregator platform (License 1483958, CR 2558995). Reference: DED-12345",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:3000/api/keyspay",
+      "value": "http://localhost:3000/api",
       "type": "string"
+    },
+    {
+      "key": "hmacSecret",
+      "value": "your_hmac_secret_here",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "noauth"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// HMAC Authentication Helper",
+          "const method = pm.request.method;",
+          "const path = pm.request.url.getPath();",
+          "const timestamp = Date.now().toString();",
+          "const body = pm.request.body?.raw || '';",
+          "const secret = pm.variables.get('hmacSecret');",
+          "",
+          "if (secret && secret !== 'your_hmac_secret_here') {",
+          "    const payload = `${method.toUpperCase()}|${path}|${timestamp}|${body}`;",
+          "    const signature = CryptoJS.HmacSHA256(payload, secret).toString();",
+          "    ",
+          "    pm.request.headers.add({",
+          "        key: 'x-timestamp',",
+          "        value: timestamp",
+          "    });",
+          "    pm.request.headers.add({",
+          "        key: 'x-signature',", 
+          "        value: signature",
+          "    });",
+          "}"
+        ]
+      }
     }
   ],
   "item": [
@@ -25,7 +63,19 @@
       }
     },
     {
-      "name": "Create On-Ramp Session",
+      "name": "Provider Status",
+      "request": {
+        "method": "GET", 
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/providers",
+          "host": ["{{baseUrl}}"],
+          "path": ["providers"]
+        }
+      }
+    },
+    {
+      "name": "Create Ramp Session",
       "request": {
         "method": "POST",
         "header": [
@@ -39,51 +89,9 @@
           "raw": "{\n  \"fiatCurrency\": \"AED\",\n  \"fiatAmount\": 500,\n  \"asset\": \"BTC\",\n  \"country\": \"AE\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/ramp/onramp/session",
+          "raw": "{{baseUrl}}/ramp/session",
           "host": ["{{baseUrl}}"],
-          "path": ["ramp", "onramp", "session"]
-        }
-      }
-    },
-    {
-      "name": "Create Off-Ramp Session",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"asset\": \"USDT\",\n  \"assetAmount\": 1000,\n  \"payoutCurrency\": \"AED\",\n  \"country\": \"AE\",\n  \"payoutMethod\": \"bank_transfer\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/ramp/offramp/session",
-          "host": ["{{baseUrl}}"],
-          "path": ["ramp", "offramp", "session"]
-        }
-      }
-    },
-    {
-      "name": "Apply for IBAN",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"clientId\": \"test-client-123\",\n  \"accountName\": \"Test Business Account\",\n  \"currency\": \"EUR\",\n  \"country\": \"AE\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/banking/iban/apply",
-          "host": ["{{baseUrl}}"],
-          "path": ["banking", "iban", "apply"]
+          "path": ["ramp", "session"]
         }
       }
     },
@@ -98,7 +106,7 @@
           }
         ],
         "body": {
-          "mode": "raw",
+          "mode": "raw", 
           "raw": "{\n  \"sourceCurrency\": \"AED\",\n  \"targetCurrency\": \"USD\",\n  \"amount\": 1000\n}"
         },
         "url": {
@@ -109,14 +117,86 @@
       }
     },
     {
-      "name": "Get Provider Status",
+      "name": "Execute Payout",
       "request": {
-        "method": "GET",
-        "header": [],
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"quoteId\": \"q_demo\",\n  \"reference\": \"PAY-2024-001\",\n  \"metadata\": {}\n}"
+        },
         "url": {
-          "raw": "{{baseUrl}}/providers",
+          "raw": "{{baseUrl}}/payouts/execute", 
           "host": ["{{baseUrl}}"],
-          "path": ["providers"]
+          "path": ["payouts", "execute"]
+        }
+      }
+    },
+    {
+      "name": "Issue Card",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cardType\": \"virtual\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cards/issue",
+          "host": ["{{baseUrl}}"], 
+          "path": ["cards", "issue"]
+        }
+      }
+    },
+    {
+      "name": "Card Controls",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type", 
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cardId\": \"card_demo\",\n  \"controls\": {\n    \"spendingLimit\": 1000,\n    \"merchantBlacklist\": []\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cards/controls",
+          "host": ["{{baseUrl}}"],
+          "path": ["cards", "controls"]
+        }
+      }
+    },
+    {
+      "name": "Apply for eIBAN (Coming Soon)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"clientId\": \"test-client-123\",\n  \"accountName\": \"Test Business Account\",\n  \"currency\": \"EUR\",\n  \"country\": \"AE\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/openpayd/accounts/apply",
+          "host": ["{{baseUrl}}"],
+          "path": ["openpayd", "accounts", "apply"]
         }
       }
     }

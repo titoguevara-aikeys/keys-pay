@@ -1,25 +1,35 @@
-openapi: 3.0.0
+openapi: 3.0.1
 info:
   title: Keys Pay Aggregator API
+  description: |
+    Dubai DED compliant aggregator platform for virtual assets and financial services.
+    
+    **License**: AIKEYS (Dubai DED License 1483958, CR 2558995)
+    **Reference**: DED-12345
+    
+    Keys Pay operates as a non-custodial aggregator. All services are provided by regulated third-party providers.
   version: 1.0.0
-  description: Dubai DED compliant aggregator platform for virtual assets and financial services
   contact:
     name: Keys Pay Support
-    email: support@keyspay.com
-  license:
-    name: Proprietary
-    url: https://keyspay.com/terms
+    url: https://keys-pay.com/support
+    email: support@keys-pay.com
 
 servers:
-  - url: https://api.keyspay.com
+  - url: https://keys-pay.com/api
     description: Production server
-  - url: http://localhost:3000/api/keyspay
+  - url: http://localhost:3000/api
     description: Development server
+
+security:
+  - bearerAuth: []
+  - hmacAuth: []
 
 paths:
   /health:
     get:
-      summary: Health check endpoint
+      summary: Health Check
+      description: Returns the current health status of the API and enabled providers
+      security: []
       responses:
         '200':
           description: Service is healthy
@@ -30,43 +40,70 @@ paths:
                 properties:
                   ok:
                     type: boolean
+                    example: true
                   timestamp:
                     type: string
                     format: date-time
+                  service:
+                    type: string
+                    example: "keyspay"
+                  version:
+                    type: string
+                    example: "1.0.0"
+                  providers:
+                    type: object
+                    properties:
+                      ramp:
+                        type: boolean
+                      nium:
+                        type: boolean
+                      openpayd:
+                        type: boolean
 
-  /ramp/onramp/session:
+  /providers:
+    get:
+      summary: Provider Status
+      description: Get real-time status of integrated providers
+      security: []
+      responses:
+        '200':
+          description: Provider statuses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  providers:
+                    type: object
+                  timestamp:
+                    type: string
+                  disclaimer:
+                    type: string
+
+  /ramp/session:
     post:
-      summary: Create Transak on-ramp session
-      description: Create cryptocurrency purchase session via Transak (MoR)
+      summary: Create Ramp Session
+      description: Create a buy/sell session with Ramp (on/off-ramp)
+      tags: [Ramp]
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - fiatCurrency
-                - fiatAmount
-                - asset
-                - country
+              required: [fiatCurrency, fiatAmount, asset, country]
               properties:
                 fiatCurrency:
                   type: string
-                  minLength: 3
-                  maxLength: 3
                   example: "AED"
                 fiatAmount:
                   type: number
-                  minimum: 50
-                  maximum: 50000
                   example: 500
                 asset:
                   type: string
                   example: "BTC"
                 country:
                   type: string
-                  minLength: 2
-                  maxLength: 2
                   example: "AE"
       responses:
         '200':
@@ -78,99 +115,30 @@ paths:
                 properties:
                   provider:
                     type: string
-                    example: "TRANSAK"
+                    example: "RAMP"
                   sessionId:
                     type: string
                   checkoutUrl:
                     type: string
-                    format: uri
-                  ref:
-                    type: string
                   disclaimer:
                     type: string
-                  merchantOfRecord:
-                    type: string
-
-  /ramp/offramp/session:
-    post:
-      summary: Create Guardarian off-ramp session
-      description: Create cryptocurrency sale session via Guardarian (MoR)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - asset
-                - assetAmount
-                - payoutCurrency
-                - country
-                - payoutMethod
-              properties:
-                asset:
-                  type: string
-                  example: "USDT"
-                assetAmount:
-                  type: number
-                  example: 1000
-                payoutCurrency:
-                  type: string
-                  example: "AED"
-                country:
-                  type: string
-                  example: "AE"
-                payoutMethod:
-                  type: string
-                  enum: ["bank_transfer", "card", "mobile_money"]
-      responses:
-        '200':
-          description: Session created successfully
-
-  /banking/iban/apply:
-    post:
-      summary: Apply for virtual IBAN via OpenPayd
-      description: Submit IBAN application to OpenPayd (MoR)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - clientId
-                - accountName
-                - currency
-                - country
-              properties:
-                clientId:
-                  type: string
-                accountName:
-                  type: string
-                currency:
-                  type: string
-                  example: "EUR"
-                country:
-                  type: string
-                  example: "AE"
-      responses:
-        '200':
-          description: Application submitted successfully
+        '403':
+          description: Ramp is disabled
+        '401':
+          description: Authentication failed
 
   /payouts/quote:
     post:
-      summary: Get payout quote from Nium
-      description: Request FX quote for cross-border payout via Nium (MoR)
+      summary: Get Payout Quote
+      description: Request an FX quote for cross-border payouts via Nium
+      tags: [Nium Payouts]
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - sourceCurrency
-                - targetCurrency
-                - amount
+              required: [sourceCurrency, targetCurrency, amount]
               properties:
                 sourceCurrency:
                   type: string
@@ -184,55 +152,124 @@ paths:
       responses:
         '200':
           description: Quote generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  quoteId:
+                    type: string
+                  rate:
+                    type: number
+                  fee:
+                    type: number
+                  ttlSeconds:
+                    type: integer
+                  disclaimer:
+                    type: string
+        '403':
+          description: Nium is disabled
 
   /payouts/execute:
     post:
-      summary: Execute payout via Nium
-      description: Execute cross-border payout using Nium quote (MoR)
+      summary: Execute Payout
+      description: Execute a cross-border payout using a Nium quote
+      tags: [Nium Payouts]
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - quoteId
-                - reference
+              required: [quoteId, reference]
               properties:
                 quoteId:
                   type: string
                 reference:
                   type: string
+                  maxLength: 100
+                metadata:
+                  type: object
       responses:
         '200':
           description: Payout executed successfully
-
-  /providers:
-    get:
-      summary: Get provider status
-      description: Real-time status of all integrated providers
-      responses:
-        '200':
-          description: Provider status retrieved successfully
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  summary:
-                    type: object
-                  providers:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                        health:
-                          type: string
-                          enum: ["up", "degraded", "down"]
-                        score:
-                          type: number
+                  provider:
+                    type: string
+                  ref:
+                    type: string
+                  status:
+                    type: string
+                    enum: [processing, completed, failed]
+                  disclaimer:
+                    type: string
+
+  /cards/issue:
+    post:
+      summary: Issue Card
+      description: Issue a new card via Nium
+      tags: [Nium Cards]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cardType:
+                  type: string
+                  example: "virtual"
+      responses:
+        '200':
+          description: Card issued successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cardId:
+                    type: string
+                  last4:
+                    type: string
+                  activationUrl:
+                    type: string
+                  disclaimer:
+                    type: string
+
+  /cards/controls:
+    post:
+      summary: Card Controls
+      description: Update card controls and limits
+      tags: [Nium Cards]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cardId:
+                  type: string
+                controls:
+                  type: object
+      responses:
+        '200':
+          description: Controls updated successfully
+
+  /openpayd/accounts/apply:
+    post:
+      summary: Apply for eIBAN (Coming Soon)
+      description: Apply for a virtual IBAN via OpenPayd
+      tags: [OpenPayd]
+      responses:
+        '403':
+          description: OpenPayd is currently disabled
+        '501':
+          description: Coming Soon
 
 components:
   securitySchemes:
@@ -240,6 +277,8 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-
-security:
-  - bearerAuth: []
+    hmacAuth:
+      type: apiKey
+      in: header
+      name: x-signature
+      description: HMAC authentication using x-signature and x-timestamp headers
