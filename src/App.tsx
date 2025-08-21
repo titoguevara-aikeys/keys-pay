@@ -15,13 +15,13 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { MockAuthProvider } from "@/contexts/MockAuthContext";
 import { PlatformGuard } from "@/components/PlatformGuard";
 import { SecurityProvider } from "@/components/security/SecurityProvider";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AdminRoute from "@/components/AdminRoute";
 import Index from "./pages/Index";
-import Auth from "./pages/Auth";
+import MockAuth from "./pages/MockAuth";
 import NotFound from "./pages/NotFound";
 import FamilyControls from "./pages/FamilyControls";
 import Cards from "./pages/Cards";
@@ -45,13 +45,13 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <PlatformGuard>
       <SecurityProvider>
-        <AuthProvider>
+        <MockAuthProvider>
         <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/auth" element={<MockAuth />} />
             <Route path="/aikeys" element={<Aikeys />} />
             <Route path="/travel" element={
               <ProtectedRoute>
@@ -129,7 +129,7 @@ const App = () => (
           </Routes>
         </BrowserRouter>
         </TooltipProvider>
-      </AuthProvider>
+      </MockAuthProvider>
       </SecurityProvider>
     </PlatformGuard>
   </QueryClientProvider>
