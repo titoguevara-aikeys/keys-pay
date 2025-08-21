@@ -6,9 +6,11 @@ import { MerchantPayments } from '@/components/MerchantPayments';
 import { PaymentHub } from '@/components/PaymentHub';
 import { AIKEYSFinancial } from '@/components/AIKEYSFinancial';
 import { AIKEYSWealth } from '@/components/AIKEYSWealth';
+import ComplianceFooter from '@/components/ComplianceFooter';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { 
   Bitcoin, 
   Globe, 
@@ -20,7 +22,10 @@ import {
   DollarSign,
   CreditCard,
   Building,
-  Crown
+  Crown,
+  ArrowUpCircle,
+  ArrowDownCircle,
+  Wallet
 } from 'lucide-react';
 
 export default function CryptoHub() {
@@ -32,28 +37,88 @@ export default function CryptoHub() {
         {/* Hero Section */}
         <div className="text-center space-y-4">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <img src="/lovable-uploads/4326dc21-0939-4654-8586-fba79c3b8f84.png?v=2" alt="AIKeys Logo" className="h-8 w-8" />
+            <img src="/lovable-uploads/4326dc21-0939-4654-8586-fba79c3b8f84.png?v=2" alt="Keys Pay Logo" className="h-8 w-8" />
             <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-              Keys Crypto Hub
+              Keys Pay Crypto Hub
             </h1>
           </div>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Spend crypto like fiat with seamless blockchain payments worldwide
+            DED-licensed aggregator platform for virtual assets and financial services
           </p>
           <div className="flex flex-wrap justify-center gap-4 mt-6">
             <Badge variant="secondary" className="px-4 py-2">
               <Shield className="h-4 w-4 mr-2" />
-              Bank-grade security
+              DED Licensed (1483958)
             </Badge>
             <Badge variant="secondary" className="px-4 py-2">
               <Users className="h-4 w-4 mr-2" />
-              Trusted by 4M+ users
+              Non-custodial aggregator
             </Badge>
             <Badge variant="secondary" className="px-4 py-2">
               <Zap className="h-4 w-4 mr-2" />
-              Instant transactions
+              Live integrations
             </Badge>
           </div>
+        </div>
+
+        {/* Keys Pay Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ArrowUpCircle className="h-5 w-5 text-primary" />
+                Buy Crypto
+              </CardTitle>
+              <CardDescription>Powered by Ramp Network</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full" size="lg">
+                <ArrowUpCircle className="h-4 w-4 mr-2" />
+                Open Ramp Widget
+              </Button>
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                Bank transfer, cards • AED to BTC, ETH, USDC
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-green-500/10 to-green-500/5 border-green-500/20">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CreditCard className="h-5 w-5 text-green-500" />
+                Virtual Cards
+              </CardTitle>
+              <CardDescription>Powered by Nium</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full" size="lg" variant="outline">
+                <CreditCard className="h-4 w-4 mr-2" />
+                Issue Card
+              </Button>
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                Instant virtual cards • Global acceptance
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border-blue-500/20">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Globe className="h-5 w-5 text-blue-500" />
+                Global Payouts
+              </CardTitle>
+              <CardDescription>Powered by Nium</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full" size="lg" variant="outline">
+                <Globe className="h-4 w-4 mr-2" />
+                Send Money
+              </Button>
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                200+ countries • Competitive rates
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Stats Overview */}
@@ -62,10 +127,10 @@ export default function CryptoHub() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Supported Cryptos</p>
-                  <p className="text-2xl font-bold">50+</p>
+                  <p className="text-sm font-medium text-muted-foreground">Provider Status</p>
+                  <p className="text-2xl font-bold text-primary">Live</p>
                 </div>
-                <img src="/lovable-uploads/4326dc21-0939-4654-8586-fba79c3b8f84.png?v=2" alt="AIKeys Logo" className="h-8 w-8" />
+                <Shield className="h-8 w-8 text-primary" />
               </div>
             </CardContent>
           </Card>
@@ -74,10 +139,10 @@ export default function CryptoHub() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Global Merchants</p>
-                  <p className="text-2xl font-bold">130M+</p>
+                  <p className="text-sm font-medium text-muted-foreground">Ramp Network</p>
+                  <p className="text-2xl font-bold text-green-500">Active</p>
                 </div>
-                <Store className="h-8 w-8 text-green-500" />
+                <ArrowUpCircle className="h-8 w-8 text-green-500" />
               </div>
             </CardContent>
           </Card>
@@ -86,22 +151,22 @@ export default function CryptoHub() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Countries</p>
-                  <p className="text-2xl font-bold">200+</p>
+                  <p className="text-sm font-medium text-muted-foreground">Nium Services</p>
+                  <p className="text-2xl font-bold text-blue-500">Active</p>
                 </div>
-                <Globe className="h-8 w-8 text-blue-500" />
+                <CreditCard className="h-8 w-8 text-blue-500" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border-purple-500/20">
+          <Card className="bg-gradient-to-br from-orange-500/10 to-orange-500/5 border-orange-500/20">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">24h Volume</p>
-                  <p className="text-2xl font-bold">$50M+</p>
+                  <p className="text-sm font-medium text-muted-foreground">OpenPayd</p>
+                  <p className="text-2xl font-bold text-orange-500">Soon</p>
                 </div>
-                <TrendingUp className="h-8 w-8 text-purple-500" />
+                <Wallet className="h-8 w-8 text-orange-500" />
               </div>
             </CardContent>
           </Card>
@@ -248,7 +313,7 @@ export default function CryptoHub() {
       </div>
       
       {/* Footer */}
-      <Footer />
+      <ComplianceFooter />
     </div>
   );
 }
