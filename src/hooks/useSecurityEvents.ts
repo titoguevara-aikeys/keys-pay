@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/MockAuthContext';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface SecurityEvent {

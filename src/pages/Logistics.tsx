@@ -23,7 +23,7 @@ import {
   FileText,
   Smartphone
 } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/MockAuthContext';
 import Navigation from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 

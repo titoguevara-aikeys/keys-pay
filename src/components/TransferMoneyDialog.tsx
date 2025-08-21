@@ -26,7 +26,7 @@ import { useAccounts } from '@/hooks/useAccounts';
 import { useTransferMoney } from '@/hooks/useTransfer';
 import { useToast } from '@/hooks/use-toast';
 import type { FamilyMember } from '@/hooks/useFamilyMembers';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/MockAuthContext';
 
 const formSchema = z.object({
   amount: z.string().min(1, 'Amount is required').refine(

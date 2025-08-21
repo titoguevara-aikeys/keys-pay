@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { SecurityCore } from '@/utils/securityCore';
 import { useSecurity } from './SecurityProvider';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/MockAuthContext';
 
 interface SecurityAlert {
   id: string;
