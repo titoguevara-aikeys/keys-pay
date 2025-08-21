@@ -7,7 +7,7 @@
 import React, { useEffect, useState } from 'react';
 import { Shield, AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { IntellectualPropertyProtection } from '@/utils/intellectualProperty';
+// IntellectualPropertyProtection import removed for development
 import { IntruderWarning } from '@/components/security/IntruderWarning';
 
 interface PlatformGuardProps {
@@ -69,10 +69,10 @@ export const PlatformGuard: React.FC<PlatformGuardProps> = ({ children }) => {
           </CardHeader>
           <CardContent className="text-center">
             <p className="text-muted-foreground mb-4">
-              {IntellectualPropertyProtection.getIPNotice()}
+              Access denied. Please contact support.
             </p>
             <div className="text-xs text-muted-foreground font-mono break-all">
-              {IntellectualPropertyProtection.getViolationContact()}
+              support@keyspay.ai
             </div>
           </CardContent>
         </Card>
