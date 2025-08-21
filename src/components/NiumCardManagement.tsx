@@ -152,8 +152,8 @@ const NiumCardManagement = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">NIUM Card Management</h1>
-          <p className="text-muted-foreground">Manage your NIUM virtual and physical payment cards</p>
+          <h1 className="text-3xl font-bold">Keys Pay Card Management</h1>
+          <p className="text-muted-foreground">Manage your Keys Pay virtual and physical payment cards</p>
           {healthCheck && (
             <div className="flex items-center gap-2 mt-2">
               <div className={`w-2 h-2 rounded-full ${healthCheck.ok ? 'bg-green-500' : 'bg-red-500'}`} />
