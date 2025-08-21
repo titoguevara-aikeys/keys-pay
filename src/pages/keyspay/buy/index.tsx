@@ -263,9 +263,14 @@ export default function BuyCrypto() {
       </div>
 
       <div className="mt-8 p-4 bg-muted rounded-lg">
+        <div className="flex items-center justify-center mb-2">
+          <span className="text-xs text-muted-foreground mr-2">Powered by</span>
+          <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">Transak</span>
+        </div>
         <p className="text-sm text-muted-foreground text-center">
           <strong>Disclaimer:</strong> Virtual asset services are provided by Transak, an independent licensed partner. 
-          Keys Pay operates as a technology platform only and does not custody, exchange, or process virtual assets. 
+          Keys Pay is a technology platform operating as an aggregator under Dubai DED Commercial License (No. 1483958, CR No. 2558995). 
+          Keys Pay does not custody client funds, issue financial products, or act as Merchant of Record. 
           All transactions are subject to Transak's terms and conditions.
         </p>
       </div>

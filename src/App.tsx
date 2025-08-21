@@ -20,6 +20,7 @@ import { PlatformGuard } from "@/components/PlatformGuard";
 import { SecurityProvider } from "@/components/security/SecurityProvider";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AdminRoute from "@/components/AdminRoute";
+import ComplianceFooter from "@/components/ComplianceFooter";
 import Index from "./pages/Index";
 import MockAuth from "./pages/MockAuth";
 import NotFound from "./pages/NotFound";
@@ -38,6 +39,9 @@ import Travel from "./pages/Travel";
 import Education from "./pages/Education";
 import Logistics from "./pages/Logistics";
 import MobileApp from "./pages/MobileApp";
+import KeyspayAdmin from "./pages/keyspay/admin";
+import KeyspayBuy from "./pages/keyspay/buy";
+import KeyspaySell from "./pages/keyspay/sell";
 
 const queryClient = new QueryClient();
 
@@ -124,9 +128,25 @@ const App = () => (
               </ProtectedRoute>
             } />
             <Route path="/mobile-app" element={<MobileApp />} />
+            <Route path="/keyspay/admin" element={
+              <AdminRoute>
+                <KeyspayAdmin />
+              </AdminRoute>
+            } />
+            <Route path="/keyspay/buy" element={
+              <ProtectedRoute>
+                <KeyspayBuy />
+              </ProtectedRoute>
+            } />
+            <Route path="/keyspay/sell" element={
+              <ProtectedRoute>
+                <KeyspaySell />
+              </ProtectedRoute>
+            } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <ComplianceFooter />
         </BrowserRouter>
         </TooltipProvider>
       </MockAuthProvider>

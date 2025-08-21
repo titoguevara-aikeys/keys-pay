@@ -364,7 +364,9 @@ export default function KeysPayAdmin() {
                 <CheckCircle className="h-4 w-4" />
                 <AlertDescription>
                   <strong>Compliance Status: Active</strong> - Keys Pay operates as a licensed aggregator 
-                  under Dubai DED regulations. All regulated activities are performed by licensed partners.
+                  under Dubai DED Commercial License (No. 1483958, CR No. 2558995). All regulated activities 
+                  are performed by licensed partners. Keys Pay does not custody client funds, issue financial 
+                  products, or act as Merchant of Record.
                 </AlertDescription>
               </Alert>
 
