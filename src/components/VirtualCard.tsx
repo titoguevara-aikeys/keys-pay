@@ -151,7 +151,7 @@ const VirtualCardComponent: React.FC<VirtualCardProps> = ({
           <div className="relative p-6 h-full flex flex-col justify-between text-white">
             <div className="flex justify-between items-start">
               <div className="flex items-center">
-                <img src="/lovable-uploads/4326dc21-0939-4654-8586-fba79c3b8f84.png?v=2" alt="AIKeys Logo" className="h-12 w-12 ml-4 mr-8 -mt-2" />
+                <img src="/lovable-uploads/4326dc21-0939-4654-8586-fba79c3b8f84.png?v=2" alt="Keys Pay Logo" className="h-12 w-12 ml-4 mr-8 -mt-2" />
                  <div>
                    <p className="text-white/90 text-sm font-medium uppercase tracking-wider">
                      {getCardDisplayName(card.card_type)}

@@ -84,7 +84,7 @@ export function AIAssistantSidebar({ activeTab = 'intelligence', onTabChange }: 
             </div>
             {!collapsed && (
               <div>
-                <h2 className="font-bold text-lg">AIKEYS AI</h2>
+                <h2 className="font-bold text-lg">Keys Pay AI</h2>
                 <p className="text-xs text-muted-foreground">Intelligence Hub</p>
               </div>
             )}
