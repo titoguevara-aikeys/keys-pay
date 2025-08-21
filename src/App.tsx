@@ -149,6 +149,16 @@ const App = () => (
                 <KeyspaySell />
               </ProtectedRoute>
             } />
+            <Route path="/keyspay/admin/providers" element={
+              <AdminRoute>
+                <ProvidersIndexPage />
+              </AdminRoute>
+            } />
+            <Route path="/keyspay/admin/providers/nium" element={
+              <AdminRoute>
+                <NiumAdminPage />
+              </AdminRoute>
+            } />
             <Route path="/admin/providers" element={
               <AdminRoute>
                 <ProvidersIndexPage />
