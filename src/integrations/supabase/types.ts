@@ -1978,39 +1978,30 @@ export type Database = {
       platform_license: {
         Row: {
           created_at: string | null
-          digital_signature: string
           domain_whitelist: string[] | null
           expires_at: string | null
-          features: Json | null
           id: string
           is_active: boolean | null
           license_key: string
-          max_users: number | null
-          owner_email: string
+          updated_at: string | null
         }
         Insert: {
           created_at?: string | null
-          digital_signature: string
           domain_whitelist?: string[] | null
           expires_at?: string | null
-          features?: Json | null
           id?: string
           is_active?: boolean | null
           license_key: string
-          max_users?: number | null
-          owner_email: string
+          updated_at?: string | null
         }
         Update: {
           created_at?: string | null
-          digital_signature?: string
           domain_whitelist?: string[] | null
           expires_at?: string | null
-          features?: Json | null
           id?: string
           is_active?: boolean | null
           license_key?: string
-          max_users?: number | null
-          owner_email?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
