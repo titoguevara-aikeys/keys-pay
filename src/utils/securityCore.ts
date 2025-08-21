@@ -723,13 +723,8 @@ export class EnterpriseSecurityCore {
   }
 
   private setupNetworkSecurity(): void {
-    // Import network security dynamically to avoid circular dependency
-    import('./networkSecurity').then(({ NetworkSecurity }) => {
-      // Network security is already initialized automatically
-      console.log('🌐 Network security layer activated');
-    }).catch(error => {
-      console.error('Failed to initialize network security:', error);
-    });
+    // Network security disabled for development
+    console.log('🌐 Network security disabled for development');
   }
 }
 

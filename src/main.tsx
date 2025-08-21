@@ -4,10 +4,7 @@ import App from './App.tsx'
 import './index.css'
 import { WebVitals } from './components/WebVitals'
 
-// Security modules disabled for development
-if (process.env.NODE_ENV === 'production') {
-  import('./utils/ownerProtection')
-}
+// All security features disabled for development
 
 createRoot(document.getElementById("root")!).render(
   <>

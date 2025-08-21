@@ -2301,7 +2301,7 @@ export type Database = {
           metadata: Json | null
           risk_score: number | null
           user_agent: string | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           blocked?: boolean | null
@@ -2315,7 +2315,7 @@ export type Database = {
           metadata?: Json | null
           risk_score?: number | null
           user_agent?: string | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           blocked?: boolean | null
@@ -2329,7 +2329,7 @@ export type Database = {
           metadata?: Json | null
           risk_score?: number | null
           user_agent?: string | null
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
