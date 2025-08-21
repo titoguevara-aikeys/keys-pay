@@ -266,7 +266,7 @@ const NiumCardManagement = () => {
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                   <CreditCard className="h-5 w-5" />
-                  NIUM Cards Overview
+                  Keys Pay Cards Overview
                 </CardTitle>
                 <Button
                   variant="ghost"
