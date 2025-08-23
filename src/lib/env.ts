@@ -13,7 +13,8 @@ export const env = {
 } as const;
 
 // Server-only environment (for API routes)
-export const serverEnv = {
+// Only access process.env if we're in a Node.js environment
+export const serverEnv = typeof process !== 'undefined' ? {
   VERCEL_PROJECT_ID: process.env.VERCEL_PROJECT_ID,
   VERCEL_TEAM_ID: process.env.VERCEL_TEAM_ID || "",
   VERCEL_TOKEN: process.env.VERCEL_TOKEN,
@@ -21,7 +22,7 @@ export const serverEnv = {
   NIUM_API_KEY: process.env.NIUM_API_KEY,
   RAMP_API_KEY: process.env.RAMP_API_KEY,
   OPENPAYD_API_KEY: process.env.OPENPAYD_API_KEY,
-} as const;
+} : {} as const;
 
 // Validation for required client variables
 const requiredClientVars = ['BASE_URL'] as const;
