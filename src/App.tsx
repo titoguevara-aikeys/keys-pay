@@ -124,6 +124,11 @@ const App = () => (
                 <AdminPortal />
               </AdminRoute>
             } />
+            <Route path="/admin/system-check" element={
+              <AdminRoute>
+                <SystemCheck />
+              </AdminRoute>
+            } />
             <Route path="/kyc" element={
               <ProtectedRoute>
                 <KYC />
