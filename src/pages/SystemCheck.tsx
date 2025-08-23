@@ -21,7 +21,7 @@ import {
   Building2,
   Ban
 } from 'lucide-react';
-import { env } from '@/lib/env';
+
 
 interface CheckResult {
   ok: boolean;
@@ -302,7 +302,7 @@ export default function SystemCheck() {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            {env.APP_ENV === 'staging' && (
+            {import.meta.env.VITE_APP_ENV === 'staging' && (
               <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
                 Staging Environment
               </Badge>
