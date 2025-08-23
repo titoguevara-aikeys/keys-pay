@@ -1,7 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import VerificationStatus from '@/components/VerificationStatus';
+import { useAuth } from '@/contexts/MockAuthContext';
+import { useProfile } from '@/hooks/useProfile';
 import { 
   Home, 
   CreditCard, 
@@ -14,10 +17,16 @@ import {
   Brain,
   BadgeCheck,
   ArrowRightLeft,
-  Smartphone
+  Smartphone,
+  LogOut,
+  User,
+  CheckCircle
 } from 'lucide-react';
 
 const Navigation = () => {
+  const { user, signOut } = useAuth();
+  const { data: profile } = useProfile();
+  
   const navItems = [
     { to: '/', icon: Home, label: 'Dashboard' },
     { to: '/transactions', icon: ArrowRightLeft, label: 'Transactions' },
@@ -29,6 +38,12 @@ const Navigation = () => {
     { to: '/analytics', icon: BarChart3, label: 'Analytics' },
     { to: '/mobile-app', icon: Smartphone, label: 'Mobile App' },
   ];
+
+  const isVerified = profile?.email && profile?.phone;
+  
+  const handleLogout = () => {
+    signOut();
+  };
 
   return (
     <nav className="bg-background/80 backdrop-blur-sm border-b">
@@ -49,7 +64,6 @@ const Navigation = () => {
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-1">
-            <VerificationStatus />
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
@@ -71,6 +85,42 @@ const Navigation = () => {
               </NavLink>
             ))}
           </div>
+
+          {/* User Section */}
+          {user && (
+            <div className="hidden md:flex items-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-muted/50 rounded-lg border">
+                <User className="h-4 w-4 text-muted-foreground" />
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium">
+                    {profile?.first_name ? `${profile.first_name} ${profile.last_name || ''}`.trim() : user.email?.split('@')[0] || 'User'}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-muted-foreground">
+                      ID: {user.id?.slice(-8)?.toUpperCase() || 'N/A'}
+                    </span>
+                    {isVerified && (
+                      <div className="flex items-center gap-1">
+                        <CheckCircle className="h-3 w-3 text-emerald-600" />
+                        <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300 text-xs">
+                          Verified
+                        </Badge>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </Button>
+            </div>
+          )}
 
           {/* Mobile Navigation */}
           <div className="md:hidden">
