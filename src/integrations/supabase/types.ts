@@ -2237,6 +2237,60 @@ export type Database = {
           },
         ]
       }
+      ramp_tests: {
+        Row: {
+          created_at: string
+          details: Json | null
+          id: string
+          ok: boolean
+          test_name: string
+        }
+        Insert: {
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ok: boolean
+          test_name: string
+        }
+        Update: {
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ok?: boolean
+          test_name?: string
+        }
+        Relationships: []
+      }
+      ramp_webhooks: {
+        Row: {
+          created_at: string
+          event_type: string | null
+          id: string
+          order_id: string | null
+          payload: Json
+          received_at: string
+          signature: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type?: string | null
+          id?: string
+          order_id?: string | null
+          payload: Json
+          received_at?: string
+          signature?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string | null
+          id?: string
+          order_id?: string | null
+          payload?: Json
+          received_at?: string
+          signature?: string | null
+        }
+        Relationships: []
+      }
       scheduled_transfers: {
         Row: {
           amount: number
