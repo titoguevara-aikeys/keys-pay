@@ -46,6 +46,7 @@ import KeyspaySell from "./pages/keyspay/sell";
 // Import Admin components
 import ProvidersIndexPage from "./pages/admin/ProvidersIndex";
 import NiumAdminPage from "./pages/admin/NiumAdmin";
+import SystemCheck from "./pages/SystemCheck";
 import PaymentsSendPage from "./pages/PaymentsSend";
 import CollectionsAccountsPage from "./pages/CollectionsAccounts";
 

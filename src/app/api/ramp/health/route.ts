@@ -1,12 +1,12 @@
 export async function GET() {
   const startTime = Date.now();
-  const featureEnabled = process.env.FEATURE_NIUM !== "false";
+  const featureEnabled = process.env.FEATURE_RAMP !== "false";
   
   if (!featureEnabled) {
     return Response.json({ 
       ok: false, 
       featureEnabled: false,
-      message: "NIUM feature disabled"
+      message: "Ramp feature disabled"
     });
   }
   
@@ -14,8 +14,8 @@ export async function GET() {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 4000);
     
-    // Test NIUM sandbox connectivity
-    const response = await fetch("https://gateway.nium.com/api/v1/health", {
+    // Test Ramp API connectivity
+    const response = await fetch("https://api.ramp.network/api/host-api/configuration", {
       method: "GET",
       headers: {
         'User-Agent': 'Keys Pay Health Check'
@@ -31,7 +31,7 @@ export async function GET() {
       latencyMs,
       featureEnabled: true,
       status: response.status,
-      message: response.ok ? "NIUM sandbox reachable" : "NIUM sandbox unreachable"
+      message: response.ok ? "Ramp API reachable" : "Ramp API unreachable"
     }, { status: response.ok ? 200 : 502 });
     
   } catch (error: any) {
