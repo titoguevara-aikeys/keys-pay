@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import VerificationStatus from '@/components/VerificationStatus';
 import { 
   Home, 
   CreditCard, 
@@ -26,7 +27,6 @@ const Navigation = () => {
     { to: '/cards', icon: CreditCard, label: 'Cards' },
     { to: '/family', icon: Users, label: 'Family' },
     { to: '/analytics', icon: BarChart3, label: 'Analytics' },
-    { to: '/kyc', icon: BadgeCheck, label: 'KYC' },
     { to: '/mobile-app', icon: Smartphone, label: 'Mobile App' },
   ];
 
@@ -49,6 +49,7 @@ const Navigation = () => {
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-1">
+            <VerificationStatus />
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
