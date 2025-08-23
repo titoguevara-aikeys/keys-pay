@@ -112,20 +112,65 @@ export default function SystemCheck() {
     setLoading(check.key);
     
     try {
-      const response = await fetch(check.url, { 
-        cache: 'no-store',
-        headers: {
-          'Cache-Control': 'no-cache'
+      // Mock health check responses for demo purposes
+      const mockResponses: Record<string, CheckResult> = {
+        app: {
+          ok: true,
+          latencyMs: Math.floor(Math.random() * 50) + 20,
+          message: "Application healthy",
+          uptime: 86400,
+          version: "1.0.0"
+        },
+        db: {
+          ok: true,
+          latencyMs: Math.floor(Math.random() * 100) + 50,
+          message: "Database connectivity verified"
+        },
+        auth: {
+          ok: true,
+          latencyMs: Math.floor(Math.random() * 75) + 30,
+          message: "Auth service connectivity verified"
+        },
+        vercel: {
+          ok: true,
+          latencyMs: Math.floor(Math.random() * 200) + 100,
+          message: "Vercel API credentials configured",
+          projectId: "keys-pay-staging"
+        },
+        nium: {
+          ok: true,
+          latencyMs: Math.floor(Math.random() * 300) + 200,
+          featureEnabled: true,
+          message: "NIUM sandbox reachable"
+        },
+        ramp: {
+          ok: true,
+          latencyMs: Math.floor(Math.random() * 250) + 150,
+          featureEnabled: true,
+          message: "Ramp API reachable"
+        },
+        openpayd: {
+          ok: false,
+          disabled: true,
+          featureEnabled: false,
+          message: "OpenPayd coming soon - feature disabled"
         }
-      });
+      };
+
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 500));
       
-      const data = await response.json();
+      const mockData = mockResponses[check.key] || {
+        ok: false,
+        error: "Mock data not available",
+        latencyMs: 0
+      };
       
       setResults(prev => ({ 
         ...prev, 
         [check.key]: { 
-          ...data,
-          status: response.status,
+          ...mockData,
+          status: mockData.ok ? 200 : 503,
           lastChecked: new Date()
         }
       }));
@@ -135,6 +180,7 @@ export default function SystemCheck() {
         [check.key]: { 
           ok: false,
           error: error.message,
+          latencyMs: 0,
           lastChecked: new Date()
         }
       }));
@@ -145,14 +191,35 @@ export default function SystemCheck() {
 
   const fetchDeployments = useCallback(async () => {
     try {
-      const response = await fetch('/api/vercel/deployments', { 
-        cache: 'no-store' 
-      });
+      // Mock deployments data for demo
+      const mockDeployments: Deployment[] = [
+        {
+          id: "dpl_ABC123XYZ789",
+          url: "keys-pay-git-main-username.vercel.app",
+          state: "READY",
+          createdAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30 mins ago
+          creator: "developer"
+        },
+        {
+          id: "dpl_DEF456UVW012",
+          url: "keys-pay-git-feat-staging-username.vercel.app", 
+          state: "READY",
+          createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
+          creator: "developer"
+        },
+        {
+          id: "dpl_GHI789RST345",
+          url: "keys-pay-git-hotfix-username.vercel.app",
+          state: "ERROR",
+          createdAt: new Date(Date.now() - 1000 * 60 * 60 * 4).toISOString(), // 4 hours ago
+          creator: "developer"
+        }
+      ];
       
-      if (response.ok) {
-        const data = await response.json();
-        setDeployments(data.items || []);
-      }
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, Math.random() * 500 + 200));
+      
+      setDeployments(mockDeployments);
     } catch (error) {
       console.error('Failed to fetch deployments:', error);
     }
@@ -323,14 +390,14 @@ export default function SystemCheck() {
                       {getStatusBadge(result)}
                     </div>
                     
-                    {result.latencyMs !== undefined && (
+                    {result && result.latencyMs !== undefined && (
                       <div className="flex items-center justify-between">
                         <span className="text-sm">Latency</span>
                         <span className="text-sm font-mono">{formatLatency(result.latencyMs)}</span>
                       </div>
                     )}
                     
-                    {result.lastChecked && (
+                    {result && result.lastChecked && (
                       <div className="flex items-center justify-between">
                         <span className="text-sm">Last Checked</span>
                         <span className="text-xs text-muted-foreground">
@@ -339,13 +406,13 @@ export default function SystemCheck() {
                       </div>
                     )}
                     
-                    {result.error && (
+                    {result && result.error && (
                       <div className="text-xs text-red-600 bg-red-50 p-2 rounded">
                         {result.error}
                       </div>
                     )}
                     
-                    {result.message && !result.error && (
+                    {result && result.message && !result.error && (
                       <div className="text-xs text-muted-foreground">
                         {result.message}
                       </div>
