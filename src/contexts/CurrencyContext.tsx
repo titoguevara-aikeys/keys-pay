@@ -32,6 +32,18 @@ export const SUPPORTED_CURRENCIES: Currency[] = [
   { code: 'THB', name: 'Thai Baht', symbol: '฿', flag: '🇹🇭' },
   { code: 'MYR', name: 'Malaysian Ringgit', symbol: 'RM', flag: '🇲🇾' },
   { code: 'PLN', name: 'Polish Złoty', symbol: 'zł', flag: '🇵🇱' },
+  { code: 'SAR', name: 'Saudi Riyal', symbol: '﷼', flag: '🇸🇦' },
+  { code: 'PHP', name: 'Philippine Peso', symbol: '₱', flag: '🇵🇭' },
+  { code: 'IDR', name: 'Indonesian Rupiah', symbol: 'Rp', flag: '🇮🇩' },
+  { code: 'VND', name: 'Vietnamese Dong', symbol: '₫', flag: '🇻🇳' },
+  { code: 'EGP', name: 'Egyptian Pound', symbol: 'E£', flag: '🇪🇬' },
+  { code: 'TRY', name: 'Turkish Lira', symbol: '₺', flag: '🇹🇷' },
+  { code: 'QAR', name: 'Qatari Riyal', symbol: 'ق.ر', flag: '🇶🇦' },
+  { code: 'KWD', name: 'Kuwaiti Dinar', symbol: 'د.ك', flag: '🇰🇼' },
+  { code: 'BHD', name: 'Bahraini Dinar', symbol: 'د.ب', flag: '🇧🇭' },
+  { code: 'OMR', name: 'Omani Rial', symbol: 'ر.ع.', flag: '🇴🇲' },
+  { code: 'ILS', name: 'Israeli Shekel', symbol: '₪', flag: '🇮🇱' },
+  { code: 'TWD', name: 'Taiwan Dollar', symbol: 'NT$', flag: '🇹🇼' },
 ];
 
 interface CurrencyContextType {
