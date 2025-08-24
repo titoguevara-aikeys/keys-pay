@@ -17,6 +17,21 @@ export const SUPPORTED_CURRENCIES: Currency[] = [
   { code: 'AUD', name: 'Australian Dollar', symbol: 'A$', flag: '🇦🇺' },
   { code: 'JPY', name: 'Japanese Yen', symbol: '¥', flag: '🇯🇵' },
   { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF', flag: '🇨🇭' },
+  { code: 'CNY', name: 'Chinese Yuan', symbol: '¥', flag: '🇨🇳' },
+  { code: 'INR', name: 'Indian Rupee', symbol: '₹', flag: '🇮🇳' },
+  { code: 'KRW', name: 'South Korean Won', symbol: '₩', flag: '🇰🇷' },
+  { code: 'BRL', name: 'Brazilian Real', symbol: 'R$', flag: '🇧🇷' },
+  { code: 'MXN', name: 'Mexican Peso', symbol: '$', flag: '🇲🇽' },
+  { code: 'RUB', name: 'Russian Ruble', symbol: '₽', flag: '🇷🇺' },
+  { code: 'ZAR', name: 'South African Rand', symbol: 'R', flag: '🇿🇦' },
+  { code: 'NOK', name: 'Norwegian Krone', symbol: 'kr', flag: '🇳🇴' },
+  { code: 'SEK', name: 'Swedish Krona', symbol: 'kr', flag: '🇸🇪' },
+  { code: 'DKK', name: 'Danish Krone', symbol: 'kr', flag: '🇩🇰' },
+  { code: 'HKD', name: 'Hong Kong Dollar', symbol: 'HK$', flag: '🇭🇰' },
+  { code: 'NZD', name: 'New Zealand Dollar', symbol: 'NZ$', flag: '🇳🇿' },
+  { code: 'THB', name: 'Thai Baht', symbol: '฿', flag: '🇹🇭' },
+  { code: 'MYR', name: 'Malaysian Ringgit', symbol: 'RM', flag: '🇲🇾' },
+  { code: 'PLN', name: 'Polish Złoty', symbol: 'zł', flag: '🇵🇱' },
 ];
 
 interface CurrencyContextType {
