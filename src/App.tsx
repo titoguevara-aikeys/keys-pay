@@ -16,6 +16,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MockAuthProvider } from "@/contexts/MockAuthContext";
+import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import { PlatformGuard } from "@/components/PlatformGuard";
 import { SecurityProvider } from "@/components/security/SecurityProvider";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -57,7 +58,8 @@ const App = () => (
     <PlatformGuard>
       <SecurityProvider>
         <MockAuthProvider>
-        <TooltipProvider>
+          <CurrencyProvider>
+            <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
@@ -190,7 +192,8 @@ const App = () => (
           </Routes>
           <ComplianceFooter />
         </BrowserRouter>
-        </TooltipProvider>
+            </TooltipProvider>
+          </CurrencyProvider>
       </MockAuthProvider>
       </SecurityProvider>
     </PlatformGuard>

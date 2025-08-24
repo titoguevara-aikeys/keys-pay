@@ -8,6 +8,7 @@ import { Plus, ArrowDownLeft } from 'lucide-react';
 import { useAccounts, useUpdateAccountBalance } from '@/hooks/useAccounts';
 import { useCreateTransaction } from '@/hooks/useTransactions';
 import { useToast } from '@/hooks/use-toast';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface AddMoneyProps {
   trigger?: React.ReactNode;
@@ -24,6 +25,7 @@ const AddMoney: React.FC<AddMoneyProps> = ({ trigger }) => {
   const updateBalance = useUpdateAccountBalance();
   const createTransaction = useCreateTransaction();
   const { toast } = useToast();
+  const { formatAmount, getCurrencySymbol } = useCurrency();
   
   const fundingSources = [
     { id: 'bank', name: 'Bank Account (****1234)' },
@@ -74,7 +76,7 @@ const AddMoney: React.FC<AddMoneyProps> = ({ trigger }) => {
       
       toast({
         title: "Money Added Successfully",
-        description: `$${numericAmount.toFixed(2)} added to your account`,
+        description: `${formatAmount(numericAmount)} added to your account`,
       });
       
       // Reset form
@@ -124,11 +126,11 @@ const AddMoney: React.FC<AddMoneyProps> = ({ trigger }) => {
                 <SelectValue placeholder="Select account" />
               </SelectTrigger>
               <SelectContent>
-                {accounts?.map((account) => (
-                  <SelectItem key={account.id} value={account.id}>
-                    {account.account_type} - ${account.balance.toFixed(2)}
-                  </SelectItem>
-                ))}
+                 {accounts?.map((account) => (
+                   <SelectItem key={account.id} value={account.id}>
+                     {account.account_type} - {formatAmount(account.balance)}
+                   </SelectItem>
+                 ))}
               </SelectContent>
             </Select>
           </div>
@@ -149,11 +151,11 @@ const AddMoney: React.FC<AddMoneyProps> = ({ trigger }) => {
             </Select>
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="amount">Amount</Label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">$</span>
-              <Input
+           <div className="space-y-2">
+             <Label htmlFor="amount">Amount</Label>
+             <div className="relative">
+               <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">{getCurrencySymbol()}</span>
+               <Input
                 id="amount"
                 type="number"
                 placeholder="0.00"

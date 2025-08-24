@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import VerificationStatus from '@/components/VerificationStatus';
 import { useAuth } from '@/contexts/MockAuthContext';
 import { useProfile } from '@/hooks/useProfile';
+import CurrencySelector from '@/components/CurrencySelector';
 import { 
   Home, 
   CreditCard, 
@@ -86,6 +87,11 @@ const Navigation = () => {
             ))}
           </div>
 
+          {/* Currency Selector */}
+          <div className="hidden md:block">
+            <CurrencySelector showLabel={false} className="text-sm" />
+          </div>
+
           {/* User Section */}
           {user && (
             <div className="hidden md:flex items-center gap-3">
@@ -123,7 +129,8 @@ const Navigation = () => {
           )}
 
           {/* Mobile Navigation */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center gap-2">
+            <CurrencySelector showLabel={false} className="text-xs" />
             <select 
               className="bg-background border border-border rounded-md px-3 py-2 text-sm"
               onChange={(e) => window.location.href = e.target.value}
