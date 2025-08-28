@@ -17,6 +17,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MockAuthProvider } from "@/contexts/MockAuthContext";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
+import { ExchangeRateProvider } from "@/contexts/ExchangeRateContext";
 import { PlatformGuard } from "@/components/PlatformGuard";
 import { SecurityProvider } from "@/components/security/SecurityProvider";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -58,7 +59,8 @@ const App = () => (
     <PlatformGuard>
       <SecurityProvider>
         <MockAuthProvider>
-          <CurrencyProvider>
+          <ExchangeRateProvider>
+            <CurrencyProvider>
             <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -193,7 +195,8 @@ const App = () => (
           <ComplianceFooter />
         </BrowserRouter>
             </TooltipProvider>
-          </CurrencyProvider>
+            </CurrencyProvider>
+          </ExchangeRateProvider>
       </MockAuthProvider>
       </SecurityProvider>
     </PlatformGuard>

@@ -42,7 +42,25 @@ export const useExchangeRates = (baseCurrency: string = 'USD') => {
     toCurrency: string
   ): number => {
     if (!ratesData?.rates) return amount;
-    return convertCurrency(amount, fromCurrency, toCurrency, ratesData.rates);
+    if (fromCurrency === toCurrency) return amount;
+    
+    // If converting from USD to another currency
+    if (fromCurrency === baseCurrency) {
+      const rate = ratesData.rates[toCurrency] || 1;
+      return amount * rate;
+    }
+    
+    // If converting to USD from another currency  
+    if (toCurrency === baseCurrency) {
+      const rate = ratesData.rates[fromCurrency] || 1;
+      return amount / rate;
+    }
+    
+    // Cross-currency conversion: from -> USD -> to
+    const fromRate = ratesData.rates[fromCurrency] || 1;
+    const toRate = ratesData.rates[toCurrency] || 1;
+    const usdAmount = amount / fromRate; // Convert to USD first
+    return usdAmount * toRate; // Then convert to target currency
   };
 
   /**

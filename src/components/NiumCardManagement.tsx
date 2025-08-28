@@ -70,6 +70,7 @@ const NiumCardManagement = () => {
   const issueCard = useNiumIssueCard();
   const toggleCard = useNiumCardToggle();
   const orderPhysicalCard = useNiumOrderPhysicalCard();
+  const { toast } = useToast();
   const { isLoadingRates, lastUpdated, ratesError } = useCurrency();
 
   // Memoized callbacks to prevent unnecessary re-renders

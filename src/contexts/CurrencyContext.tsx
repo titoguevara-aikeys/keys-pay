@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useExchangeRateContext } from './ExchangeRateContext';
 
 export interface Currency {
   code: string;
@@ -32,7 +33,7 @@ export const SUPPORTED_CURRENCIES: Currency[] = [
   { code: 'THB', name: 'Thai Baht', symbol: '฿', flag: '🇹🇭' },
   { code: 'MYR', name: 'Malaysian Ringgit', symbol: 'RM', flag: '🇲🇾' },
   { code: 'PLN', name: 'Polish Złoty', symbol: 'zł', flag: '🇵🇱' },
-  { code: 'SAR', name: 'Saudi Riyal', symbol: '﷼', flag: '🇸🇦' },
+  { code: 'SAR', name: 'Saudi Riyal', symbol: 'ر.س', flag: '🇸🇦' },
   { code: 'PHP', name: 'Philippine Peso', symbol: '₱', flag: '🇵🇭' },
   { code: 'IDR', name: 'Indonesian Rupiah', symbol: 'Rp', flag: '🇮🇩' },
   { code: 'VND', name: 'Vietnamese Dong', symbol: '₫', flag: '🇻🇳' },
@@ -69,10 +70,14 @@ interface CurrencyProviderProps {
 export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) => {
   const [selectedCurrency, setSelectedCurrencyState] = useState<Currency>(SUPPORTED_CURRENCIES[0]); // Default to USD
   
-  // Temporary: Use static rates while we fix the exchange rate integration
-  const [isLoadingRates, setIsLoadingRates] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState<number>(Date.now());
-  const [ratesError, setRatesError] = useState(false);
+  // Get exchange rate context (this will be undefined if not wrapped in ExchangeRateProvider)
+  let exchangeRateContext;
+  try {
+    exchangeRateContext = useExchangeRateContext();
+  } catch {
+    // If not wrapped in ExchangeRateProvider, use fallback values
+    exchangeRateContext = null;
+  }
 
   // Load saved currency preference on mount
   useEffect(() => {
@@ -95,8 +100,12 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) 
       return amount;
     }
     
-    // For now, return the original amount (1:1 conversion) until we fix exchange rates
-    // TODO: Implement live FX conversion
+    // Use live exchange rates if available
+    if (exchangeRateContext && exchangeRateContext.convert) {
+      return exchangeRateContext.convert(amount, fromCurrency, selectedCurrency.code);
+    }
+    
+    // Fallback: return original amount
     return amount;
   };
 
@@ -133,9 +142,9 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) 
     getCurrencySymbol,
     getSupportedCurrencies,
     convertAmount,
-    isLoadingRates,
-    lastUpdated,
-    ratesError,
+    isLoadingRates: exchangeRateContext?.isLoadingRates || false,
+    lastUpdated: exchangeRateContext?.lastUpdated,
+    ratesError: exchangeRateContext?.ratesError || false,
   };
 
   return (
