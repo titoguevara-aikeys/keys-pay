@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useExchangeRates } from '@/hooks/useExchangeRates';
 
 export interface Currency {
   code: string;
@@ -70,13 +69,10 @@ interface CurrencyProviderProps {
 export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) => {
   const [selectedCurrency, setSelectedCurrencyState] = useState<Currency>(SUPPORTED_CURRENCIES[0]); // Default to USD
   
-  // Get live exchange rates
-  const { 
-    convertFromBase, 
-    isLoading: isLoadingRates, 
-    lastUpdated, 
-    isError: ratesError 
-  } = useExchangeRates('USD');
+  // Temporary: Use static rates while we fix the exchange rate integration
+  const [isLoadingRates, setIsLoadingRates] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<number>(Date.now());
+  const [ratesError, setRatesError] = useState(false);
 
   // Load saved currency preference on mount
   useEffect(() => {
@@ -99,8 +95,9 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) 
       return amount;
     }
     
-    // Convert from the source currency to selected currency using live rates
-    return convertFromBase(amount, selectedCurrency.code);
+    // For now, return the original amount (1:1 conversion) until we fix exchange rates
+    // TODO: Implement live FX conversion
+    return amount;
   };
 
   const formatAmount = (amount: number, showSymbol: boolean = true, fromCurrency: string = 'USD'): string => {
