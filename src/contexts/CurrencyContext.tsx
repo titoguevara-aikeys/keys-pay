@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useExchangeRates } from '@/hooks/useExchangeRates';
 
 export interface Currency {
   code: string;
@@ -49,9 +50,13 @@ export const SUPPORTED_CURRENCIES: Currency[] = [
 interface CurrencyContextType {
   selectedCurrency: Currency;
   setSelectedCurrency: (currency: Currency) => void;
-  formatAmount: (amount: number, showSymbol?: boolean) => string;
+  formatAmount: (amount: number, showSymbol?: boolean, fromCurrency?: string) => string;
   getCurrencySymbol: () => string;
   getSupportedCurrencies: () => Currency[];
+  convertAmount: (amount: number, fromCurrency: string) => number;
+  isLoadingRates: boolean;
+  lastUpdated: number | undefined;
+  ratesError: boolean;
 }
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
@@ -64,6 +69,14 @@ interface CurrencyProviderProps {
 
 export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) => {
   const [selectedCurrency, setSelectedCurrencyState] = useState<Currency>(SUPPORTED_CURRENCIES[0]); // Default to USD
+  
+  // Get live exchange rates
+  const { 
+    convertFromBase, 
+    isLoading: isLoadingRates, 
+    lastUpdated, 
+    isError: ratesError 
+  } = useExchangeRates('USD');
 
   // Load saved currency preference on mount
   useEffect(() => {
@@ -81,18 +94,30 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) 
     localStorage.setItem(STORAGE_KEY, currency.code);
   };
 
-  const formatAmount = (amount: number, showSymbol: boolean = true): string => {
+  const convertAmount = (amount: number, fromCurrency: string = 'USD'): number => {
+    if (fromCurrency === selectedCurrency.code) {
+      return amount;
+    }
+    
+    // Convert from the source currency to selected currency using live rates
+    return convertFromBase(amount, selectedCurrency.code);
+  };
+
+  const formatAmount = (amount: number, showSymbol: boolean = true, fromCurrency: string = 'USD'): string => {
+    // Convert amount to selected currency if needed
+    const convertedAmount = convertAmount(amount, fromCurrency);
+    
     const formattedNumber = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(Math.abs(amount));
+    }).format(Math.abs(convertedAmount));
 
     if (!showSymbol) {
       return formattedNumber;
     }
 
     // Handle negative amounts
-    const prefix = amount < 0 ? '-' : '';
+    const prefix = convertedAmount < 0 ? '-' : '';
     return `${prefix}${selectedCurrency.symbol}${formattedNumber}`;
   };
 
@@ -110,6 +135,10 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) 
     formatAmount,
     getCurrencySymbol,
     getSupportedCurrencies,
+    convertAmount,
+    isLoadingRates,
+    lastUpdated,
+    ratesError,
   };
 
   return (

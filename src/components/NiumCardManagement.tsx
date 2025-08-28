@@ -51,6 +51,7 @@ import { NiumPhysicalCardOrder } from './NiumPhysicalCardOrder';
 import { CardsSkeleton } from './skeletons/CardsSkeleton';
 import { KeysPayCardShowcase } from './KeysPayCardShowcase';
 import CurrencyDisplay from './CurrencyDisplay';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 const NiumCardManagement = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -70,6 +71,7 @@ const NiumCardManagement = () => {
   const toggleCard = useNiumCardToggle();
   const orderPhysicalCard = useNiumOrderPhysicalCard();
   const { toast } = useToast();
+  const { isLoadingRates, lastUpdated, ratesError } = useCurrency();
 
   // Memoized callbacks to prevent unnecessary re-renders
   const handleStatusChange = useCallback((value: string) => {
@@ -157,11 +159,24 @@ const NiumCardManagement = () => {
           <h1 className="text-3xl font-bold">Keys Pay Card Management</h1>
           <p className="text-muted-foreground">Manage your Keys Pay virtual and physical payment cards</p>
           {healthCheck && (
-            <div className="flex items-center gap-2 mt-2">
-              <div className={`w-2 h-2 rounded-full ${healthCheck.ok ? 'bg-green-500' : 'bg-red-500'}`} />
-              <span className="text-sm text-muted-foreground">
-                Keys Pay Sandbox {healthCheck.ok ? 'Connected' : 'Disconnected'}
-              </span>
+            <div className="flex flex-col gap-2 mt-2">
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${healthCheck.ok ? 'bg-green-500' : 'bg-red-500'}`} />
+                <span className="text-sm text-muted-foreground">
+                  Keys Pay Sandbox {healthCheck.ok ? 'Connected' : 'Disconnected'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${!ratesError && !isLoadingRates ? 'bg-green-500' : isLoadingRates ? 'bg-yellow-500' : 'bg-red-500'}`} />
+                <span className="text-sm text-muted-foreground">
+                  FX Rates {!ratesError && !isLoadingRates ? 'Live' : isLoadingRates ? 'Loading' : 'Offline'}
+                  {lastUpdated && !isLoadingRates && (
+                    <span className="ml-1 text-xs">
+                      (Updated {new Date(lastUpdated).toLocaleTimeString()})
+                    </span>
+                  )}
+                </span>
+              </div>
             </div>
           )}
         </div>

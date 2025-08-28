@@ -5,6 +5,7 @@ interface CurrencyDisplayProps {
   amount: number;
   showSymbol?: boolean;
   className?: string;
+  fromCurrency?: string;
 }
 
 /**
@@ -14,13 +15,14 @@ interface CurrencyDisplayProps {
 const CurrencyDisplay: React.FC<CurrencyDisplayProps> = ({ 
   amount, 
   showSymbol = true, 
-  className = "" 
+  className = "",
+  fromCurrency = "USD"
 }) => {
   const { formatAmount } = useCurrency();
 
   return (
     <span className={className}>
-      {formatAmount(amount, showSymbol)}
+      {formatAmount(amount, showSymbol, fromCurrency)}
     </span>
   );
 };
