@@ -17,6 +17,7 @@ import {
 import type { NiumCard } from '@/lib/nium/cards-api';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
+import CurrencyDisplay from './CurrencyDisplay';
 
 interface NiumVirtualCardProps {
   card: NiumCard;
@@ -149,11 +150,11 @@ export const NiumVirtualCard: React.FC<NiumVirtualCardProps> = ({
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
             <span className="text-xs text-gray-400">Available Balance</span>
-            <span className="text-lg font-bold">${card.balance.toLocaleString()}</span>
+            <CurrencyDisplay amount={card.balance} className="text-lg font-bold" />
           </div>
           <div className="flex justify-between items-center">
             <span className="text-xs text-gray-400">Spending Limit</span>
-            <span className="text-sm">${card.spendingLimit.toLocaleString()}</span>
+            <CurrencyDisplay amount={card.spendingLimit} className="text-sm" />
           </div>
         </div>
 

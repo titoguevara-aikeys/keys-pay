@@ -50,6 +50,7 @@ import { NiumCreateCardDialog } from './NiumCreateCardDialog';
 import { NiumPhysicalCardOrder } from './NiumPhysicalCardOrder';
 import { CardsSkeleton } from './skeletons/CardsSkeleton';
 import { KeysPayCardShowcase } from './KeysPayCardShowcase';
+import CurrencyDisplay from './CurrencyDisplay';
 
 const NiumCardManagement = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -232,7 +233,7 @@ const NiumCardManagement = () => {
               <DollarSign className="h-5 w-5 text-green-600" />
               <div>
                 <p className="text-sm text-muted-foreground">Total Balance</p>
-                <p className="text-2xl font-bold">${cardStats.totalBalance.toLocaleString()}</p>
+                <CurrencyDisplay amount={cardStats.totalBalance} className="text-2xl font-bold" />
               </div>
             </div>
           </CardContent>
@@ -244,7 +245,7 @@ const NiumCardManagement = () => {
               <TrendingUp className="h-5 w-5 text-blue-600" />
               <div>
                 <p className="text-sm text-muted-foreground">Monthly Spend</p>
-                <p className="text-2xl font-bold">${cardStats.monthlySpending.toLocaleString()}</p>
+                <CurrencyDisplay amount={cardStats.monthlySpending} className="text-2xl font-bold" />
               </div>
             </div>
           </CardContent>
