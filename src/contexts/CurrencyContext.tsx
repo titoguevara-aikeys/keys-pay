@@ -96,15 +96,20 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) 
   };
 
   const convertAmount = (amount: number, fromCurrency: string = 'USD'): number => {
+    console.log('Converting:', { amount, fromCurrency, selectedCurrency: selectedCurrency.code, exchangeRateContext });
+    
     if (fromCurrency === selectedCurrency.code) {
       return amount;
     }
     
     // Use live exchange rates if available
     if (exchangeRateContext && exchangeRateContext.convert) {
-      return exchangeRateContext.convert(amount, fromCurrency, selectedCurrency.code);
+      const converted = exchangeRateContext.convert(amount, fromCurrency, selectedCurrency.code);
+      console.log('Converted result:', { original: amount, converted, fromCurrency, toCurrency: selectedCurrency.code });
+      return converted;
     }
     
+    console.log('No exchange rate context available, returning original amount');
     // Fallback: return original amount
     return amount;
   };

@@ -150,11 +150,11 @@ export const NiumVirtualCard: React.FC<NiumVirtualCardProps> = ({
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
             <span className="text-xs text-gray-400">Available Balance</span>
-            <CurrencyDisplay amount={card.balance} className="text-lg font-bold" />
+            <CurrencyDisplay amount={card.balance} fromCurrency="USD" className="text-lg font-bold" />
           </div>
           <div className="flex justify-between items-center">
             <span className="text-xs text-gray-400">Spending Limit</span>
-            <CurrencyDisplay amount={card.spendingLimit} className="text-sm" />
+            <CurrencyDisplay amount={card.spendingLimit} fromCurrency="USD" className="text-sm" />
           </div>
         </div>
 

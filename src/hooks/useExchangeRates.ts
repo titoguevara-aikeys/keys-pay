@@ -41,18 +41,25 @@ export const useExchangeRates = (baseCurrency: string = 'USD') => {
     fromCurrency: string,
     toCurrency: string
   ): number => {
-    if (!ratesData?.rates) return amount;
+    console.log('Exchange rate convert called:', { amount, fromCurrency, toCurrency, rates: ratesData?.rates });
+    
+    if (!ratesData?.rates) {
+      console.log('No rates data available');
+      return amount;
+    }
     if (fromCurrency === toCurrency) return amount;
     
     // If converting from USD to another currency
     if (fromCurrency === baseCurrency) {
       const rate = ratesData.rates[toCurrency] || 1;
+      console.log('USD to currency:', { rate, result: amount * rate });
       return amount * rate;
     }
     
     // If converting to USD from another currency  
     if (toCurrency === baseCurrency) {
       const rate = ratesData.rates[fromCurrency] || 1;
+      console.log('Currency to USD:', { rate, result: amount / rate });
       return amount / rate;
     }
     
@@ -60,7 +67,9 @@ export const useExchangeRates = (baseCurrency: string = 'USD') => {
     const fromRate = ratesData.rates[fromCurrency] || 1;
     const toRate = ratesData.rates[toCurrency] || 1;
     const usdAmount = amount / fromRate; // Convert to USD first
-    return usdAmount * toRate; // Then convert to target currency
+    const result = usdAmount * toRate; // Then convert to target currency
+    console.log('Cross-currency:', { fromRate, toRate, usdAmount, result });
+    return result;
   };
 
   /**

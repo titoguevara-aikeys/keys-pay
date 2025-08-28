@@ -20,6 +20,9 @@ const CurrencyDisplay: React.FC<CurrencyDisplayProps> = ({
 }) => {
   const { formatAmount } = useCurrency();
 
+  // Debug logging
+  console.log('CurrencyDisplay:', { amount, fromCurrency, showSymbol });
+
   return (
     <span className={className}>
       {formatAmount(amount, showSymbol, fromCurrency)}

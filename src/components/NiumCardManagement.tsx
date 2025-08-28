@@ -248,7 +248,7 @@ const NiumCardManagement = () => {
               <DollarSign className="h-5 w-5 text-green-600" />
               <div>
                 <p className="text-sm text-muted-foreground">Total Balance</p>
-                <CurrencyDisplay amount={cardStats.totalBalance} className="text-2xl font-bold" />
+                <CurrencyDisplay amount={cardStats.totalBalance} fromCurrency="USD" className="text-2xl font-bold" />
               </div>
             </div>
           </CardContent>
@@ -260,7 +260,7 @@ const NiumCardManagement = () => {
               <TrendingUp className="h-5 w-5 text-blue-600" />
               <div>
                 <p className="text-sm text-muted-foreground">Monthly Spend</p>
-                <CurrencyDisplay amount={cardStats.monthlySpending} className="text-2xl font-bold" />
+                <CurrencyDisplay amount={cardStats.monthlySpending} fromCurrency="USD" className="text-2xl font-bold" />
               </div>
             </div>
           </CardContent>

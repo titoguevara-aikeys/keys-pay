@@ -28,6 +28,8 @@ export const ExchangeRateProvider: React.FC<ExchangeRateProviderProps> = ({ chil
     rates
   } = useExchangeRates('USD');
 
+  console.log('ExchangeRateProvider:', { isLoadingRates, ratesError, rates, lastUpdated });
+
   const contextValue: ExchangeRateContextType = {
     convertFromBase,
     convert,
