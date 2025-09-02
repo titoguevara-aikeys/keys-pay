@@ -6,7 +6,7 @@ import { Eye, EyeOff, Building2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { useKeysPayAuth } from '@/contexts/KeysPayAuthContext';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 interface KeysPayAuthProps {
   onAuthSuccess?: () => void;
