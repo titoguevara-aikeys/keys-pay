@@ -1,20 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { createClient } from '@supabase/supabase-js';
-
-// Direct Supabase client for KeysPay auth with working API key
-const keysPaySupabase = createClient(
-  'https://emolyyvmvvfjyxbguhyn.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtb2x5eXZtdnZmanl4Ymd1aHluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0MDI3NDIsImV4cCI6MjA0OTk3ODc0Mn0.pk3Uln3jPZnQUye4hlUc68PBSA2CXVNJRcGM22VDt9c',
-  {
-    auth: {
-      storage: window.localStorage,
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true
-    }
-  }
-);
+import { supabase } from '@/integrations/supabase/client';
 
 interface KeysPayAuthContextType {
   user: User | null;
@@ -34,7 +20,7 @@ export const KeysPayAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   useEffect(() => {
     // Get initial session
-    keysPaySupabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       console.log('Initial session:', session);
       setSession(session);
       setUser(session?.user ?? null);
@@ -45,7 +31,7 @@ export const KeysPayAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = keysPaySupabase.auth.onAuthStateChange(
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         console.log('KeysPay Auth event:', event, session);
         setSession(session);
@@ -59,7 +45,7 @@ export const KeysPayAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const signUp = async (email: string, password: string) => {
     console.log('KeysPay SignUp attempt:', email);
-    const { error } = await keysPaySupabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -78,7 +64,7 @@ export const KeysPayAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const signIn = async (email: string, password: string) => {
     console.log('KeysPay SignIn attempt:', email);
-    const { error } = await keysPaySupabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -94,7 +80,7 @@ export const KeysPayAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const signOut = async () => {
     console.log('KeysPay SignOut');
-    const { error } = await keysPaySupabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
     if (error) console.error('Sign out error:', error);
   };
 
