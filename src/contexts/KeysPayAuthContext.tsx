@@ -19,69 +19,120 @@ export const KeysPayAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('🔧 KeysPay Auth Context Initializing...');
+    
+    let mounted = true;
+
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('Initial session:', session);
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    }).catch(error => {
-      console.error('Error getting initial session:', error);
-      setLoading(false);
-    });
+    const initializeAuth = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('❌ Auth Session Error:', error);
+        }
+        
+        if (mounted) {
+          console.log('✅ Initial session loaded:', session ? 'Session found' : 'No session');
+          setSession(session);
+          setUser(session?.user ?? null);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('❌ Auth initialization failed:', error);
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    };
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        console.log('KeysPay Auth event:', event, session);
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
+        console.log(`🔄 Auth State Change: ${event}`, session ? 'With session' : 'No session');
+        if (mounted) {
+          setSession(session);
+          setUser(session?.user ?? null);
+          setLoading(false);
+        }
       }
     );
 
-    return () => subscription.unsubscribe();
+    initializeAuth();
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signUp = async (email: string, password: string) => {
-    console.log('KeysPay SignUp attempt:', email);
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`
+    console.log('🔄 KeysPay SignUp attempt for:', email);
+    
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+      
+      if (error) {
+        console.error('❌ SignUp error:', {
+          message: error.message,
+          status: error.status,
+          code: error.code
+        });
+      } else {
+        console.log('✅ SignUp successful:', data.user ? 'User created' : 'Confirmation required');
       }
-    });
-    
-    if (error) {
-      console.error('SignUp error:', error);
-    } else {
-      console.log('SignUp success');
+      
+      return { error };
+    } catch (err) {
+      console.error('❌ SignUp exception:', err);
+      return { error: err };
     }
-    
-    return { error };
   };
 
   const signIn = async (email: string, password: string) => {
-    console.log('KeysPay SignIn attempt:', email);
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    console.log('🔄 KeysPay SignIn attempt for:', email);
     
-    if (error) {
-      console.error('SignIn error:', error);
-    } else {
-      console.log('SignIn success');
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
+      if (error) {
+        console.error('❌ SignIn error:', {
+          message: error.message,
+          status: error.status,
+          code: error.code
+        });
+      } else {
+        console.log('✅ SignIn successful:', data.user ? 'User authenticated' : 'No user returned');
+      }
+      
+      return { error };
+    } catch (err) {
+      console.error('❌ SignIn exception:', err);
+      return { error: err };
     }
-    
-    return { error };
   };
 
   const signOut = async () => {
-    console.log('KeysPay SignOut');
-    const { error } = await supabase.auth.signOut();
-    if (error) console.error('Sign out error:', error);
+    console.log('🔄 KeysPay SignOut');
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('❌ SignOut error:', error);
+      } else {
+        console.log('✅ SignOut successful');
+      }
+    } catch (err) {
+      console.error('❌ SignOut exception:', err);
+    }
   };
 
   const value = {
