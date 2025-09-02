@@ -5,8 +5,8 @@ import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Building2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
+import { useKeysPayAuth } from '@/contexts/KeysPayAuthContext';
+import { supabase } from '@/lib/supabase';
 
 interface KeysPayAuthProps {
   onAuthSuccess?: () => void;
@@ -18,7 +18,7 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
   const [activeTab, setActiveTab] = useState('signin');
   const [authError, setAuthError] = useState<string>('');
   const navigate = useNavigate();
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp } = useKeysPayAuth();
 
   const [signInForm, setSignInForm] = useState({
     email: '',

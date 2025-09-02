@@ -13,7 +13,7 @@ import {
   HelpCircle,
   LogOut
 } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useKeysPayAuth } from "@/contexts/KeysPayAuthContext";
 import {
   Sidebar,
   SidebarContent,
@@ -51,7 +51,7 @@ const supportItems = [
 export function KeysPaySidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
-  const { signOut, user, userRole } = useAuth();
+  const { signOut, user } = useKeysPayAuth();
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -98,7 +98,7 @@ export function KeysPaySidebar() {
                 <p className="font-medium text-sm truncate">{user.email}</p>
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary" className="text-xs px-2 py-0">
-                    {userRole || 'User'}
+                    User
                   </Badge>
                   <Badge variant="outline" className="text-xs px-2 py-0">
                     GCC

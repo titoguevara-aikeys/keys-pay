@@ -15,17 +15,18 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { KeysPayAuthProvider } from "@/contexts/KeysPayAuthContext";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import { ExchangeRateProvider } from "@/contexts/ExchangeRateContext";
 import { PlatformGuard } from "@/components/PlatformGuard";
 import { SecurityProvider } from "@/components/security/SecurityProvider";
+import { KeysPayProtectedRoute } from "@/components/KeysPayProtectedRoute";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AdminRoute from "@/components/AdminRoute";
 import ComplianceFooter from "@/components/ComplianceFooter";
 import { KeysPaySidebar } from '@/components/KeysPaySidebar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { useAuth } from '@/contexts/AuthContext';
+import { useKeysPayAuth } from '@/contexts/KeysPayAuthContext';
 
 // Keys Pay Pages
 import Dashboard from './pages/Dashboard';
@@ -65,7 +66,7 @@ import CollectionsAccountsPage from "./pages/CollectionsAccounts";
 const queryClient = new QueryClient();
 
 const AppRoutes = () => {
-  const { user } = useAuth();
+  const { user } = useKeysPayAuth();
   
   return (
     <Routes>
@@ -74,7 +75,7 @@ const AppRoutes = () => {
       
       {/* Protected Dashboard Routes */}
       <Route path="/dashboard" element={
-        <ProtectedRoute>
+        <KeysPayProtectedRoute>
           <SidebarProvider>
             <div className="min-h-screen flex w-full">
               <KeysPaySidebar />
@@ -89,11 +90,11 @@ const AppRoutes = () => {
               </div>
             </div>
           </SidebarProvider>
-        </ProtectedRoute>
+        </KeysPayProtectedRoute>
       } />
       
       <Route path="/crypto" element={
-        <ProtectedRoute>
+        <KeysPayProtectedRoute>
           <SidebarProvider>
             <div className="min-h-screen flex w-full">
               <KeysPaySidebar />
@@ -108,11 +109,11 @@ const AppRoutes = () => {
               </div>
             </div>
           </SidebarProvider>
-        </ProtectedRoute>
+        </KeysPayProtectedRoute>
       } />
 
       <Route path="/keyspay/cards" element={
-        <ProtectedRoute>
+        <KeysPayProtectedRoute>
           <SidebarProvider>
             <div className="min-h-screen flex w-full">
               <KeysPaySidebar />
@@ -127,11 +128,11 @@ const AppRoutes = () => {
               </div>
             </div>
           </SidebarProvider>
-        </ProtectedRoute>
+        </KeysPayProtectedRoute>
       } />
 
       <Route path="/profile" element={
-        <ProtectedRoute>
+        <KeysPayProtectedRoute>
           <SidebarProvider>
             <div className="min-h-screen flex w-full">
               <KeysPaySidebar />
@@ -146,8 +147,11 @@ const AppRoutes = () => {
               </div>
             </div>
           </SidebarProvider>
-        </ProtectedRoute>
+        </KeysPayProtectedRoute>
       } />
+
+      {/* Redirect keyspay to dashboard */}
+      <Route path="/keyspay" element={<Navigate to="/dashboard" replace />} />
 
       {/* Legacy Routes - Hidden behind feature flags */}
       <Route path="/travel" element={<ProtectedRoute><Travel /></ProtectedRoute>} />
@@ -187,7 +191,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <PlatformGuard>
       <SecurityProvider>
-        <AuthProvider>
+        <KeysPayAuthProvider>
           <ExchangeRateProvider>
             <CurrencyProvider>
               <TooltipProvider>
@@ -200,7 +204,7 @@ const App = () => (
               </TooltipProvider>
             </CurrencyProvider>
           </ExchangeRateProvider>
-        </AuthProvider>
+        </KeysPayAuthProvider>
       </SecurityProvider>
     </PlatformGuard>
   </QueryClientProvider>
