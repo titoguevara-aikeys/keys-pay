@@ -108,7 +108,7 @@ const Auth = () => {
           </div>
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">Keys Pay</CardTitle>
           <CardDescription>
-            Secure digital payments and family controls
+            GCC Financial Aggregator • Crypto • Cards • Banking
           </CardDescription>
         </CardHeader>
         
