@@ -128,6 +128,42 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_chat_logs: {
+        Row: {
+          context: Json | null
+          created_at: string | null
+          id: string
+          message: string
+          model: string | null
+          response: string
+          response_time_ms: number | null
+          tokens_used: number | null
+          user_id: string | null
+        }
+        Insert: {
+          context?: Json | null
+          created_at?: string | null
+          id?: string
+          message: string
+          model?: string | null
+          response: string
+          response_time_ms?: number | null
+          tokens_used?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          context?: Json | null
+          created_at?: string | null
+          id?: string
+          message?: string
+          model?: string | null
+          response?: string
+          response_time_ms?: number | null
+          tokens_used?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       ai_chat_messages: {
         Row: {
           content: string
@@ -313,6 +349,33 @@ export type Database = {
         }
         Relationships: []
       }
+      api_rate_limits: {
+        Row: {
+          action: string
+          count: number | null
+          created_at: string | null
+          id: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          count?: number | null
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          count?: number | null
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       audit_events: {
         Row: {
           actor_email: string | null
@@ -345,6 +408,89 @@ export type Database = {
           timestamp?: string
         }
         Relationships: []
+      }
+      bank_transfers: {
+        Row: {
+          amount: number
+          beneficiary_name: string
+          created_at: string | null
+          currency: string
+          fee_amount: number | null
+          from_account: string
+          iban: string | null
+          id: string
+          organization_id: string
+          provider: string
+          provider_transfer_id: string | null
+          purpose_code: string | null
+          reference: string | null
+          routing_number: string | null
+          settled_at: string | null
+          status: Database["public"]["Enums"]["transfer_status"] | null
+          swift_code: string | null
+          to_account: string
+          transfer_type: string
+          updated_at: string | null
+          user_id: string
+          webhook_data: Json | null
+        }
+        Insert: {
+          amount: number
+          beneficiary_name: string
+          created_at?: string | null
+          currency?: string
+          fee_amount?: number | null
+          from_account: string
+          iban?: string | null
+          id?: string
+          organization_id: string
+          provider?: string
+          provider_transfer_id?: string | null
+          purpose_code?: string | null
+          reference?: string | null
+          routing_number?: string | null
+          settled_at?: string | null
+          status?: Database["public"]["Enums"]["transfer_status"] | null
+          swift_code?: string | null
+          to_account: string
+          transfer_type: string
+          updated_at?: string | null
+          user_id: string
+          webhook_data?: Json | null
+        }
+        Update: {
+          amount?: number
+          beneficiary_name?: string
+          created_at?: string | null
+          currency?: string
+          fee_amount?: number | null
+          from_account?: string
+          iban?: string | null
+          id?: string
+          organization_id?: string
+          provider?: string
+          provider_transfer_id?: string | null
+          purpose_code?: string | null
+          reference?: string | null
+          routing_number?: string | null
+          settled_at?: string | null
+          status?: Database["public"]["Enums"]["transfer_status"] | null
+          swift_code?: string | null
+          to_account?: string
+          transfer_type?: string
+          updated_at?: string | null
+          user_id?: string
+          webhook_data?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bank_transfers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       bills: {
         Row: {
@@ -567,32 +713,44 @@ export type Database = {
       cards: {
         Row: {
           account_id: string
+          card_controls: Json | null
           card_number: string
           card_status: string
           card_type: string
           created_at: string
           id: string
+          provider: string | null
+          provider_card_id: string | null
           spending_limit: number | null
+          spending_limits: Json | null
           updated_at: string
         }
         Insert: {
           account_id: string
+          card_controls?: Json | null
           card_number: string
           card_status?: string
           card_type?: string
           created_at?: string
           id?: string
+          provider?: string | null
+          provider_card_id?: string | null
           spending_limit?: number | null
+          spending_limits?: Json | null
           updated_at?: string
         }
         Update: {
           account_id?: string
+          card_controls?: Json | null
           card_number?: string
           card_status?: string
           card_type?: string
           created_at?: string
           id?: string
+          provider?: string | null
+          provider_card_id?: string | null
           spending_limit?: number | null
+          spending_limits?: Json | null
           updated_at?: string
         }
         Relationships: [
@@ -953,6 +1111,80 @@ export type Database = {
         }
         Relationships: []
       }
+      crypto_orders: {
+        Row: {
+          checkout_url: string | null
+          created_at: string | null
+          crypto_amount: number | null
+          crypto_currency: string
+          exchange_rate: number | null
+          expires_at: string | null
+          fee_amount: number | null
+          fiat_amount: number | null
+          fiat_currency: string
+          id: string
+          order_type: string
+          organization_id: string
+          provider: string
+          provider_order_id: string | null
+          settled_at: string | null
+          status: Database["public"]["Enums"]["crypto_order_status"] | null
+          updated_at: string | null
+          user_id: string
+          webhook_data: Json | null
+        }
+        Insert: {
+          checkout_url?: string | null
+          created_at?: string | null
+          crypto_amount?: number | null
+          crypto_currency: string
+          exchange_rate?: number | null
+          expires_at?: string | null
+          fee_amount?: number | null
+          fiat_amount?: number | null
+          fiat_currency?: string
+          id?: string
+          order_type: string
+          organization_id: string
+          provider: string
+          provider_order_id?: string | null
+          settled_at?: string | null
+          status?: Database["public"]["Enums"]["crypto_order_status"] | null
+          updated_at?: string | null
+          user_id: string
+          webhook_data?: Json | null
+        }
+        Update: {
+          checkout_url?: string | null
+          created_at?: string | null
+          crypto_amount?: number | null
+          crypto_currency?: string
+          exchange_rate?: number | null
+          expires_at?: string | null
+          fee_amount?: number | null
+          fiat_amount?: number | null
+          fiat_currency?: string
+          id?: string
+          order_type?: string
+          organization_id?: string
+          provider?: string
+          provider_order_id?: string | null
+          settled_at?: string | null
+          status?: Database["public"]["Enums"]["crypto_order_status"] | null
+          updated_at?: string | null
+          user_id?: string
+          webhook_data?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crypto_orders_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       crypto_transactions: {
         Row: {
           amount: number
@@ -1052,6 +1284,9 @@ export type Database = {
       }
       deals: {
         Row: {
+          api_deal_id: string | null
+          availability_status: string | null
+          booking_url: string | null
           category: string | null
           created_at: string | null
           currency: string | null
@@ -1062,6 +1297,7 @@ export type Database = {
           image_url: string | null
           is_featured: boolean | null
           last_seen: string | null
+          last_synced: string | null
           member_price: number | null
           partner_id: string | null
           public_price: number
@@ -1072,6 +1308,9 @@ export type Database = {
           valid_to: string | null
         }
         Insert: {
+          api_deal_id?: string | null
+          availability_status?: string | null
+          booking_url?: string | null
           category?: string | null
           created_at?: string | null
           currency?: string | null
@@ -1082,6 +1321,7 @@ export type Database = {
           image_url?: string | null
           is_featured?: boolean | null
           last_seen?: string | null
+          last_synced?: string | null
           member_price?: number | null
           partner_id?: string | null
           public_price: number
@@ -1092,6 +1332,9 @@ export type Database = {
           valid_to?: string | null
         }
         Update: {
+          api_deal_id?: string | null
+          availability_status?: string | null
+          booking_url?: string | null
           category?: string | null
           created_at?: string | null
           currency?: string | null
@@ -1102,6 +1345,7 @@ export type Database = {
           image_url?: string | null
           is_featured?: boolean | null
           last_seen?: string | null
+          last_synced?: string | null
           member_price?: number | null
           partner_id?: string | null
           public_price?: number
@@ -1387,6 +1631,47 @@ export type Database = {
         }
         Relationships: []
       }
+      guardarian_orders: {
+        Row: {
+          created_at: string | null
+          crypto_order_id: string
+          deposit_type: string | null
+          guardarian_order_id: string
+          id: string
+          payout_type: string | null
+          updated_at: string | null
+          webhook_data: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          crypto_order_id: string
+          deposit_type?: string | null
+          guardarian_order_id: string
+          id?: string
+          payout_type?: string | null
+          updated_at?: string | null
+          webhook_data?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          crypto_order_id?: string
+          deposit_type?: string | null
+          guardarian_order_id?: string
+          id?: string
+          payout_type?: string | null
+          updated_at?: string | null
+          webhook_data?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guardarian_orders_crypto_order_id_fkey"
+            columns: ["crypto_order_id"]
+            isOneToOne: false
+            referencedRelation: "crypto_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       idempotency_keys: {
         Row: {
           created_at: string | null
@@ -1463,6 +1748,129 @@ export type Database = {
             columns: ["partner_id"]
             isOneToOne: false
             referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ledger_accounts: {
+        Row: {
+          account_code: string
+          account_name: string
+          account_type: Database["public"]["Enums"]["ledger_account_type"]
+          balance: number | null
+          created_at: string | null
+          currency: string
+          id: string
+          is_active: boolean | null
+          organization_id: string
+          parent_account_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          account_code: string
+          account_name: string
+          account_type: Database["public"]["Enums"]["ledger_account_type"]
+          balance?: number | null
+          created_at?: string | null
+          currency?: string
+          id?: string
+          is_active?: boolean | null
+          organization_id: string
+          parent_account_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          account_code?: string
+          account_name?: string
+          account_type?: Database["public"]["Enums"]["ledger_account_type"]
+          balance?: number | null
+          created_at?: string | null
+          currency?: string
+          id?: string
+          is_active?: boolean | null
+          organization_id?: string
+          parent_account_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ledger_accounts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ledger_accounts_parent_account_id_fkey"
+            columns: ["parent_account_id"]
+            isOneToOne: false
+            referencedRelation: "ledger_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ledger_entries: {
+        Row: {
+          account_id: string
+          created_at: string | null
+          created_by: string | null
+          credit_amount: number | null
+          currency: string
+          debit_amount: number | null
+          description: string
+          id: string
+          organization_id: string
+          posted_at: string | null
+          provider: string | null
+          provider_transaction_id: string | null
+          reference: string | null
+          transaction_id: string
+        }
+        Insert: {
+          account_id: string
+          created_at?: string | null
+          created_by?: string | null
+          credit_amount?: number | null
+          currency?: string
+          debit_amount?: number | null
+          description: string
+          id?: string
+          organization_id: string
+          posted_at?: string | null
+          provider?: string | null
+          provider_transaction_id?: string | null
+          reference?: string | null
+          transaction_id: string
+        }
+        Update: {
+          account_id?: string
+          created_at?: string | null
+          created_by?: string | null
+          credit_amount?: number | null
+          currency?: string
+          debit_amount?: number | null
+          description?: string
+          id?: string
+          organization_id?: string
+          posted_at?: string | null
+          provider?: string | null
+          provider_transaction_id?: string | null
+          reference?: string | null
+          transaction_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ledger_entries_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "ledger_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ledger_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -1674,6 +2082,204 @@ export type Database = {
         }
         Relationships: []
       }
+      nymcard_cards: {
+        Row: {
+          activated_at: string | null
+          card_status: string | null
+          card_type: string
+          controls: Json | null
+          created_at: string | null
+          customer_id: string
+          expiry_month: number | null
+          expiry_year: number | null
+          id: string
+          last_four: string | null
+          nymcard_card_id: string
+          spending_limits: Json | null
+          updated_at: string | null
+          user_id: string
+          webhook_data: Json | null
+        }
+        Insert: {
+          activated_at?: string | null
+          card_status?: string | null
+          card_type?: string
+          controls?: Json | null
+          created_at?: string | null
+          customer_id: string
+          expiry_month?: number | null
+          expiry_year?: number | null
+          id?: string
+          last_four?: string | null
+          nymcard_card_id: string
+          spending_limits?: Json | null
+          updated_at?: string | null
+          user_id: string
+          webhook_data?: Json | null
+        }
+        Update: {
+          activated_at?: string | null
+          card_status?: string | null
+          card_type?: string
+          controls?: Json | null
+          created_at?: string | null
+          customer_id?: string
+          expiry_month?: number | null
+          expiry_year?: number | null
+          id?: string
+          last_four?: string | null
+          nymcard_card_id?: string
+          spending_limits?: Json | null
+          updated_at?: string | null
+          user_id?: string
+          webhook_data?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nymcard_cards_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "nymcard_customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nymcard_customers: {
+        Row: {
+          created_at: string | null
+          id: string
+          kyc_data: Json | null
+          kyc_status: string | null
+          nymcard_customer_id: string
+          organization_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          kyc_data?: Json | null
+          kyc_status?: string | null
+          nymcard_customer_id: string
+          organization_id: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          kyc_data?: Json | null
+          kyc_status?: string | null
+          nymcard_customer_id?: string
+          organization_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nymcard_customers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nymcard_transactions: {
+        Row: {
+          amount: number
+          card_id: string
+          created_at: string | null
+          currency: string
+          id: string
+          merchant_category: string | null
+          merchant_name: string | null
+          nymcard_transaction_id: string
+          settled_at: string | null
+          status: string
+          transaction_type: string
+          webhook_data: Json | null
+        }
+        Insert: {
+          amount: number
+          card_id: string
+          created_at?: string | null
+          currency: string
+          id?: string
+          merchant_category?: string | null
+          merchant_name?: string | null
+          nymcard_transaction_id: string
+          settled_at?: string | null
+          status: string
+          transaction_type: string
+          webhook_data?: Json | null
+        }
+        Update: {
+          amount?: number
+          card_id?: string
+          created_at?: string | null
+          currency?: string
+          id?: string
+          merchant_category?: string | null
+          merchant_name?: string | null
+          nymcard_transaction_id?: string
+          settled_at?: string | null
+          status?: string
+          transaction_type?: string
+          webhook_data?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nymcard_transactions_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "nymcard_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          country_code: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          kyb_data: Json | null
+          kyb_status: string | null
+          license_number: string | null
+          name: string
+          tax_id: string | null
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          country_code?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          kyb_data?: Json | null
+          kyb_status?: string | null
+          license_number?: string | null
+          name: string
+          tax_id?: string | null
+          type?: string
+          updated_at?: string | null
+        }
+        Update: {
+          country_code?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          kyb_data?: Json | null
+          kyb_status?: string | null
+          license_number?: string | null
+          name?: string
+          tax_id?: string | null
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       otp_rate_limits: {
         Row: {
           attempts: number
@@ -1698,6 +2304,36 @@ export type Database = {
           email?: string
           id?: string
           last_attempt?: string
+        }
+        Relationships: []
+      }
+      owner_access_logs: {
+        Row: {
+          access_type: string
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          session_data: Json | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          access_type: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          session_data?: Json | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          access_type?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          session_data?: Json | null
+          user_agent?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -2062,53 +2698,79 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          cross_platform_preferences: Json | null
           email: string | null
           first_name: string | null
           id: string
           is_admin: boolean
           is_protected_owner: boolean | null
+          last_login_platform: string | null
           last_name: string | null
           membership_tier: string | null
           owner_since: string | null
           phone: string | null
+          platform_access_history: Json | null
           platform_signature: string | null
+          primary_organization_id: string | null
+          registration_platform: string | null
           role: Database["public"]["Enums"]["app_role"]
+          sso_enabled: boolean | null
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          cross_platform_preferences?: Json | null
           email?: string | null
           first_name?: string | null
           id?: string
           is_admin?: boolean
           is_protected_owner?: boolean | null
+          last_login_platform?: string | null
           last_name?: string | null
           membership_tier?: string | null
           owner_since?: string | null
           phone?: string | null
+          platform_access_history?: Json | null
           platform_signature?: string | null
+          primary_organization_id?: string | null
+          registration_platform?: string | null
           role?: Database["public"]["Enums"]["app_role"]
+          sso_enabled?: boolean | null
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          cross_platform_preferences?: Json | null
           email?: string | null
           first_name?: string | null
           id?: string
           is_admin?: boolean
           is_protected_owner?: boolean | null
+          last_login_platform?: string | null
           last_name?: string | null
           membership_tier?: string | null
           owner_since?: string | null
           phone?: string | null
+          platform_access_history?: Json | null
           platform_signature?: string | null
+          primary_organization_id?: string | null
+          registration_platform?: string | null
           role?: Database["public"]["Enums"]["app_role"]
+          sso_enabled?: boolean | null
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_primary_organization_id_fkey"
+            columns: ["primary_organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       promotion_prices: {
         Row: {
@@ -2237,6 +2899,44 @@ export type Database = {
           },
         ]
       }
+      ramp_orders: {
+        Row: {
+          created_at: string | null
+          crypto_order_id: string
+          id: string
+          ramp_order_id: string
+          updated_at: string | null
+          webhook_data: Json | null
+          widget_config: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          crypto_order_id: string
+          id?: string
+          ramp_order_id: string
+          updated_at?: string | null
+          webhook_data?: Json | null
+          widget_config?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          crypto_order_id?: string
+          id?: string
+          ramp_order_id?: string
+          updated_at?: string | null
+          webhook_data?: Json | null
+          widget_config?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ramp_orders_crypto_order_id_fkey"
+            columns: ["crypto_order_id"]
+            isOneToOne: false
+            referencedRelation: "crypto_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ramp_tests: {
         Row: {
           created_at: string
@@ -2290,6 +2990,53 @@ export type Database = {
           signature?: string | null
         }
         Relationships: []
+      }
+      role_memberships: {
+        Row: {
+          app_role: Database["public"]["Enums"]["app_role"]
+          created_at: string | null
+          expires_at: string | null
+          granted_at: string | null
+          granted_by: string | null
+          id: string
+          is_active: boolean | null
+          organization_id: string | null
+          role: Database["public"]["Enums"]["organization_role"]
+          user_id: string
+        }
+        Insert: {
+          app_role?: Database["public"]["Enums"]["app_role"]
+          created_at?: string | null
+          expires_at?: string | null
+          granted_at?: string | null
+          granted_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          organization_id?: string | null
+          role?: Database["public"]["Enums"]["organization_role"]
+          user_id: string
+        }
+        Update: {
+          app_role?: Database["public"]["Enums"]["app_role"]
+          created_at?: string | null
+          expires_at?: string | null
+          granted_at?: string | null
+          granted_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          organization_id?: string | null
+          role?: Database["public"]["Enums"]["organization_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_memberships_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       scheduled_transfers: {
         Row: {
@@ -2611,6 +3358,30 @@ export type Database = {
         }
         Relationships: []
       }
+      system_performance: {
+        Row: {
+          id: string
+          metadata: Json | null
+          metric_name: string
+          metric_value: number
+          recorded_at: string | null
+        }
+        Insert: {
+          id?: string
+          metadata?: Json | null
+          metric_name: string
+          metric_value: number
+          recorded_at?: string | null
+        }
+        Update: {
+          id?: string
+          metadata?: Json | null
+          metric_name?: string
+          metric_value?: number
+          recorded_at?: string | null
+        }
+        Relationships: []
+      }
       transactions: {
         Row: {
           account_id: string
@@ -2688,6 +3459,33 @@ export type Database = {
           severity?: string
           title?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      travel_api_credentials: {
+        Row: {
+          created_at: string
+          credentials: Json
+          id: string
+          is_active: boolean
+          provider: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          credentials?: Json
+          id?: string
+          is_active?: boolean
+          provider: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          credentials?: Json
+          id?: string
+          is_active?: boolean
+          provider?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -2879,6 +3677,39 @@ export type Database = {
         }
         Relationships: []
       }
+      travel_partners: {
+        Row: {
+          api_endpoint: string | null
+          commission_rate: number | null
+          configuration: Json | null
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          api_endpoint?: string | null
+          commission_rate?: number | null
+          configuration?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          api_endpoint?: string | null
+          commission_rate?: number | null
+          configuration?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       trusted_devices: {
         Row: {
           created_at: string
@@ -3049,6 +3880,51 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_events_v2: {
+        Row: {
+          created_at: string | null
+          error_message: string | null
+          event_id: string
+          event_type: string
+          id: string
+          last_retry_at: string | null
+          processed: boolean | null
+          processed_at: string | null
+          provider: string
+          raw_payload: Json
+          retry_count: number | null
+          signature: string
+        }
+        Insert: {
+          created_at?: string | null
+          error_message?: string | null
+          event_id: string
+          event_type: string
+          id?: string
+          last_retry_at?: string | null
+          processed?: boolean | null
+          processed_at?: string | null
+          provider: string
+          raw_payload: Json
+          retry_count?: number | null
+          signature: string
+        }
+        Update: {
+          created_at?: string | null
+          error_message?: string | null
+          event_id?: string
+          event_type?: string
+          id?: string
+          last_retry_at?: string | null
+          processed?: boolean | null
+          processed_at?: string | null
+          provider?: string
+          raw_payload?: Json
+          retry_count?: number | null
+          signature?: string
+        }
+        Relationships: []
+      }
       wiki_pages: {
         Row: {
           ai_summary: string | null
@@ -3118,6 +3994,118 @@ export type Database = {
         }
         Relationships: []
       }
+      wio_accounts: {
+        Row: {
+          account_number: string | null
+          account_type: string
+          balance: number | null
+          created_at: string | null
+          currency: string
+          iban: string | null
+          id: string
+          is_active: boolean | null
+          organization_id: string
+          updated_at: string | null
+          webhook_data: Json | null
+          wio_account_id: string
+        }
+        Insert: {
+          account_number?: string | null
+          account_type: string
+          balance?: number | null
+          created_at?: string | null
+          currency?: string
+          iban?: string | null
+          id?: string
+          is_active?: boolean | null
+          organization_id: string
+          updated_at?: string | null
+          webhook_data?: Json | null
+          wio_account_id: string
+        }
+        Update: {
+          account_number?: string | null
+          account_type?: string
+          balance?: number | null
+          created_at?: string | null
+          currency?: string
+          iban?: string | null
+          id?: string
+          is_active?: boolean | null
+          organization_id?: string
+          updated_at?: string | null
+          webhook_data?: Json | null
+          wio_account_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wio_accounts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wio_beneficiaries: {
+        Row: {
+          account_number: string
+          bank_name: string
+          beneficiary_name: string
+          country_code: string
+          created_at: string | null
+          currency: string
+          iban: string | null
+          id: string
+          is_approved: boolean | null
+          organization_id: string
+          swift_code: string | null
+          updated_at: string | null
+          webhook_data: Json | null
+          wio_beneficiary_id: string
+        }
+        Insert: {
+          account_number: string
+          bank_name: string
+          beneficiary_name: string
+          country_code: string
+          created_at?: string | null
+          currency: string
+          iban?: string | null
+          id?: string
+          is_approved?: boolean | null
+          organization_id: string
+          swift_code?: string | null
+          updated_at?: string | null
+          webhook_data?: Json | null
+          wio_beneficiary_id: string
+        }
+        Update: {
+          account_number?: string
+          bank_name?: string
+          beneficiary_name?: string
+          country_code?: string
+          created_at?: string | null
+          currency?: string
+          iban?: string | null
+          id?: string
+          is_approved?: boolean | null
+          organization_id?: string
+          swift_code?: string | null
+          updated_at?: string | null
+          webhook_data?: Json | null
+          wio_beneficiary_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wio_beneficiaries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -3141,6 +4129,10 @@ export type Database = {
       check_otp_rate_limit: {
         Args: { p_email: string }
         Returns: Json
+      }
+      cleanup_old_records: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       cleanup_rate_limit_records: {
         Args: Record<PropertyKey, never>
@@ -3209,6 +4201,16 @@ export type Database = {
         }
         Returns: string
       }
+      log_owner_access: {
+        Args: {
+          p_access_type: string
+          p_ip_address?: unknown
+          p_session_data?: Json
+          p_user_agent?: string
+          p_user_id: string
+        }
+        Returns: string
+      }
       log_security_event: {
         Args:
           | {
@@ -3243,6 +4245,14 @@ export type Database = {
       process_allowance_payment: {
         Args: { p_allowance_id: string }
         Returns: Json
+      }
+      record_performance_metric: {
+        Args: {
+          p_metadata?: Json
+          p_metric_name: string
+          p_metric_value: number
+        }
+        Returns: string
       }
       send_notification: {
         Args: {
@@ -3332,6 +4342,25 @@ export type Database = {
         | "super_admin"
         | "user"
         | "moderator"
+      crypto_order_status:
+        | "pending"
+        | "processing"
+        | "completed"
+        | "failed"
+        | "cancelled"
+      ledger_account_type:
+        | "asset"
+        | "liability"
+        | "equity"
+        | "revenue"
+        | "expense"
+      organization_role: "owner" | "admin" | "member" | "viewer"
+      transfer_status:
+        | "pending"
+        | "processing"
+        | "completed"
+        | "failed"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -3468,6 +4497,28 @@ export const Constants = {
         "super_admin",
         "user",
         "moderator",
+      ],
+      crypto_order_status: [
+        "pending",
+        "processing",
+        "completed",
+        "failed",
+        "cancelled",
+      ],
+      ledger_account_type: [
+        "asset",
+        "liability",
+        "equity",
+        "revenue",
+        "expense",
+      ],
+      organization_role: ["owner", "admin", "member", "viewer"],
+      transfer_status: [
+        "pending",
+        "processing",
+        "completed",
+        "failed",
+        "cancelled",
       ],
     },
   },
