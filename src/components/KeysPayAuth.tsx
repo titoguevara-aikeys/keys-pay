@@ -55,7 +55,7 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
       } else {
         toast.success('Successfully signed in!');
         onAuthSuccess?.();
-        navigate('/keyspay');
+        navigate('/dashboard');
       }
     } catch (error) {
       setAuthError('An error occurred. Please try again.');
