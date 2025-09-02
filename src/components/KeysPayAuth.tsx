@@ -20,6 +20,8 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 interface KeysPayAuthProps {
   onAuthSuccess?: () => void;
@@ -30,6 +32,7 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('signin');
   const navigate = useNavigate();
+  const { signIn, signUp } = useAuth();
 
   const [signInForm, setSignInForm] = useState({
     email: '',
@@ -52,14 +55,23 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
     setLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const { error } = await signIn(signInForm.email, signInForm.password);
       
-      toast.success('Successfully signed in!');
-      onAuthSuccess?.();
-      navigate('/keyspay');
+      if (error) {
+        if (error.message.includes('Invalid login credentials')) {
+          toast.error('Invalid email or password. Please check your credentials.');
+        } else if (error.message.includes('Email not confirmed')) {
+          toast.error('Please confirm your email address before signing in.');
+        } else {
+          toast.error(error.message);
+        }
+      } else {
+        toast.success('Successfully signed in!');
+        onAuthSuccess?.();
+        navigate('/keyspay');
+      }
     } catch (error) {
-      toast.error('Failed to sign in. Please check your credentials.');
+      toast.error('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -76,11 +88,46 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
     setLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const redirectUrl = `${window.location.origin}/`;
+      const { error } = await signUp(signUpForm.email, signUpForm.password);
       
-      toast.success('Account created successfully! Please check your email for verification.');
-      setActiveTab('signin');
+      if (error) {
+        if (error.message.includes('User already registered')) {
+          toast.error('This email is already registered. Please sign in instead.');
+        } else {
+          toast.error(error.message);
+        }
+      } else {
+        // Create organization and update profile after successful signup
+        setTimeout(async () => {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            // Update profile with additional info
+            await supabase
+              .from('profiles')
+              .update({
+                first_name: signUpForm.firstName,
+                last_name: signUpForm.lastName,
+                phone: '',
+                business_role: 'Owner',
+                registration_platform: 'keys-pay'
+              })
+              .eq('user_id', user.id);
+
+            // Create organization
+            await supabase
+              .from('organizations')
+              .insert({
+                name: signUpForm.organizationName,
+                type: signUpForm.organizationType,
+                country_code: signUpForm.countryCode
+              });
+          }
+        }, 1000);
+
+        toast.success('Account created successfully! Please check your email for verification.');
+        setActiveTab('signin');
+      }
     } catch (error) {
       toast.error('Failed to create account. Please try again.');
     } finally {

@@ -718,9 +718,14 @@ export type Database = {
           card_status: string
           card_type: string
           created_at: string
+          cvv: string | null
+          expiry_month: number | null
+          expiry_year: number | null
           id: string
+          last_four: string | null
           provider: string | null
           provider_card_id: string | null
+          provider_data: Json | null
           spending_limit: number | null
           spending_limits: Json | null
           updated_at: string
@@ -732,9 +737,14 @@ export type Database = {
           card_status?: string
           card_type?: string
           created_at?: string
+          cvv?: string | null
+          expiry_month?: number | null
+          expiry_year?: number | null
           id?: string
+          last_four?: string | null
           provider?: string | null
           provider_card_id?: string | null
+          provider_data?: Json | null
           spending_limit?: number | null
           spending_limits?: Json | null
           updated_at?: string
@@ -746,9 +756,14 @@ export type Database = {
           card_status?: string
           card_type?: string
           created_at?: string
+          cvv?: string | null
+          expiry_month?: number | null
+          expiry_year?: number | null
           id?: string
+          last_four?: string | null
           provider?: string | null
           provider_card_id?: string | null
+          provider_data?: Json | null
           spending_limit?: number | null
           spending_limits?: Json | null
           updated_at?: string
@@ -1113,6 +1128,7 @@ export type Database = {
       }
       crypto_orders: {
         Row: {
+          checkout_session_id: string | null
           checkout_url: string | null
           created_at: string | null
           crypto_amount: number | null
@@ -1127,6 +1143,7 @@ export type Database = {
           organization_id: string
           provider: string
           provider_order_id: string | null
+          provider_response: Json | null
           settled_at: string | null
           status: Database["public"]["Enums"]["crypto_order_status"] | null
           updated_at: string | null
@@ -1134,6 +1151,7 @@ export type Database = {
           webhook_data: Json | null
         }
         Insert: {
+          checkout_session_id?: string | null
           checkout_url?: string | null
           created_at?: string | null
           crypto_amount?: number | null
@@ -1148,6 +1166,7 @@ export type Database = {
           organization_id: string
           provider: string
           provider_order_id?: string | null
+          provider_response?: Json | null
           settled_at?: string | null
           status?: Database["public"]["Enums"]["crypto_order_status"] | null
           updated_at?: string | null
@@ -1155,6 +1174,7 @@ export type Database = {
           webhook_data?: Json | null
         }
         Update: {
+          checkout_session_id?: string | null
           checkout_url?: string | null
           created_at?: string | null
           crypto_amount?: number | null
@@ -1169,6 +1189,7 @@ export type Database = {
           organization_id?: string
           provider?: string
           provider_order_id?: string | null
+          provider_response?: Json | null
           settled_at?: string | null
           status?: Database["public"]["Enums"]["crypto_order_status"] | null
           updated_at?: string | null
@@ -1751,6 +1772,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      keyspay_webhook_events: {
+        Row: {
+          created_at: string | null
+          error_message: string | null
+          event_id: string
+          event_type: string
+          id: string
+          payload: Json
+          processed: boolean | null
+          processed_at: string | null
+          provider: string
+          retry_count: number | null
+          signature: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          error_message?: string | null
+          event_id: string
+          event_type: string
+          id?: string
+          payload: Json
+          processed?: boolean | null
+          processed_at?: string | null
+          provider: string
+          retry_count?: number | null
+          signature?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          error_message?: string | null
+          event_id?: string
+          event_type?: string
+          id?: string
+          payload?: Json
+          processed?: boolean | null
+          processed_at?: string | null
+          provider?: string
+          retry_count?: number | null
+          signature?: string | null
+        }
+        Relationships: []
       }
       ledger_accounts: {
         Row: {
@@ -2697,6 +2760,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          business_role: string | null
           created_at: string
           cross_platform_preferences: Json | null
           email: string | null
@@ -2715,10 +2779,12 @@ export type Database = {
           registration_platform: string | null
           role: Database["public"]["Enums"]["app_role"]
           sso_enabled: boolean | null
+          timezone: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          business_role?: string | null
           created_at?: string
           cross_platform_preferences?: Json | null
           email?: string | null
@@ -2737,10 +2803,12 @@ export type Database = {
           registration_platform?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           sso_enabled?: boolean | null
+          timezone?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          business_role?: string | null
           created_at?: string
           cross_platform_preferences?: Json | null
           email?: string | null
@@ -2759,6 +2827,7 @@ export type Database = {
           registration_platform?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           sso_enabled?: boolean | null
+          timezone?: string | null
           updated_at?: string
           user_id?: string
         }

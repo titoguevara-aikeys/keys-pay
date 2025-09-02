@@ -22,6 +22,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useUpdateProfile, useUpdateOrganization, useUpdateSecuritySettings } from '@/hooks/useKeysPayProfile';
 
 interface ProfileSettingsProps {
   user?: {
@@ -41,7 +42,6 @@ interface ProfileSettingsProps {
 }
 
 export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
-  const [loading, setLoading] = useState(false);
   const [profileForm, setProfileForm] = useState({
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
@@ -77,32 +77,23 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
     transactionUpdates: true
   });
 
+  const updateProfileMutation = useUpdateProfile();
+  const updateOrganizationMutation = useUpdateOrganization();
+  const updateSecurityMutation = useUpdateSecuritySettings();
+
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      toast.success('Profile updated successfully!');
-    } catch (error) {
-      toast.error('Failed to update profile');
-    } finally {
-      setLoading(false);
-    }
+    await updateProfileMutation.mutateAsync(profileForm);
   };
 
   const handleOrganizationUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    await updateOrganizationMutation.mutateAsync(organizationForm);
+  };
 
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      toast.success('Organization details updated successfully!');
-    } catch (error) {
-      toast.error('Failed to update organization');
-    } finally {
-      setLoading(false);
-    }
+  const handleSecurityUpdate = async (settings: Record<string, boolean>) => {
+    setSecuritySettings(prev => ({ ...prev, ...settings }));
+    await updateSecurityMutation.mutateAsync(settings);
   };
 
   const getKybStatusBadge = (status: string) => {
@@ -218,8 +209,11 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
                 </div>
 
                 <div className="flex justify-end pt-4">
-                  <Button type="submit" disabled={loading}>
-                    {loading ? 'Updating...' : 'Update Profile'}
+                  <Button 
+                    type="submit" 
+                    disabled={updateProfileMutation.isPending}
+                  >
+                    {updateProfileMutation.isPending ? 'Updating...' : 'Update Profile'}
                   </Button>
                 </div>
               </form>
@@ -352,8 +346,11 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
                 </div>
 
                 <div className="flex justify-end pt-4">
-                  <Button type="submit" disabled={loading}>
-                    {loading ? 'Updating...' : 'Update Organization'}
+                  <Button 
+                    type="submit" 
+                    disabled={updateOrganizationMutation.isPending}
+                  >
+                    {updateOrganizationMutation.isPending ? 'Updating...' : 'Update Organization'}
                   </Button>
                 </div>
               </form>
@@ -381,7 +378,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
                   </div>
                   <Switch
                     checked={securitySettings.twoFactorEnabled}
-                    onCheckedChange={(checked) => setSecuritySettings({...securitySettings, twoFactorEnabled: checked})}
+                    onCheckedChange={(checked) => handleSecurityUpdate({...securitySettings, twoFactorEnabled: checked})}
                   />
                 </div>
 
