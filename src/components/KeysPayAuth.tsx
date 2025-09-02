@@ -5,7 +5,6 @@ import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Building2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { useKeysPayAuth } from '@/contexts/KeysPayAuthContext';
 import { supabase } from '@/integrations/supabase/client';
 
 interface KeysPayAuthProps {
@@ -18,7 +17,38 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
   const [activeTab, setActiveTab] = useState('signin');
   const [authError, setAuthError] = useState<string>('');
   const navigate = useNavigate();
-  const { signIn, signUp } = useKeysPayAuth();
+  
+  // Use direct Supabase client instead of context to avoid provider dependency issues
+  const signInDirect = async (email: string, password: string) => {
+    console.log('🔄 Direct SignIn attempt for:', email);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      console.error('❌ Direct SignIn error:', error);
+    } else {
+      console.log('✅ Direct SignIn successful');
+    }
+    return { error };
+  };
+
+  const signUpDirect = async (email: string, password: string) => {
+    console.log('🔄 Direct SignUp attempt for:', email);
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/dashboard`
+      }
+    });
+    if (error) {
+      console.error('❌ Direct SignUp error:', error);
+    } else {
+      console.log('✅ Direct SignUp successful');
+    }
+    return { error };
+  };
 
   const [signInForm, setSignInForm] = useState({
     email: '',
@@ -42,7 +72,7 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
     setAuthError('');
 
     try {
-      const { error } = await signIn(signInForm.email, signInForm.password);
+      const { error } = await signInDirect(signInForm.email, signInForm.password);
       
       if (error) {
         if (error.message.includes('Invalid login credentials')) {
@@ -76,7 +106,7 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
     setLoading(true);
 
     try {
-      const { error } = await signUp(signUpForm.email, signUpForm.password);
+      const { error } = await signUpDirect(signUpForm.email, signUpForm.password);
       
       if (error) {
         if (error.message.includes('User already registered')) {
