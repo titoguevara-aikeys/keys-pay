@@ -4171,6 +4171,12 @@ export type Database = {
         Args: { p_user_id: string }
         Returns: Json
       }
+      get_user_organizations: {
+        Args: { _user_id: string }
+        Returns: {
+          org_id: string
+        }[]
+      }
       has_app_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -4200,6 +4206,10 @@ export type Database = {
       }
       is_member: {
         Args: { u: string }
+        Returns: boolean
+      }
+      is_org_member: {
+        Args: { _org_id: string; _user_id: string }
         Returns: boolean
       }
       is_protected_owner: {
