@@ -32,6 +32,7 @@ import Dashboard from './pages/Dashboard';
 import CryptoBuyPage from './pages/CryptoBuyPage';
 import Auth from './pages/Auth';
 import KeysPayCardsPage from './pages/KeysPayCardsPage';
+import ProfilePage from './pages/ProfilePage';
 
 // Legacy Pages
 import Index from "./pages/Index";
@@ -122,6 +123,25 @@ const AppRoutes = () => {
                 </header>
                 <main className="flex-1">
                   <KeysPayCardsPage />
+                </main>
+              </div>
+            </div>
+          </SidebarProvider>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/profile" element={
+        <ProtectedRoute>
+          <SidebarProvider>
+            <div className="min-h-screen flex w-full">
+              <KeysPaySidebar />
+              <div className="flex-1 flex flex-col">
+                <header className="h-14 flex items-center border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                  <SidebarTrigger className="ml-4" />
+                  <div className="flex-1" />
+                </header>
+                <main className="flex-1">
+                  <ProfilePage />
                 </main>
               </div>
             </div>

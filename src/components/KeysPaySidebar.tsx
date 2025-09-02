@@ -8,6 +8,7 @@ import {
   Activity, 
   Settings,
   Building2,
+  User,
   Shield,
   HelpCircle,
   LogOut
@@ -38,6 +39,7 @@ const mainItems = [
 
 const accountItems = [
   { title: "Organizations", url: "/organizations", icon: Building2 },
+  { title: "Profile Settings", url: "/profile", icon: User },
   { title: "Security", url: "/security", icon: Shield },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
