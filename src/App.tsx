@@ -67,8 +67,6 @@ import CollectionsAccountsPage from "./pages/CollectionsAccounts";
 const queryClient = new QueryClient();
 
 const AppRoutes = () => {
-  const { user } = useKeysPayAuth();
-  
   return (
     <Routes>
       <Route path="/auth" element={<Auth />} />
@@ -178,14 +176,23 @@ const AppRoutes = () => {
       <Route path="/payments/send" element={<ProtectedRoute><PaymentsSendPage /></ProtectedRoute>} />
       <Route path="/collections/accounts" element={<ProtectedRoute><CollectionsAccountsPage /></ProtectedRoute>} />
       
-      {/* Redirect root to dashboard for authenticated users */}
-      <Route path="/" element={
-        user ? <Navigate to="/dashboard" replace /> : <Navigate to="/auth" replace />
-      } />
+      {/* Redirect root based on auth state */}
+      <Route path="/" element={<AuthRedirect />} />
       
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
+};
+
+// Component for handling auth-based redirects
+const AuthRedirect = () => {
+  const { user, loading } = useKeysPayAuth();
+  
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
+  
+  return user ? <Navigate to="/dashboard" replace /> : <Navigate to="/auth" replace />;
 };
 
 const App = () => (
