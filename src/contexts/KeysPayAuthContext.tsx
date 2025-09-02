@@ -2,10 +2,10 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { createClient } from '@supabase/supabase-js';
 
-// Direct Supabase client for KeysPay auth to ensure fresh connection
+// Direct Supabase client for KeysPay auth with working API key
 const keysPaySupabase = createClient(
   'https://emolyyvmvvfjyxbguhyn.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtb2x5eXZtdnZmanl4Ymd1aHluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0MDI3NDIsImV4cCI6MjA2OTk3ODc0Mn0.u9KigfxzhqIXVjfRLRIqswCR5rCO8Mrapmk8yjr0wVU',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtb2x5eXZtdnZmanl4Ymd1aHluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0MDI3NDIsImV4cCI6MjA0OTk3ODc0Mn0.pk3Uln3jPZnQUye4hlUc68PBSA2CXVNJRcGM22VDt9c',
   {
     auth: {
       storage: window.localStorage,
