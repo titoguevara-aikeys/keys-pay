@@ -31,7 +31,7 @@ import { Badge } from "@/components/ui/badge";
 const mainItems = [
   { title: "Dashboard", url: "/dashboard", icon: Wallet },
   { title: "Buy & Sell", url: "/crypto", icon: TrendingUp },
-  { title: "Cards", url: "/cards", icon: CreditCard, badge: "Beta" },
+  { title: "Cards", url: "/keyspay/cards", icon: CreditCard, badge: "Beta" },
   { title: "Transfers", url: "/transfers", icon: ArrowUpDown, badge: "UAE" },
   { title: "Activity", url: "/activity", icon: Activity },
 ];
