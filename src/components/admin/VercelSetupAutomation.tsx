@@ -256,7 +256,7 @@ export const VercelSetupAutomation: React.FC<VercelSetupProps> = ({ onSetupCompl
               <Label htmlFor="vercel-token">Vercel Token Status</Label>
               <div className="flex items-center gap-2">
                 <Badge variant="outline">
-                  {process.env.VERCEL_TOKEN ? 'Configured' : 'Not Set'}
+                  Check via setup process
                 </Badge>
                 <Button
                   variant="outline"
