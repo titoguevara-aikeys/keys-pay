@@ -2370,6 +2370,33 @@ export type Database = {
         }
         Relationships: []
       }
+      otp_security_settings: {
+        Row: {
+          block_duration_minutes: number
+          created_at: string
+          id: string
+          max_attempts: number
+          otp_expiry_minutes: number
+          updated_at: string
+        }
+        Insert: {
+          block_duration_minutes?: number
+          created_at?: string
+          id?: string
+          max_attempts?: number
+          otp_expiry_minutes?: number
+          updated_at?: string
+        }
+        Update: {
+          block_duration_minutes?: number
+          created_at?: string
+          id?: string
+          max_attempts?: number
+          otp_expiry_minutes?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       owner_access_logs: {
         Row: {
           access_type: string
@@ -4196,6 +4223,10 @@ export type Database = {
         Returns: boolean
       }
       check_otp_rate_limit: {
+        Args: { p_email: string }
+        Returns: Json
+      }
+      check_otp_rate_limit_enhanced: {
         Args: { p_email: string }
         Returns: Json
       }
