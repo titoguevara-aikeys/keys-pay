@@ -18,36 +18,42 @@ interface AutoDeployConfig {
 }
 
 async function triggerVercelDeployment(projectId: string, token: string, branch: string = 'main') {
-  const response = await fetch(`https://api.vercel.com/v13/deployments`, {
+  console.log(`Triggering deployment for project: ${projectId}, branch: ${branch}`);
+  
+  const response = await fetch(`https://api.vercel.com/v6/deployments`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      name: `aikey-mena-hub`,
-      project: projectId,
-      target: 'production',
+      name: `aikey-mena-hub-${Date.now()}`,
       gitSource: {
         type: 'github',
         ref: branch,
-        repoId: projectId
+        repoId: '901639267' // aikeys/aikey-mena-hub repository ID
       },
-      build: {
-        env: {}
+      target: 'production',
+      projectSettings: {
+        framework: 'vite'
       }
     })
   });
 
   if (!response.ok) {
     const error = await response.text();
+    console.error(`Vercel deployment failed: ${error}`);
     throw new Error(`Vercel deployment failed: ${error}`);
   }
 
-  return await response.json();
+  const result = await response.json();
+  console.log('Deployment triggered successfully:', result.id);
+  return result;
 }
 
 async function checkForUpdates(projectId: string, token: string) {
+  console.log(`Checking deployments for project: ${projectId}`);
+  
   const response = await fetch(`https://api.vercel.com/v6/deployments?projectId=${projectId}&limit=1`, {
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -55,10 +61,14 @@ async function checkForUpdates(projectId: string, token: string) {
   });
 
   if (!response.ok) {
+    const error = await response.text();
+    console.error(`Failed to check deployments: ${error}`);
     throw new Error(`Failed to check deployments: ${response.statusText}`);
   }
 
-  return await response.json();
+  const result = await response.json();
+  console.log(`Found ${result.deployments?.length || 0} deployments`);
+  return result;
 }
 
 let monitoringInterval: number | null = null;

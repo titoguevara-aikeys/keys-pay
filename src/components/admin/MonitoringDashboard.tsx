@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { VercelHealthCheck } from './VercelHealthCheck';
 import { VercelDeploymentManager } from './VercelDeploymentManager';
 import { VercelAutoDeployment } from './VercelAutoDeployment';
+import { VercelSetupAutomation } from './VercelSetupAutomation';
 
 interface MonitoringData {
   ttfb: number;
@@ -330,6 +331,9 @@ const MonitoringDashboard: React.FC = () => {
         
         {/* Health Check First */}
         <VercelHealthCheck />
+        
+        {/* Setup Automation */}
+        <VercelSetupAutomation onSetupComplete={() => fetchMonitoringData()} />
         
         {/* Full Deployment Manager */}
         <VercelDeploymentManager />

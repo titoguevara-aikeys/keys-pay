@@ -1,81 +1,112 @@
-import { validateServerEnv, serverEnv } from "@/lib/env";
+import { createClient } from '@supabase/supabase-js';
 
-export async function POST(req: Request) {
+const supabase = createClient(
+  "https://emolyyvmvvfjyxbguhyn.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtb2x5eXZtdnZmanl4Ymd1aHluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0MDI3NDIsImV4cCI6MjA2OTk3ODc0Mn0.u9KigfxzhqIXVjfRLRIqswCR5rCO8Mrapmk8yjr0wVU"
+);
+
+export async function POST(request: Request) {
   try {
-    validateServerEnv(['VERCEL_PROJECT_ID', 'VERCEL_TOKEN']);
+    const VERCEL_PROJECT_ID = process.env.VERCEL_PROJECT_ID || "aikey-mena-hub";
+    const VERCEL_TOKEN = process.env.VERCEL_TOKEN;
     
-    const { branch = 'main', auto = false } = await req.json();
-    
-    // Call the Supabase Edge Function for deployment
-    const functionUrl = `${process.env.SUPABASE_URL}/functions/v1/vercel-auto-deploy`;
-    const functionKey = process.env.SUPABASE_SERVICE_KEY;
-    
-    if (!functionUrl || !functionKey) {
+    if (!VERCEL_TOKEN) {
       return Response.json({
-        success: false,
-        error: "Supabase configuration missing"
-      }, { status: 500 });
+        ok: false,
+        error: "Missing VERCEL_TOKEN environment variable"
+      }, { 
+        status: 503,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
-
-    const action = auto ? 'start-monitoring' : 'deploy';
-    const config = {
+    
+    const { branch = 'main', auto = false } = await request.json().catch(() => ({}));
+    
+    console.log('Calling vercel-auto-deploy function with:', { 
+      action: auto ? 'start-monitoring' : 'deploy',
       branch,
-      enabled: auto,
-      interval: 30 * 60 * 1000 // 30 minutes
-    };
-
-    const response = await fetch(functionUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${functionKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ action, config })
+      projectId: VERCEL_PROJECT_ID 
     });
-
-    if (!response.ok) {
-      const error = await response.text();
+    
+    const { data, error } = await supabase.functions.invoke('vercel-auto-deploy', {
+      body: {
+        action: auto ? 'start-monitoring' : 'deploy',
+        config: {
+          enabled: auto,
+          branch,
+          monitorInterval: 360 // 6 hours
+        }
+      }
+    });
+    
+    if (error) {
+      console.error('Supabase function error:', error);
       return Response.json({
-        success: false,
-        error: `Deployment function failed: ${error}`
-      }, { status: response.status });
+        ok: false,
+        error: error.message || 'Failed to call auto-deploy function'
+      }, { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
-
-    const result = await response.json();
+    
+    if (!data?.success) {
+      return Response.json({
+        ok: false,
+        error: data?.error || 'Deployment failed'
+      }, { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
     
     return Response.json({
-      success: true,
-      ...result
+      ok: true,
+      ...data
+    }, {
+      headers: { 'Content-Type': 'application/json' }
     });
     
   } catch (error: any) {
-    console.error('Deployment API error:', error);
-    
+    console.error('Deploy route error:', error);
     return Response.json({
-      success: false,
-      error: error.message
-    }, { status: 500 });
+      ok: false,
+      error: error.message || 'Unknown error'
+    }, { 
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
 
 export async function GET() {
   try {
-    validateServerEnv(['VERCEL_PROJECT_ID', 'VERCEL_TOKEN']);
+    const VERCEL_PROJECT_ID = process.env.VERCEL_PROJECT_ID || "aikey-mena-hub";
+    const VERCEL_TOKEN = process.env.VERCEL_TOKEN;
     
     return Response.json({
-      success: true,
-      message: "Auto-deployment API is available",
+      ok: true,
+      message: "Vercel deploy API available",
+      projectId: VERCEL_PROJECT_ID,
+      hasToken: !!VERCEL_TOKEN,
       endpoints: {
-        deploy: "POST /api/vercel/deploy - Trigger immediate deployment",
-        monitor: "POST /api/vercel/deploy with auto:true - Start auto-deployment monitoring"
+        deploy: "POST /api/vercel/deploy",
+        health: "GET /api/vercel/health", 
+        deployments: "GET /api/vercel/deployments"
       }
+    }, {
+      headers: { 'Content-Type': 'application/json' }
     });
     
   } catch (error: any) {
+    console.error('Deploy GET route error:', error);
     return Response.json({
-      success: false,
-      error: error.message
-    }, { status: 503 });
+      ok: false,
+      error: error.message || 'Unknown error'
+    }, { 
+      status: 503,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
 

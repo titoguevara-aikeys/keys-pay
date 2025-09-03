@@ -1,24 +1,33 @@
-import { validateServerEnv, serverEnv } from "@/lib/env";
-
 export async function GET() {
   try {
-    validateServerEnv(['VERCEL_PROJECT_ID', 'VERCEL_TOKEN']);
+    const VERCEL_PROJECT_ID = process.env.VERCEL_PROJECT_ID || "aikey-mena-hub";
+    const VERCEL_TOKEN = process.env.VERCEL_TOKEN;
     
-    const ok = !!(serverEnv.VERCEL_PROJECT_ID && serverEnv.VERCEL_TOKEN);
+    const ok = !!(VERCEL_PROJECT_ID && VERCEL_TOKEN);
     
     return Response.json({
       ok,
-      projectId: serverEnv.VERCEL_PROJECT_ID || null,
+      projectId: VERCEL_PROJECT_ID,
       message: ok ? "Vercel API credentials configured" : "Missing Vercel credentials"
     }, { 
-      status: ok ? 200 : 503 
+      status: ok ? 200 : 503,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache'
+      }
     });
     
   } catch (error: any) {
+    console.error('Vercel health check error:', error);
     return Response.json({
       ok: false,
-      error: error.message,
-      projectId: null
-    }, { status: 503 });
+      error: error.message || 'Unknown error',
+      projectId: process.env.VERCEL_PROJECT_ID || "aikey-mena-hub"
+    }, { 
+      status: 503,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 }
