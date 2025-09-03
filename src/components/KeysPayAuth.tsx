@@ -99,7 +99,7 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
         });
         
         if (error.message.includes('Invalid API key') || error.message.includes('Invalid authentication credentials')) {
-          setAuthError('🚨 Authentication system error. The API key needs to be updated. Please contact support.');
+          setAuthError('Authentication system temporarily unavailable. Please try again in a moment.');
         } else if (error.message.includes('Invalid login credentials')) {
           setAuthError('Invalid email or password. Please check your credentials.');
         } else if (error.message.includes('Email not confirmed')) {
@@ -135,7 +135,7 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
       
       if (error) {
         if (error.message.includes('Invalid API key') || error.message.includes('Invalid authentication credentials')) {
-          setAuthError('🚨 Authentication system error. The API key needs to be updated. Please contact support.');
+          setAuthError('Authentication system temporarily unavailable. Please try again in a moment.');
         } else if (error.message.includes('User already registered')) {
           setAuthError('This email is already registered. Please sign in instead.');
         } else {

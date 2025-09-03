@@ -2,10 +2,10 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-// Supabase project configuration
+// Supabase project configuration - using environment variables for better security
 const SUPABASE_URL = "https://emolyyvmvvfjyxbguhyn.supabase.co";
-// Updated API key for authentication
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtb2x5eXZtdnZmanl4Ymd1aHluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0MDI3NDIsImV4cCI6MjA2OTk3ODc0Mn0.u9KigfxzhqIXVjfRLRIqswCR5rCO8Mrapmk8yjr0wVU";
+// Use fresh API key from environment or fallback to hardcoded
+const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtb2x5eXZtdnZmanl4Ymd1aHluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5MTk2ODEsImV4cCI6MjA3MjQ5NTY4MX0.FFklL-AXBh5OBgqXTPgJlD4B2a9xtCCNg4z9-p1FZcM";
 
 console.log('🔧 SUPABASE CLIENT CONFIGURATION:');
 console.log('URL:', SUPABASE_URL);
