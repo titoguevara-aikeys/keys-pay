@@ -18,15 +18,30 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
   const [authError, setAuthError] = useState<string>('');
   const navigate = useNavigate();
   
-  // Use direct Supabase client instead of context to avoid provider dependency issues
   const signInDirect = async (email: string, password: string) => {
     console.log('🔄 Direct SignIn attempt for:', email);
+    
+    // Test Supabase connection first
+    console.log('🧪 Testing Supabase connection...');
+    try {
+      const { data: testData, error: testError } = await supabase.auth.getSession();
+      console.log('🧪 Supabase connection test:', { success: !testError, error: testError?.message });
+    } catch (err) {
+      console.error('🧪 Supabase connection test failed:', err);
+    }
+    
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
     if (error) {
       console.error('❌ Direct SignIn error:', error);
+      console.error('❌ Error details:', {
+        message: error.message,
+        status: (error as any)?.status,
+        statusCode: (error as any)?.statusCode,
+        code: (error as any)?.code
+      });
     } else {
       console.log('✅ Direct SignIn successful');
     }
@@ -75,6 +90,14 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
       const { error } = await signInDirect(signInForm.email, signInForm.password);
       
       if (error) {
+        console.error('🚨 SignIn Error Analysis:', {
+          message: error.message,
+          includes_invalid_api: error.message.includes('Invalid API key'),
+          includes_invalid_auth: error.message.includes('Invalid authentication credentials'),
+          includes_invalid_login: error.message.includes('Invalid login credentials'),
+          includes_email_not_confirmed: error.message.includes('Email not confirmed')
+        });
+        
         if (error.message.includes('Invalid API key') || error.message.includes('Invalid authentication credentials')) {
           setAuthError('🚨 Authentication system error. The API key needs to be updated. Please contact support.');
         } else if (error.message.includes('Invalid login credentials')) {

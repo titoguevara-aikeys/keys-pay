@@ -18,9 +18,8 @@ export interface ExchangeRateResponse {
   rates: Record<string, number>;
 }
 
-// Free tier API key - in production, this should be in environment variables
-const API_KEY = 'fca_live_LvCQqHnIzLaaRiFyIjA0Gr7yx2DW3OKXGPk8bv3U';
-const BASE_URL = 'https://api.freecurrencyapi.com/v1/latest';
+// Using a free API that doesn't require authentication
+const BASE_URL = 'https://api.exchangerate-api.com/v4/latest';
 
 /**
  * Fetches live exchange rates from FreeCurrencyAPI
@@ -33,41 +32,86 @@ export const fetchExchangeRates = async (
   targetCurrencies?: string[]
 ): Promise<ExchangeRateResponse> => {
   try {
-    const params = new URLSearchParams({
-      apikey: API_KEY,
-      base_currency: baseCurrency,
-    });
-
-    if (targetCurrencies && targetCurrencies.length > 0) {
-      params.append('currencies', targetCurrencies.join(','));
-    }
-
-    const response = await fetch(`${BASE_URL}?${params.toString()}`);
+    // Using exchangerate-api.com which is free and doesn't require authentication
+    const response = await fetch(`${BASE_URL}/${baseCurrency}`);
     
     if (!response.ok) {
+      console.warn(`Exchange rate API returned ${response.status}, using fallback rates`);
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
     
-    if (!data.data) {
+    if (!data.rates) {
       throw new Error('Invalid response format from currency API');
+    }
+
+    // Filter rates to only include requested currencies if specified
+    let filteredRates = data.rates;
+    if (targetCurrencies && targetCurrencies.length > 0) {
+      filteredRates = {};
+      targetCurrencies.forEach(currency => {
+        if (data.rates[currency]) {
+          filteredRates[currency] = data.rates[currency];
+        }
+      });
     }
 
     return {
       success: true,
       timestamp: Date.now(),
       base: baseCurrency,
-      date: new Date().toISOString().split('T')[0],
-      rates: data.data
+      date: data.date || new Date().toISOString().split('T')[0],
+      rates: filteredRates
     };
   } catch (error) {
-    console.error('Failed to fetch exchange rates:', error);
-    // Return fallback rates (1:1) to prevent app from breaking
-    const fallbackRates: Record<string, number> = {};
-    if (targetCurrencies) {
+    console.warn('Failed to fetch live exchange rates, using fallback rates. Error:', error);
+    
+    // Comprehensive fallback rates based on approximate current values
+    const fallbackRates: Record<string, number> = {
+      'EUR': 0.85,
+      'GBP': 0.79,
+      'AED': 3.67,
+      'SGD': 1.35,
+      'CAD': 1.36,
+      'AUD': 1.52,
+      'JPY': 149.50,
+      'CHF': 0.90,
+      'CNY': 7.15,
+      'INR': 83.25,
+      'KRW': 1320.50,
+      'BRL': 5.15,
+      'MXN': 17.25,
+      'RUB': 92.50,
+      'ZAR': 18.75,
+      'NOK': 10.85,
+      'SEK': 10.95,
+      'DKK': 6.85,
+      'HKD': 7.80,
+      'NZD': 1.65,
+      'THB': 35.25,
+      'MYR': 4.45,
+      'PLN': 4.15,
+      'SAR': 3.75,
+      'PHP': 56.50,
+      'IDR': 15750,
+      'VND': 24500,
+      'EGP': 48.50,
+      'TRY': 29.25,
+      'QAR': 3.64,
+      'KWD': 0.31,
+      'BHD': 0.38,
+      'OMR': 0.38,
+      'ILS': 3.65,
+      'TWD': 31.25
+    };
+    
+    // Filter to requested currencies or return all fallback rates
+    let filteredRates = fallbackRates;
+    if (targetCurrencies && targetCurrencies.length > 0) {
+      filteredRates = {};
       targetCurrencies.forEach(currency => {
-        fallbackRates[currency] = 1;
+        filteredRates[currency] = fallbackRates[currency] || 1;
       });
     }
     
@@ -76,7 +120,7 @@ export const fetchExchangeRates = async (
       timestamp: Date.now(),
       base: baseCurrency,
       date: new Date().toISOString().split('T')[0],
-      rates: fallbackRates
+      rates: filteredRates
     };
   }
 };

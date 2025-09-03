@@ -20,9 +20,10 @@ export const useExchangeRates = (baseCurrency: string = 'USD') => {
     queryKey: ['exchange-rates', baseCurrency],
     queryFn: () => fetchExchangeRates(baseCurrency, targetCurrencies),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    refetchInterval: 10 * 60 * 1000, // Refetch every 10 minutes
-    retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    refetchInterval: 15 * 60 * 1000, // Refetch every 15 minutes to reduce API calls
+    retry: 2, // Reduce retries to prevent spam
+    retryDelay: (attemptIndex) => Math.min(2000 * 2 ** attemptIndex, 30000),
+    refetchOnWindowFocus: false, // Don't refetch on window focus to reduce API calls
   });
 
   /**
