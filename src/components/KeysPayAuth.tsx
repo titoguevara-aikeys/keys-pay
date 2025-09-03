@@ -5,13 +5,14 @@ import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Building2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { useKeysPayAuth } from '@/contexts/KeysPayAuthContext';
 
 interface KeysPayAuthProps {
   onAuthSuccess?: () => void;
 }
 
 export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
+  const { signIn, signUp } = useKeysPayAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('signin');
@@ -21,48 +22,31 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
   const signInDirect = async (email: string, password: string) => {
     console.log('🔄 Direct SignIn attempt for:', email);
     
-    // Test Supabase connection first
-    console.log('🧪 Testing Supabase connection...');
-    try {
-      const { data: testData, error: testError } = await supabase.auth.getSession();
-      console.log('🧪 Supabase connection test:', { success: !testError, error: testError?.message });
-    } catch (err) {
-      console.error('🧪 Supabase connection test failed:', err);
+    // Use the context method instead of direct Supabase calls
+    const result = await signIn(email, password);
+    
+    if (result.error) {
+      console.error('❌ Context SignIn error:', result.error);
+    } else {
+      console.log('✅ Context SignIn successful');
     }
     
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) {
-      console.error('❌ Direct SignIn error:', error);
-      console.error('❌ Error details:', {
-        message: error.message,
-        status: (error as any)?.status,
-        statusCode: (error as any)?.statusCode,
-        code: (error as any)?.code
-      });
-    } else {
-      console.log('✅ Direct SignIn successful');
-    }
-    return { error };
+    return result;
   };
 
   const signUpDirect = async (email: string, password: string) => {
     console.log('🔄 Direct SignUp attempt for:', email);
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`
-      }
-    });
-    if (error) {
-      console.error('❌ Direct SignUp error:', error);
+    
+    // Use the context method instead of direct Supabase calls
+    const result = await signUp(email, password);
+    
+    if (result.error) {
+      console.error('❌ Context SignUp error:', result.error);
     } else {
-      console.log('✅ Direct SignUp successful');
+      console.log('✅ Context SignUp successful');
     }
-    return { error };
+    
+    return result;
   };
 
   const [signInForm, setSignInForm] = useState({
@@ -98,14 +82,14 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
           includes_email_not_confirmed: error.message.includes('Email not confirmed')
         });
         
-        if (error.message.includes('Invalid API key') || error.message.includes('Invalid authentication credentials')) {
-          setAuthError('Authentication system temporarily unavailable. Please try again in a moment.');
-        } else if (error.message.includes('Invalid login credentials')) {
+        if (error.message.includes('Invalid login credentials')) {
           setAuthError('Invalid email or password. Please check your credentials.');
         } else if (error.message.includes('Email not confirmed')) {
           setAuthError('Please confirm your email address before signing in.');
+        } else if (error.message.includes('Connection failed')) {
+          setAuthError('Unable to connect to authentication service. Please check your internet connection and try again.');
         } else {
-          setAuthError(error.message);
+          setAuthError(error.message || 'Authentication failed. Please try again.');
         }
       } else {
         toast.success('Successfully signed in!');
@@ -113,7 +97,8 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
         navigate('/dashboard');
       }
     } catch (error) {
-      setAuthError('An error occurred. Please try again.');
+      console.error('❌ SignIn catch block:', error);
+      setAuthError('An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -134,59 +119,23 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
       const { error } = await signUpDirect(signUpForm.email, signUpForm.password);
       
       if (error) {
-        if (error.message.includes('Invalid API key') || error.message.includes('Invalid authentication credentials')) {
-          setAuthError('Authentication system temporarily unavailable. Please try again in a moment.');
-        } else if (error.message.includes('User already registered')) {
+        if (error.message.includes('User already registered')) {
           setAuthError('This email is already registered. Please sign in instead.');
+        } else if (error.message.includes('Connection failed')) {
+          setAuthError('Unable to connect to authentication service. Please check your internet connection and try again.');
         } else {
-          setAuthError(error.message);
+          setAuthError(error.message || 'Failed to create account. Please try again.');
         }
       } else {
         // Create organization and update profile after successful signup
         setTimeout(async () => {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user) {
-            // Profile is now automatically created by trigger, so just update it
-            await supabase
-              .from('profiles')
-              .update({
-                first_name: signUpForm.firstName,
-                last_name: signUpForm.lastName,
-                phone: '',
-                business_role: 'Owner',
-                registration_platform: 'keys-pay'
-              })
-              .eq('user_id', user.id);
-
-            // Create organization
-            const { data: org } = await supabase
-              .from('organizations')
-              .insert({
-                name: signUpForm.organizationName,
-                type: signUpForm.organizationType,
-                country_code: signUpForm.countryCode
-              })
-              .select()
-              .single();
-
-            // Create default account for the user
-            await supabase
-              .from('accounts')
-              .insert({
-                user_id: user.id,
-                account_number: `KP-${user.id.substring(0, 8).toUpperCase()}`,
-                account_type: 'checking',
-                balance: 0,
-                currency: 'AED',
-                status: 'active'
-              });
-          }
+          // Profile creation is now handled by database triggers
+          toast.success('Account created successfully! You can now sign in.');
+          setActiveTab('signin');
         }, 1000);
-
-        toast.success('Account created successfully! Please check your email for verification.');
-        setActiveTab('signin');
       }
     } catch (error) {
+      console.error('❌ SignUp catch block:', error);
       setAuthError('Failed to create account. Please try again.');
     } finally {
       setLoading(false);

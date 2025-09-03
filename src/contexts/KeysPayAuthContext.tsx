@@ -70,6 +70,12 @@ export const KeysPayAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
     console.log('🔄 KeysPay SignUp attempt for:', email);
     
     try {
+      // Test connection before attempting signup
+      const { data: testSession, error: testError } = await supabase.auth.getSession();
+      if (testError && !testError.message.includes('session')) {
+        throw new Error(`Connection failed: ${testError.message}`);
+      }
+      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -85,11 +91,11 @@ export const KeysPayAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
           code: error.code
         });
       } else {
-        console.log('✅ SignUp successful:', data.user ? 'User created' : 'Confirmation required');
+        console.log('✅ SignUp successful:', data.user ? 'User created' : 'Confirmation email sent');
       }
       
       return { error };
-    } catch (err) {
+    } catch (err: any) {
       console.error('❌ SignUp exception:', err);
       return { error: err };
     }
@@ -99,6 +105,12 @@ export const KeysPayAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
     console.log('🔄 KeysPay SignIn attempt for:', email);
     
     try {
+      // Test connection before attempting signin
+      const { data: testSession, error: testError } = await supabase.auth.getSession();
+      if (testError && !testError.message.includes('session')) {
+        throw new Error(`Connection failed: ${testError.message}`);
+      }
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -115,7 +127,7 @@ export const KeysPayAuthProvider: React.FC<{ children: React.ReactNode }> = ({ c
       }
       
       return { error };
-    } catch (err) {
+    } catch (err: any) {
       console.error('❌ SignIn exception:', err);
       return { error: err };
     }
