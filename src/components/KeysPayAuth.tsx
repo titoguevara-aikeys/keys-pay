@@ -119,7 +119,7 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
         setTimeout(async () => {
           const { data: { user } } = await supabase.auth.getUser();
           if (user) {
-            // Update profile with additional info
+            // Profile is now automatically created by trigger, so just update it
             await supabase
               .from('profiles')
               .update({
@@ -132,12 +132,26 @@ export const KeysPayAuth: React.FC<KeysPayAuthProps> = ({ onAuthSuccess }) => {
               .eq('user_id', user.id);
 
             // Create organization
-            await supabase
+            const { data: org } = await supabase
               .from('organizations')
               .insert({
                 name: signUpForm.organizationName,
                 type: signUpForm.organizationType,
                 country_code: signUpForm.countryCode
+              })
+              .select()
+              .single();
+
+            // Create default account for the user
+            await supabase
+              .from('accounts')
+              .insert({
+                user_id: user.id,
+                account_number: `KP-${user.id.substring(0, 8).toUpperCase()}`,
+                account_type: 'checking',
+                balance: 0,
+                currency: 'AED',
+                status: 'active'
               });
           }
         }, 1000);
