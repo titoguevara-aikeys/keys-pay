@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { RefreshCw, AlertTriangle, CheckCircle, XCircle, Clock, Users, Zap, Activity } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { VercelDeploymentManager } from './VercelDeploymentManager';
+import { VercelHealthCheck } from './VercelHealthCheck';
 
 interface MonitoringData {
   ttfb: number;
@@ -296,7 +297,12 @@ const MonitoringDashboard: React.FC = () => {
       {/* Vercel Deployment Management */}
       <div className="space-y-4">
         <Separator />
-        <h3 className="text-xl font-semibold">Deployment Management</h3>
+        <h3 className="text-xl font-semibold">Vercel Integration</h3>
+        
+        {/* Health Check First */}
+        <VercelHealthCheck />
+        
+        {/* Full Deployment Manager */}
         <VercelDeploymentManager />
       </div>
     </div>
