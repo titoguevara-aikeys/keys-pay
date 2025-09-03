@@ -68,7 +68,7 @@ const queryClient = new QueryClient();
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/auth" element={<Auth />} />
+      <Route path="/auth" element={<Navigate to="/dashboard" replace />} />
       <Route path="/mock-auth" element={<MockAuth />} />
       
       {/* Protected Dashboard Routes */}
