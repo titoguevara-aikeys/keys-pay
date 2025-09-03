@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.log-security-event]
 verify_jwt = false
+
+[functions.vercel-auto-deploy]
+verify_jwt = false

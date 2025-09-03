@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.208.0/http/server.ts"
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -6,250 +6,208 @@ const corsHeaders = {
 }
 
 interface DeploymentHook {
-  url: string
-  secret?: string
+  url: string;
+  secret?: string;
 }
 
 interface AutoDeployConfig {
-  enabled: boolean
-  branch: string
-  webhookUrl?: string
-  monitorInterval?: number
+  enabled: boolean;
+  branch: string;
+  webhookUrl?: string;
+  monitorInterval?: number; // minutes
 }
 
 async function triggerVercelDeployment(projectId: string, token: string, branch: string = 'main') {
-  const deploymentUrl = `https://api.vercel.com/v13/deployments`
-  
-  const deploymentPayload = {
-    name: 'keys-pay-auto-deploy',
-    gitSource: {
-      type: 'github',
-      ref: branch,
-      repoId: projectId
-    },
-    projectSettings: {
-      buildCommand: 'npm run build',
-      outputDirectory: 'dist'
-    }
-  }
-
-  const response = await fetch(deploymentUrl, {
+  const response = await fetch(`https://api.vercel.com/v13/deployments`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
-      'User-Agent': 'Keys Pay Auto Deploy'
     },
-    body: JSON.stringify(deploymentPayload)
-  })
+    body: JSON.stringify({
+      name: `aikey-mena-hub`,
+      project: projectId,
+      target: 'production',
+      gitSource: {
+        type: 'github',
+        ref: branch,
+        repoId: projectId
+      },
+      build: {
+        env: {}
+      }
+    })
+  });
 
   if (!response.ok) {
-    const error = await response.text()
-    throw new Error(`Vercel deployment failed: ${response.status} - ${error}`)
+    const error = await response.text();
+    throw new Error(`Vercel deployment failed: ${error}`);
   }
 
-  return await response.json()
+  return await response.json();
 }
 
 async function checkForUpdates(projectId: string, token: string) {
-  // Check for new commits or changes that should trigger deployment
-  const deploymentsUrl = `https://api.vercel.com/v13/deployments?projectId=${projectId}&limit=1`
-  
-  const response = await fetch(deploymentsUrl, {
+  const response = await fetch(`https://api.vercel.com/v6/deployments?projectId=${projectId}&limit=1`, {
     headers: {
       'Authorization': `Bearer ${token}`,
-      'User-Agent': 'Keys Pay Auto Deploy Monitor'
     }
-  })
+  });
 
   if (!response.ok) {
-    throw new Error(`Failed to check deployments: ${response.status}`)
+    throw new Error(`Failed to check deployments: ${response.statusText}`);
   }
 
-  const data = await response.json()
-  return data.deployments || []
+  return await response.json();
 }
 
-async function backgroundMonitoring(config: AutoDeployConfig, projectId: string, token: string) {
-  console.log('Starting background deployment monitoring...')
+let monitoringInterval: number | null = null;
+
+async function backgroundMonitoring(projectId: string, token: string, config: AutoDeployConfig) {
+  console.log('Starting background monitoring for auto-deployment');
   
-  let lastDeploymentId: string | null = null
+  const checkInterval = (config.monitorInterval || 360) * 60 * 1000; // Convert to milliseconds, default 6 hours
   
   const monitor = async () => {
     try {
-      const deployments = await checkForUpdates(projectId, token)
+      const deployments = await checkForUpdates(projectId, token);
+      const lastDeployment = deployments.deployments?.[0];
       
-      if (deployments.length > 0) {
-        const latestDeployment = deployments[0]
-        
-        // If this is a new deployment or first run
-        if (!lastDeploymentId) {
-          lastDeploymentId = latestDeployment.uid
-          console.log('Initialized monitoring with deployment:', latestDeploymentId)
-          return
-        }
+      if (!lastDeployment) {
+        console.log('No deployments found, triggering initial deployment');
+        await triggerVercelDeployment(projectId, token, config.branch);
+        return;
+      }
 
-        // Check if we need to trigger a new deployment
-        // This could be based on various criteria like:
-        // - Time since last deployment
-        // - Manual trigger request
-        // - Webhook notification
-        
-        const timeSinceLastDeploy = Date.now() - new Date(latestDeployment.createdAt).getTime()
-        const sixHours = 6 * 60 * 60 * 1000
-
-        // Auto-deploy if no deployment in the last 6 hours and it's enabled
-        if (config.enabled && timeSinceLastDeploy > sixHours) {
-          console.log('Triggering auto-deployment due to time threshold')
-          const newDeployment = await triggerVercelDeployment(projectId, token, config.branch)
-          lastDeploymentId = newDeployment.uid
-          console.log('Auto-deployment triggered:', newDeployment.uid)
-        }
+      const lastDeploymentTime = new Date(lastDeployment.createdAt);
+      const now = new Date();
+      const timeDiff = now.getTime() - lastDeploymentTime.getTime();
+      
+      if (timeDiff > checkInterval) {
+        console.log(`Last deployment was ${Math.round(timeDiff / (1000 * 60 * 60))} hours ago, triggering new deployment`);
+        await triggerVercelDeployment(projectId, token, config.branch);
+      } else {
+        console.log(`Last deployment was recent (${Math.round(timeDiff / (1000 * 60))} minutes ago), skipping`);
       }
     } catch (error) {
-      console.error('Background monitoring error:', error)
+      console.error('Error in background monitoring:', error);
     }
-  }
+  };
 
-  // Run initial check
-  await monitor()
+  // Initial check
+  await monitor();
   
-  // Set up periodic monitoring
-  const interval = config.monitorInterval || 30 * 60 * 1000 // 30 minutes default
-  const intervalId = setInterval(monitor, interval)
+  // Set up interval
+  monitoringInterval = setInterval(monitor, checkInterval);
   
-  // Cleanup on function shutdown
-  addEventListener('beforeunload', () => {
-    console.log('Stopping deployment monitoring...')
-    clearInterval(intervalId)
-  })
+  // Cleanup on Deno exit
+  Deno.addSignalListener("SIGTERM", () => {
+    if (monitoringInterval) {
+      clearInterval(monitoringInterval);
+    }
+  });
 }
 
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders })
+    return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { action, config } = await req.json()
+    const { action, config }: { action: 'deploy' | 'start-monitoring' | 'webhook', config?: AutoDeployConfig } = await req.json();
     
     // Get Vercel credentials from environment
-    const projectId = Deno.env.get('VERCEL_PROJECT_ID')
-    const token = Deno.env.get('VERCEL_TOKEN')
+    const projectId = Deno.env.get('VERCEL_PROJECT_ID');
+    const token = Deno.env.get('VERCEL_TOKEN');
     
     if (!projectId || !token) {
-      return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: 'Vercel credentials not configured' 
-        }), 
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      )
+      return Response.json({
+        error: 'Missing Vercel credentials. Please configure VERCEL_PROJECT_ID and VERCEL_TOKEN.',
+        projectId: projectId || null,
+        hasToken: !!token
+      }, { 
+        status: 400,
+        headers: corsHeaders 
+      });
     }
 
     switch (action) {
       case 'deploy': {
-        // Trigger immediate deployment
-        const branch = config?.branch || 'main'
-        console.log(`Triggering deployment for branch: ${branch}`)
+        console.log('Triggering immediate deployment');
+        const deployment = await triggerVercelDeployment(projectId, token, config?.branch || 'main');
         
-        const deployment = await triggerVercelDeployment(projectId, token, branch)
-        
-        return new Response(
-          JSON.stringify({
-            success: true,
-            deployment: {
-              id: deployment.uid,
-              url: deployment.url,
-              state: deployment.readyState || 'BUILDING'
-            }
-          }),
-          { 
-            status: 200,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-          }
-        )
+        return Response.json({
+          success: true,
+          deployment: {
+            id: deployment.id,
+            url: deployment.url,
+            readyState: deployment.readyState,
+            createdAt: deployment.createdAt
+          },
+          message: 'Deployment triggered successfully'
+        }, { headers: corsHeaders });
       }
 
       case 'start-monitoring': {
-        // Start background monitoring
-        const autoDeployConfig: AutoDeployConfig = {
-          enabled: config?.enabled || false,
-          branch: config?.branch || 'main',
-          monitorInterval: config?.interval || 30 * 60 * 1000
+        if (!config) {
+          return Response.json({
+            error: 'Configuration required for monitoring'
+          }, { 
+            status: 400,
+            headers: corsHeaders 
+          });
         }
+
+        console.log('Starting auto-deployment monitoring');
         
-        console.log('Starting auto-deployment monitoring with config:', autoDeployConfig)
+        // Start background monitoring (non-blocking)
+        backgroundMonitoring(projectId, token, config).catch(console.error);
         
-        // Start background monitoring without awaiting
-        EdgeRuntime.waitUntil(backgroundMonitoring(autoDeployConfig, projectId, token))
-        
-        return new Response(
-          JSON.stringify({
-            success: true,
-            message: 'Auto-deployment monitoring started',
-            config: autoDeployConfig
-          }),
-          { 
-            status: 200,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        return Response.json({
+          success: true,
+          message: 'Auto-deployment monitoring started',
+          config: {
+            enabled: config.enabled,
+            branch: config.branch,
+            interval: config.monitorInterval || 360
           }
-        )
+        }, { headers: corsHeaders });
       }
 
       case 'webhook': {
-        // Handle webhook deployments (e.g., from GitHub)
-        console.log('Webhook deployment triggered')
+        console.log('Processing webhook deployment trigger');
+        const deployment = await triggerVercelDeployment(projectId, token, config?.branch || 'main');
         
-        const branch = config?.branch || 'main'
-        const deployment = await triggerVercelDeployment(projectId, token, branch)
-        
-        return new Response(
-          JSON.stringify({
-            success: true,
-            message: 'Webhook deployment triggered',
-            deployment: {
-              id: deployment.uid,
-              url: deployment.url
-            }
-          }),
-          { 
-            status: 200,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-          }
-        )
+        return Response.json({
+          success: true,
+          deployment: {
+            id: deployment.id,
+            url: deployment.url,
+            readyState: deployment.readyState
+          },
+          message: 'Webhook deployment triggered'
+        }, { headers: corsHeaders });
       }
 
-      default: {
-        return new Response(
-          JSON.stringify({ 
-            success: false, 
-            error: 'Invalid action. Use: deploy, start-monitoring, or webhook' 
-          }),
-          { 
-            status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-          }
-        )
-      }
+      default:
+        return Response.json({
+          error: 'Invalid action. Use: deploy, start-monitoring, or webhook'
+        }, { 
+          status: 400,
+          headers: corsHeaders 
+        });
     }
 
   } catch (error) {
-    console.error('Auto-deploy function error:', error)
+    console.error('Auto-deploy function error:', error);
     
-    return new Response(
-      JSON.stringify({
-        success: false,
-        error: error.message
-      }),
-      { 
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
-    )
+    return Response.json({
+      error: error.message || 'Unknown error occurred',
+      timestamp: new Date().toISOString()
+    }, { 
+      status: 500,
+      headers: corsHeaders 
+    });
   }
 })

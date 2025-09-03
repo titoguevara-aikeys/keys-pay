@@ -6,8 +6,9 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { RefreshCw, AlertTriangle, CheckCircle, XCircle, Clock, Users, Zap, Activity } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { VercelDeploymentManager } from './VercelDeploymentManager';
 import { VercelHealthCheck } from './VercelHealthCheck';
+import { VercelDeploymentManager } from './VercelDeploymentManager';
+import { VercelAutoDeployment } from './VercelAutoDeployment';
 
 interface MonitoringData {
   ttfb: number;
@@ -332,6 +333,9 @@ const MonitoringDashboard: React.FC = () => {
         
         {/* Full Deployment Manager */}
         <VercelDeploymentManager />
+        
+        {/* Auto-Deployment System */}
+        <VercelAutoDeployment />
       </div>
     </div>
   );
