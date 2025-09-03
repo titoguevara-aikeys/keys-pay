@@ -15,7 +15,6 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
 import { KeysPayAuthProvider } from "@/contexts/KeysPayAuthContext";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import { ExchangeRateProvider } from "@/contexts/ExchangeRateContext";
@@ -199,22 +198,20 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <PlatformGuard>
       <SecurityProvider>
-        <AuthProvider>
-          <KeysPayAuthProvider>
-            <ExchangeRateProvider>
-              <CurrencyProvider>
-                <TooltipProvider>
-                  <Toaster />
-                  <Sonner />
-                  <BrowserRouter>
-                    <AppRoutes />
-                    <ComplianceFooter />
-                  </BrowserRouter>
-                </TooltipProvider>
-              </CurrencyProvider>
-            </ExchangeRateProvider>
-          </KeysPayAuthProvider>
-        </AuthProvider>
+        <KeysPayAuthProvider>
+          <ExchangeRateProvider>
+            <CurrencyProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                  <AppRoutes />
+                  <ComplianceFooter />
+                </BrowserRouter>
+              </TooltipProvider>
+            </CurrencyProvider>
+          </ExchangeRateProvider>
+        </KeysPayAuthProvider>
       </SecurityProvider>
     </PlatformGuard>
   </QueryClientProvider>
