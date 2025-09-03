@@ -20,3 +20,12 @@ verify_jwt = false
 
 [functions.vercel-auto-deploy]
 verify_jwt = false
+
+[functions.vercel-health]
+verify_jwt = false
+
+[functions.vercel-deployments]
+verify_jwt = false
+
+[functions.vercel-deploy]
+verify_jwt = false

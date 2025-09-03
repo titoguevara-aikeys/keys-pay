@@ -5,7 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Loader2, CheckCircle, XCircle, Settings, Play, ExternalLink } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, Settings, Play, ExternalLink, Zap } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface VercelSetupProps {
   onSetupComplete?: () => void;
@@ -23,34 +24,52 @@ export const VercelSetupAutomation: React.FC<VercelSetupProps> = ({ onSetupCompl
   const [setupSteps, setSetupSteps] = useState<SetupStep[]>([
     {
       id: 'check-credentials',
-      title: 'Check Vercel Credentials',
-      description: 'Verify VERCEL_PROJECT_ID and VERCEL_TOKEN are configured',
+      title: 'Auto-Detect Vercel Project',
+      description: 'Automatically discover and configure Vercel credentials',
       status: 'pending'
     },
     {
       id: 'test-api',
-      title: 'Test Vercel API Connection',
-      description: 'Test connection to Vercel API endpoints',
+      title: 'Verify API Access',
+      description: 'Test connection and deployment permissions',
       status: 'pending'
     },
     {
       id: 'deploy-function',
-      title: 'Deploy Auto-Deploy Function',
-      description: 'Ensure Supabase Edge Function is deployed and working',
+      title: 'Enable Auto-Deploy',
+      description: 'Configure automated deployment system',
       status: 'pending'
     },
     {
       id: 'test-deployment',
-      title: 'Test Deployment Trigger',
-      description: 'Trigger a test deployment to verify everything works',
+      title: 'Trigger First Deployment',
+      description: 'Execute initial deployment to verify setup',
+      status: 'pending'
+    },
+    {
+      id: 'auto-enable',
+      title: 'Enable Continuous Deployment',
+      description: 'Activate automatic deployment monitoring',
       status: 'pending'
     }
   ]);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const [vercelToken, setVercelToken] = useState('');
-  const [projectId, setProjectId] = useState('aikey-mena-hub');
+  const [projectId, setProjectId] = useState('');
+  const [detectedProject, setDetectedProject] = useState<any>(null);
+  const [deploymentUrl, setDeploymentUrl] = useState('');
+
+  // Auto-start setup on component mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!isRunning && setupSteps.every(step => step.status === 'pending')) {
+        runAutomatedSetup();
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const updateStepStatus = (stepId: string, status: SetupStep['status']) => {
     setSetupSteps(prev => prev.map(step => 
@@ -62,15 +81,29 @@ export const VercelSetupAutomation: React.FC<VercelSetupProps> = ({ onSetupCompl
     updateStepStatus('check-credentials', 'running');
     
     try {
-      const response = await fetch('/api/vercel/health');
-      const data = await response.json();
+      const { data, error } = await supabase.functions.invoke('vercel-health');
       
-      if (data.ok) {
+      if (error) {
+        console.error('Vercel health check error:', error);
+        updateStepStatus('check-credentials', 'failed');
+        toast.error('Failed to check Vercel credentials');
+        return false;
+      }
+      
+      if (data?.ok) {
         updateStepStatus('check-credentials', 'completed');
+        if (data.autoDetectedProject) {
+          setDetectedProject(data.autoDetectedProject);
+          setProjectId(data.autoDetectedProject.id);
+          toast.success(`Auto-detected project: ${data.autoDetectedProject.name}`);
+        } else if (data.projectId) {
+          setProjectId(data.projectId);
+          toast.success(`Verified project: ${data.projectName || data.projectId}`);
+        }
         return true;
       } else {
         updateStepStatus('check-credentials', 'failed');
-        toast.error(`Credentials check failed: ${data.error}`);
+        toast.error(`Setup failed: ${data?.error || 'Unknown error'}`);
         return false;
       }
     } catch (error) {
@@ -85,16 +118,22 @@ export const VercelSetupAutomation: React.FC<VercelSetupProps> = ({ onSetupCompl
     updateStepStatus('test-api', 'running');
     
     try {
-      const response = await fetch('/api/vercel/deployments');
-      const data = await response.json();
+      const { data, error } = await supabase.functions.invoke('vercel-deployments');
       
-      if (data.ok) {
+      if (error) {
+        console.error('Vercel deployments error:', error);
+        updateStepStatus('test-api', 'failed');
+        toast.error('Failed to test Vercel API connection');
+        return false;
+      }
+      
+      if (data?.ok) {
         updateStepStatus('test-api', 'completed');
-        toast.success(`Found ${data.total} recent deployments`);
+        toast.success(`Verified deployment access - ${data.total} deployments found`);
         return true;
       } else {
         updateStepStatus('test-api', 'failed');
-        toast.error(`API test failed: ${data.error}`);
+        toast.error(`API access failed: ${data?.error || 'Unknown error'}`);
         return false;
       }
     } catch (error) {
@@ -109,25 +148,28 @@ export const VercelSetupAutomation: React.FC<VercelSetupProps> = ({ onSetupCompl
     updateStepStatus('deploy-function', 'running');
     
     try {
-      // Test if the edge function is working
-      const response = await fetch('/api/vercel/deploy', {
-        method: 'GET'
-      });
-      const data = await response.json();
+      const { data, error } = await supabase.functions.invoke('vercel-deploy', { method: 'GET' });
       
-      if (data.ok) {
+      if (error) {
+        console.error('Auto-deploy function error:', error);
+        updateStepStatus('deploy-function', 'failed');
+        toast.error('Failed to verify auto-deploy function');
+        return false;
+      }
+      
+      if (data?.ok) {
         updateStepStatus('deploy-function', 'completed');
-        toast.success('Auto-deploy function is ready');
+        toast.success('Auto-deploy system ready');
         return true;
       } else {
         updateStepStatus('deploy-function', 'failed');
-        toast.error(`Function test failed: ${data.error}`);
+        toast.error(`Auto-deploy setup failed: ${data?.error || 'Unknown error'}`);
         return false;
       }
     } catch (error) {
       console.error('Function test error:', error);
       updateStepStatus('deploy-function', 'failed');
-      toast.error('Failed to test auto-deploy function');
+      toast.error('Failed to configure auto-deploy function');
       return false;
     }
   };
@@ -136,32 +178,71 @@ export const VercelSetupAutomation: React.FC<VercelSetupProps> = ({ onSetupCompl
     updateStepStatus('test-deployment', 'running');
     
     try {
-      const response = await fetch('/api/vercel/deploy', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+      const { data, error } = await supabase.functions.invoke('vercel-deploy', {
+        body: {
           branch: 'main',
           auto: false
-        })
+        }
       });
       
-      const data = await response.json();
+      if (error) {
+        console.error('Deployment error:', error);
+        updateStepStatus('test-deployment', 'failed');
+        toast.error('Failed to trigger deployment');
+        return false;
+      }
       
-      if (data.ok && data.success) {
+      if (data?.ok && data?.success) {
         updateStepStatus('test-deployment', 'completed');
-        toast.success('Test deployment triggered successfully!');
+        if (data.deploymentUrl) {
+          setDeploymentUrl(data.deploymentUrl);
+        }
+        toast.success('Initial deployment triggered successfully!');
         return true;
       } else {
         updateStepStatus('test-deployment', 'failed');
-        toast.error(`Deployment test failed: ${data.error}`);
+        toast.error(`Deployment failed: ${data?.error || 'Unknown error'}`);
         return false;
       }
     } catch (error) {
       console.error('Deployment test error:', error);
       updateStepStatus('test-deployment', 'failed');
-      toast.error('Failed to test deployment');
+      toast.error('Failed to trigger deployment');
+      return false;
+    }
+  };
+
+  const enableAutoDeployment = async () => {
+    updateStepStatus('auto-enable', 'running');
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('vercel-deploy', {
+        body: {
+          branch: 'main',
+          auto: true
+        }
+      });
+      
+      if (error) {
+        console.error('Auto-deployment enable error:', error);
+        updateStepStatus('auto-enable', 'failed');
+        toast.error('Failed to enable auto-deployment');
+        return false;
+      }
+      
+      if (data?.ok) {
+        updateStepStatus('auto-enable', 'completed');
+        toast.success('Continuous deployment activated!');
+        return true;
+      } else {
+        updateStepStatus('auto-enable', 'failed');
+        toast.error(`Auto-deployment failed: ${data?.error || 'Unknown error'}`);
+        return false;
+      }
+    } catch (error) {
+      console.error('Auto-deployment error:', error);
+      updateStepStatus('auto-enable', 'failed');
+      toast.error('Failed to enable continuous deployment');
       return false;
     }
   };
@@ -174,7 +255,8 @@ export const VercelSetupAutomation: React.FC<VercelSetupProps> = ({ onSetupCompl
       checkCredentials,
       testApiConnection,
       deployFunction,
-      testDeployment
+      testDeployment,
+      enableAutoDeployment
     ];
     
     for (let i = 0; i < steps.length; i++) {
@@ -183,17 +265,17 @@ export const VercelSetupAutomation: React.FC<VercelSetupProps> = ({ onSetupCompl
       
       if (!success) {
         setIsRunning(false);
-        toast.error(`Setup failed at step ${i + 1}`);
+        toast.error(`Automated setup failed at step ${i + 1}`);
         return;
       }
       
-      // Small delay between steps
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Delay between steps for better UX
+      await new Promise(resolve => setTimeout(resolve, 1500));
     }
     
     setIsRunning(false);
     setCurrentStep(steps.length);
-    toast.success('Vercel integration setup completed successfully!');
+    toast.success('🚀 Vercel integration fully automated and ready!');
     onSetupComplete?.();
   };
 
@@ -231,44 +313,45 @@ export const VercelSetupAutomation: React.FC<VercelSetupProps> = ({ onSetupCompl
     <Card className="w-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Settings className="h-5 w-5" />
-          Vercel Integration Setup
+          <Zap className="h-5 w-5" />
+          Fully Automated Vercel Setup
         </CardTitle>
         <CardDescription>
-          Automated setup and configuration for Vercel auto-deployment integration
+          Automatic detection, configuration, and deployment - zero manual intervention required
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Configuration Section */}
+        {/* Auto-Detection Status */}
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="project-id">Project ID</Label>
-              <Input
-                id="project-id"
-                value={projectId}
-                onChange={(e) => setProjectId(e.target.value)}
-                placeholder="aikey-mena-hub"
-                disabled={isRunning}
-              />
+          {detectedProject && (
+            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+              <h4 className="text-sm font-medium text-green-800 mb-2">Auto-Detected Project</h4>
+              <p className="text-sm text-green-700">
+                <strong>{detectedProject.name}</strong> - {detectedProject.id}
+              </p>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="vercel-token">Vercel Token Status</Label>
-              <div className="flex items-center gap-2">
-                <Badge variant="outline">
-                  Check via setup process
-                </Badge>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => window.open('https://vercel.com/account/tokens', '_blank')}
-                >
-                  <ExternalLink className="h-4 w-4 mr-1" />
-                  Get Token
-                </Button>
-              </div>
+          )}
+          
+          {projectId && !detectedProject && (
+            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <h4 className="text-sm font-medium text-blue-800 mb-2">Configured Project</h4>
+              <p className="text-sm text-blue-700">Project ID: {projectId}</p>
             </div>
-          </div>
+          )}
+
+          {deploymentUrl && (
+            <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+              <h4 className="text-sm font-medium text-purple-800 mb-2">Live Deployment</h4>
+              <a 
+                href={`https://${deploymentUrl}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-purple-700 hover:underline flex items-center gap-1"
+              >
+                {deploymentUrl} <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
+          )}
         </div>
 
         {/* Setup Steps */}
@@ -298,42 +381,62 @@ export const VercelSetupAutomation: React.FC<VercelSetupProps> = ({ onSetupCompl
 
         {/* Action Buttons */}
         <div className="flex gap-3 pt-4 border-t">
-          <Button
-            onClick={runAutomatedSetup}
-            disabled={isRunning}
-            className="flex-1"
-          >
-            {isRunning ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Running Setup...
-              </>
-            ) : (
-              <>
-                <Play className="h-4 w-4 mr-2" />
-                Start Automated Setup
-              </>
-            )}
-          </Button>
+          {!isRunning && !allStepsCompleted && (
+            <Button
+              onClick={runAutomatedSetup}
+              disabled={isRunning}
+              className="flex-1"
+            >
+              <Zap className="h-4 w-4 mr-2" />
+              Start Full Automation
+            </Button>
+          )}
+          
+          {isRunning && (
+            <div className="flex-1 flex items-center justify-center">
+              <div className="flex items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-sm">Automating setup...</span>
+              </div>
+            </div>
+          )}
           
           {allStepsCompleted && (
-            <Button
-              variant="outline"
-              onClick={() => window.open('https://vercel.com/aikeys/aikey-mena-hub', '_blank')}
-            >
-              <ExternalLink className="h-4 w-4 mr-2" />
-              View Project
-            </Button>
+            <>
+              <Button
+                variant="outline"
+                onClick={() => window.open(`https://vercel.com/dashboard`, '_blank')}
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Vercel Dashboard
+              </Button>
+              {deploymentUrl && (
+                <Button
+                  onClick={() => window.open(`https://${deploymentUrl}`, '_blank')}
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  View Live Site
+                </Button>
+              )}
+            </>
           )}
         </div>
 
         {allStepsCompleted && (
-          <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-            <h4 className="text-sm font-medium text-green-800 mb-2">Setup Complete!</h4>
-            <p className="text-sm text-green-700">
-              Your Vercel integration is now fully configured and ready to use. 
-              Auto-deployments can be enabled from the deployment manager.
+          <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg">
+            <h4 className="text-sm font-medium text-green-800 mb-2 flex items-center gap-2">
+              <CheckCircle className="h-4 w-4" />
+              Fully Automated Setup Complete!
+            </h4>
+            <p className="text-sm text-green-700 mb-2">
+              🚀 Your Vercel integration is now <strong>fully automated</strong> with:
             </p>
+            <ul className="text-sm text-green-700 list-disc list-inside space-y-1">
+              <li>Auto-detected project configuration</li>
+              <li>Verified deployment permissions</li>
+              <li>Active continuous deployment monitoring</li>
+              <li>Zero-touch deployment pipeline</li>
+            </ul>
           </div>
         )}
       </CardContent>
