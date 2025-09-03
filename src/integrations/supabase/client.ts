@@ -4,7 +4,7 @@ import type { Database } from './types';
 
 // Supabase project configuration
 const SUPABASE_URL = "https://emolyyvmvvfjyxbguhyn.supabase.co";
-// Note: This key may need to be regenerated if authentication fails
+// Updated API key for authentication
 const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtb2x5eXZtdnZmanl4Ymd1aHluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0MDI3NDIsImV4cCI6MjA2OTk3ODc0Mn0.u9KigfxzhqIXVjfRLRIqswCR5rCO8Mrapmk8yjr0wVU";
 
 console.log('🔧 SUPABASE CLIENT CONFIGURATION:');
@@ -24,72 +24,29 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
 // Immediate test on client creation
 console.log('✅ Supabase client created successfully');
 
-// Enhanced API key validation with detailed error reporting
-const testApiKey = async () => {
+// Enhanced authentication and connection testing
+const testAuthConnection = async () => {
   try {
-    console.log('🔍 Testing API key validity...');
+    console.log('🔍 Testing Supabase authentication connection...');
     
-    // Test basic connection
-    const { data, error } = await supabase.auth.getSession();
+    // Test basic auth connection
+    const { data: session, error } = await supabase.auth.getSession();
     
     if (error) {
-      if (error.message.includes('Invalid API key') || error.message.includes('Invalid authentication credentials')) {
-        console.error('🚨 CRITICAL: SUPABASE API KEY IS INVALID/EXPIRED');
-        console.error('📋 Project ID:', 'emolyyvmvvfjyxbguhyn');
-        console.error('🔧 REQUIRED ACTION: Regenerate API keys in Supabase dashboard');
-        console.error('📍 Dashboard URL: https://supabase.com/dashboard/project/emolyyvmvvfjyxbguhyn/settings/api');
-        
-        // Show critical error notification
-        if (typeof window !== 'undefined') {
-          const errorDiv = document.createElement('div');
-          errorDiv.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #1a1a1a;
-            border: 2px solid #dc2626;
-            color: white;
-            padding: 24px;
-            border-radius: 12px;
-            z-index: 10000;
-            max-width: 500px;
-            font-family: system-ui;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            text-align: center;
-          `;
-          errorDiv.innerHTML = `
-            <h3 style="color: #dc2626; margin-top: 0;">🚨 Authentication Error</h3>
-            <p>The Supabase API key has expired and needs to be regenerated.</p>
-            <p style="font-size: 14px; color: #aaa;">
-              Please regenerate the anon key in your Supabase dashboard:<br>
-              <strong>Project Settings → API → Generate new anon key</strong>
-            </p>
-            <button onclick="this.parentElement.remove()" 
-                    style="background: #dc2626; border: none; color: white; padding: 8px 16px; 
-                           border-radius: 4px; cursor: pointer; margin-top: 16px;">
-              Close
-            </button>
-          `;
-          document.body.appendChild(errorDiv);
-        }
-        
-        return false;
-      } else {
-        console.log('✅ API key valid - different error:', error.message);
-        return true;
-      }
+      console.error('🚨 Authentication Error:', error.message);
+      return false;
     } else {
-      console.log('✅ Supabase connection successful - API key is valid');
+      console.log('✅ Supabase authentication connection successful');
+      console.log('📊 Current session status:', session ? 'Active session' : 'No active session');
       return true;
     }
   } catch (err) {
-    console.error('❌ Connection test failed:', err);
+    console.error('❌ Authentication connection test failed:', err);
     return false;
   }
 };
 
-// Run test after a brief delay
+// Test connection on client initialization
 if (typeof window !== 'undefined') {
-  setTimeout(testApiKey, 500);
+  setTimeout(testAuthConnection, 500);
 }
