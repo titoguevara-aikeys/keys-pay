@@ -185,13 +185,8 @@ const AppRoutes = () => {
 
 // Component for handling auth-based redirects
 const AuthRedirect = () => {
-  const { user, loading } = useKeysPayAuth();
-  
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
-  }
-  
-  return user ? <Navigate to="/dashboard" replace /> : <Navigate to="/auth" replace />;
+  // TEMPORARILY DISABLED - Always redirect to dashboard
+  return <Navigate to="/dashboard" replace />;
 };
 
 const App = () => (
