@@ -16,13 +16,13 @@ const ComplianceFooter: React.FC = () => {
                 Ramp (Live)
               </span>
               <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
-                Guardarian (Live)
+                Nium (Live)
               </span>
               <span className="px-3 py-1 bg-muted rounded-full text-xs">
                 OpenPayd (Coming Soon)
               </span>
               <span className="px-3 py-1 bg-muted/50 rounded-full text-xs opacity-60">
-                Nium (Optional)
+                Guardarian (Optional)
               </span>
             </div>
           </div>

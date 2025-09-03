@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useKeysPayAuth } from '@/contexts/KeysPayAuthContext';
+import { useAuth } from '@/contexts/MockAuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield, AlertTriangle } from 'lucide-react';
 
@@ -9,7 +9,7 @@ interface AdminRouteProps {
 }
 
 const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
-  const { user, loading } = useKeysPayAuth();
+  const { user, loading } = useAuth();
 
   if (loading) {
     return (

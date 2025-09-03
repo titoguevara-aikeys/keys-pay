@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useKeysPayAuth } from '@/contexts/KeysPayAuthContext';
+import { useAuth } from '@/contexts/MockAuthContext';
 import type { Database } from '@/integrations/supabase/types';
 
 export type Profile = Database['public']['Tables']['profiles']['Row'];
 
 export const useProfile = () => {
-  const { user } = useKeysPayAuth();
+  const { user } = useAuth();
   
   return useQuery({
     queryKey: ['profile', user?.id],

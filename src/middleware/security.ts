@@ -1,52 +1,28 @@
-// Enhanced Security middleware with optimizations
-import { generateTransactionRef } from '@/lib/keyspay/security';
-
-// Generate request ID for tracking
-export const generateRequestId = (): string => {
-  return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-};
-
-// Production-ready security headers with enhanced CSP
+// Security middleware for development and production
 export const securityHeaders = {
-  'Content-Security-Policy': process.env.NODE_ENV === 'production' 
-    ? `
-      default-src 'self';
-      script-src 'self' 'nonce-${generateRequestId()}';
-      style-src 'self' 'unsafe-inline';
-      img-src 'self' data: blob: https:;
-      font-src 'self' data:;
-      connect-src 'self' https://emolyyvmvvfjyxbguhyn.supabase.co https://api.aikeys.com;
-      media-src 'self' blob: data:;
-      worker-src 'self' blob:;
-      frame-ancestors 'none';
-      base-uri 'self';
-      form-action 'self';
-      object-src 'none';
-      upgrade-insecure-requests;
-    `.replace(/\s+/g, ' ').trim()
-    : `
-      default-src 'self';
-      script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data:;
-      style-src 'self' 'unsafe-inline' data:;
-      img-src 'self' data: blob: https:;
-      font-src 'self' data:;
-      connect-src 'self' https: wss: ws: http://localhost:*;
-      media-src 'self' blob: data:;
-      worker-src 'self' blob:;
-      frame-ancestors 'none';
-      base-uri 'self';
-      form-action 'self';
-      object-src 'none';
-    `.replace(/\s+/g, ' ').trim(),
+  'Content-Security-Policy': `
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data:;
+    style-src 'self' 'unsafe-inline' data:;
+    img-src 'self' data: blob: https:;
+    font-src 'self' data:;
+    connect-src 'self' https: wss: ws: http://localhost:*;
+    media-src 'self' blob: data:;
+    worker-src 'self' blob:;
+    frame-ancestors 'none';
+    base-uri 'self';
+    form-action 'self';
+    object-src 'none';
+    upgrade-insecure-requests;
+  `.replace(/\s+/g, ' ').trim(),
   'X-Frame-Options': 'DENY',
   'X-Content-Type-Options': 'nosniff',
   'X-XSS-Protection': '1; mode=block',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
   'Cross-Origin-Embedder-Policy': 'require-corp',
-  'Cross-Origin-Opener-Policy': 'same-origin',
-  'X-Request-ID': generateRequestId()
+  'Cross-Origin-Opener-Policy': 'same-origin'
 };
 
 export const setCORSHeaders = {
@@ -57,79 +33,32 @@ export const setCORSHeaders = {
   'Access-Control-Max-Age': '86400'
 };
 
-// Enhanced progressive rate limiting with violation tracking
-interface RateLimitEntry {
-  count: number;
-  resetTime: number;
-  violations: number;
-  blockUntil?: number;
-}
-
-const rateLimitStore = new Map<string, RateLimitEntry>();
-const suspiciousIPs = new Set<string>();
+// Rate limiting for API calls (simple in-memory store for demo)
+const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 
 export const rateLimit = (
   identifier: string, 
   maxRequests: number = 60, 
-  windowMs: number = 60000,
-  endpoint?: string
-): { allowed: boolean; remainingRequests?: number; blockUntil?: number } => {
+  windowMs: number = 60000
+): boolean => {
   const now = Date.now();
   const userLimit = rateLimitStore.get(identifier);
-  
-  // Check if currently blocked
-  if (userLimit?.blockUntil && now < userLimit.blockUntil) {
-    return { allowed: false, blockUntil: userLimit.blockUntil };
-  }
   
   if (!userLimit || now > userLimit.resetTime) {
     rateLimitStore.set(identifier, {
       count: 1,
-      resetTime: now + windowMs,
-      violations: userLimit?.violations || 0
+      resetTime: now + windowMs
     });
-    return { allowed: true, remainingRequests: maxRequests - 1 };
+    return true;
   }
   
   if (userLimit.count >= maxRequests) {
-    // Progressive penalties for repeated violations
-    userLimit.violations++;
-    const blockDuration = Math.min(userLimit.violations * 5 * 60 * 1000, 60 * 60 * 1000); // Max 1 hour
-    userLimit.blockUntil = now + blockDuration;
-    
-    // Track suspicious IPs
-    suspiciousIPs.add(identifier);
-    
-    // Log security event
-    logSecurityViolation(identifier, 'RATE_LIMIT_EXCEEDED', { 
-      endpoint, 
-      violations: userLimit.violations,
-      blockDuration 
-    });
-    
-    return { allowed: false, blockUntil: userLimit.blockUntil };
+    return false;
   }
   
   userLimit.count++;
-  return { allowed: true, remainingRequests: maxRequests - userLimit.count };
+  return true;
 };
-
-// Security event logging
-async function logSecurityViolation(identifier: string, eventType: string, metadata: any) {
-  try {
-    // In production, this would send to your logging service or Supabase
-    console.warn(`🚨 Security Event: ${eventType}`, { identifier, metadata, timestamp: new Date().toISOString() });
-    
-    // Could integrate with Supabase security events table here
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('securityEvent', {
-        detail: { type: eventType, severity: 'high', metadata }
-      }));
-    }
-  } catch (error) {
-    console.error('Failed to log security event:', error);
-  }
-}
 
 // Input sanitization
 export const sanitizeInput = (input: string): string => {

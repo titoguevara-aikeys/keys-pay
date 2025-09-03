@@ -1,13 +1,13 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useKeysPayAuth } from '@/contexts/KeysPayAuthContext';
+import { useAuth } from '@/contexts/MockAuthContext';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { user, loading } = useKeysPayAuth();
+  const { user, loading } = useAuth();
 
   if (loading) {
     return (

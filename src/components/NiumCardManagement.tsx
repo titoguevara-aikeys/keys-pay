@@ -307,15 +307,13 @@ const NiumCardManagement = () => {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
-                  <CreditCard size={64} className="mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No cards yet</h3>
-                  <p className="text-muted-foreground mb-4">Create your first virtual card to start spending</p>
-                  <Button onClick={handleCreateDialog}>
-                    <Plus size={16} className="mr-2" />
-                    Create Card
-                  </Button>
-                </div>
+                <KeysPayCardShowcase 
+                  onSelectCard={(cardId) => {
+                    // Handle card tier selection - could open create dialog with selected tier
+                    handleCreateDialog();
+                  }}
+                  onCreateCard={handleCreateDialog}
+                />
               )}
             </CardContent>
           </Card>
@@ -398,15 +396,12 @@ const NiumCardManagement = () => {
                     </Button>
                   </div>
                 ) : (
-                  <div className="text-center py-12">
-                    <CreditCard size={64} className="mx-auto text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No cards yet</h3>
-                    <p className="text-muted-foreground mb-4">Create your first virtual card to start spending</p>
-                    <Button onClick={handleCreateDialog}>
-                      <Plus size={16} className="mr-2" />
-                      Create Card
-                    </Button>
-                  </div>
+                  <KeysPayCardShowcase 
+                    onSelectCard={(cardId) => {
+                      handleCreateDialog();
+                    }}
+                    onCreateCard={handleCreateDialog}
+                  />
                 )}
               </CardContent>
             </Card>
