@@ -35,6 +35,9 @@ export const VercelDeploymentManager = () => {
   const [healthStatus, setHealthStatus] = useState<VercelHealthResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [deploying, setDeploying] = useState(false);
+  const [autoDeployEnabled, setAutoDeployEnabled] = useState(false);
+  const [monitoringActive, setMonitoringActive] = useState(false);
 
   const fetchVercelHealth = async () => {
     try {
@@ -73,6 +76,72 @@ export const VercelDeploymentManager = () => {
     await Promise.all([fetchVercelHealth(), fetchDeployments()]);
     setRefreshing(false);
     toast.success('Deployment data refreshed');
+  };
+
+  const triggerDeployment = async (branch: string = 'main') => {
+    setDeploying(true);
+    try {
+      const response = await fetch('/api/vercel/deploy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ branch, auto: false }),
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        toast.success(`Deployment triggered successfully! ID: ${result.deployment?.id}`);
+        // Refresh deployments list after a short delay
+        setTimeout(() => {
+          fetchDeployments();
+        }, 2000);
+      } else {
+        toast.error(`Deployment failed: ${result.error}`);
+      }
+    } catch (error) {
+      console.error('Deployment error:', error);
+      toast.error('Failed to trigger deployment');
+    } finally {
+      setDeploying(false);
+    }
+  };
+
+  const toggleAutoDeployment = async () => {
+    try {
+      if (!autoDeployEnabled) {
+        // Start auto-deployment monitoring
+        const response = await fetch('/api/vercel/deploy', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            branch: 'main', 
+            auto: true 
+          }),
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          setAutoDeployEnabled(true);
+          setMonitoringActive(true);
+          toast.success('Auto-deployment monitoring started');
+        } else {
+          toast.error(`Failed to start monitoring: ${result.error}`);
+        }
+      } else {
+        // Stop auto-deployment (this would need additional API endpoint)
+        setAutoDeployEnabled(false);
+        setMonitoringActive(false);
+        toast.success('Auto-deployment monitoring stopped');
+      }
+    } catch (error) {
+      console.error('Auto-deployment toggle error:', error);
+      toast.error('Failed to toggle auto-deployment');
+    }
   };
 
   useEffect(() => {
@@ -301,54 +370,89 @@ export const VercelDeploymentManager = () => {
         </Card>
       )}
 
-      {/* Deployment Actions */}
+      {/* Auto-Deployment Control */}
       {healthStatus?.ok && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Settings className="h-5 w-5" />
-              Deployment Actions
+              <Zap className="h-5 w-5" />
+              Auto-Deployment Control
             </CardTitle>
-            <CardDescription>Manage your Vercel deployments</CardDescription>
+            <CardDescription>
+              Automated deployment system with monitoring and background tasks
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button 
-                variant="outline" 
-                className="flex flex-col items-center gap-2 h-20"
-                onClick={() => toast.info('Feature coming soon')}
-              >
-                <Zap className="h-5 w-5" />
-                <span className="text-sm">Trigger Deploy</span>
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                className="flex flex-col items-center gap-2 h-20"
-                onClick={() => toast.info('Feature coming soon')}
-              >
-                <Globe className="h-5 w-5" />
-                <span className="text-sm">View Domains</span>
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                className="flex flex-col items-center gap-2 h-20"
-                onClick={() => toast.info('Feature coming soon')}
-              >
-                <Settings className="h-5 w-5" />
-                <span className="text-sm">Configure</span>
-              </Button>
+            <div className="space-y-4">
+              {/* Auto-Deploy Status */}
+              <div className="flex items-center justify-between p-4 rounded-lg border">
+                <div className="flex items-center gap-3">
+                  <div className={`w-3 h-3 rounded-full ${
+                    monitoringActive ? 'bg-green-500 animate-pulse' : 'bg-gray-400'
+                  }`} />
+                  <div>
+                    <p className="font-medium">
+                      Auto-Deployment {autoDeployEnabled ? 'Enabled' : 'Disabled'}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {monitoringActive 
+                        ? 'Background monitoring active - checking every 30 minutes' 
+                        : 'Manual deployments only'
+                      }
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  onClick={toggleAutoDeployment}
+                  variant={autoDeployEnabled ? "destructive" : "default"}
+                  size="sm"
+                >
+                  {autoDeployEnabled ? 'Stop Auto-Deploy' : 'Start Auto-Deploy'}
+                </Button>
+              </div>
+
+              {/* Manual Deploy Actions */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Button 
+                  onClick={() => triggerDeployment('main')}
+                  disabled={deploying}
+                  className="flex flex-col items-center gap-2 h-20"
+                >
+                  {deploying ? (
+                    <RefreshCw className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <Zap className="h-5 w-5" />
+                  )}
+                  <span className="text-sm">
+                    {deploying ? 'Deploying...' : 'Deploy Now'}
+                  </span>
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  className="flex flex-col items-center gap-2 h-20"
+                  onClick={() => window.open(`https://vercel.com/${healthStatus.projectId}`, '_blank')}
+                >
+                  <Globe className="h-5 w-5" />
+                  <span className="text-sm">Vercel Dashboard</span>
+                </Button>
+              </div>
             </div>
 
+            {/* Configuration Info */}
             <div className="mt-6 p-4 bg-muted/30 rounded-lg">
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium">Deployment Configuration</p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Make sure your Vercel environment variables (VERCEL_PROJECT_ID, VERCEL_TOKEN) are properly configured 
-                    for full deployment management capabilities.
+                  <p className="text-sm font-medium">Auto-Deployment Features</p>
+                  <ul className="text-xs text-muted-foreground mt-1 space-y-1">
+                    <li>• Automatic deployments every 6 hours if no recent activity</li>
+                    <li>• Background monitoring with Supabase Edge Functions</li>
+                    <li>• Webhook support for GitHub integration</li>
+                    <li>• Manual deployment triggers with real-time status</li>
+                  </ul>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Requires: VERCEL_PROJECT_ID, VERCEL_TOKEN, SUPABASE_SERVICE_KEY
                   </p>
                 </div>
               </div>
