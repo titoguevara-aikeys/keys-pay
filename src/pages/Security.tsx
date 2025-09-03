@@ -16,13 +16,24 @@ import { EnhancedSecurityDashboard } from '@/components/security/EnhancedSecurit
 import { RealTimeMonitor } from '@/components/security/RealTimeMonitor';
 import { SecurityCenterDashboard } from '@/components/SecurityCenterDashboard';
 import { AdvancedThreatMonitor } from '@/components/AdvancedThreatMonitor';
+import { SecurityMonitor } from '@/components/security/SecurityMonitor';
+import { SecurityOptimizationGuide } from '@/components/security/SecurityOptimizationGuide';
 import { useSecuritySettings, useUpdateSecuritySettings } from '@/hooks/useSecuritySettings';
+import { useSecurityMonitoring } from '@/hooks/useSecurityMonitoring';
 import Navigation from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 
 const Security = () => {
   const { data: settings, isLoading } = useSecuritySettings();
   const updateSettings = useUpdateSecuritySettings();
+  const { 
+    events, 
+    metrics, 
+    isMonitoring, 
+    triggerSecurityEvent, 
+    getSecurityStatus 
+  } = useSecurityMonitoring();
+  
   const [deviceSupport, setDeviceSupport] = useState({
     webauthn: false,
     touchid: false,
@@ -142,15 +153,16 @@ const Security = () => {
 
         {/* Security Configuration Tabs */}
           <Tabs defaultValue="center" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-8">
+            <TabsList className="grid w-full grid-cols-9">
               <TabsTrigger value="center">Security Center</TabsTrigger>
               <TabsTrigger value="enhanced">Enhanced</TabsTrigger>
               <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
               <TabsTrigger value="realtime">Real-time</TabsTrigger>
               <TabsTrigger value="authentication">Authentication</TabsTrigger>
               <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
+              <TabsTrigger value="monitor">Live Monitor</TabsTrigger>
               <TabsTrigger value="devices">Devices</TabsTrigger>
-              <TabsTrigger value="audit">Audit Log</TabsTrigger>
+              <TabsTrigger value="optimizations">Optimizations</TabsTrigger>
             </TabsList>
 
             <TabsContent value="center" className="space-y-6">
@@ -292,6 +304,14 @@ const Security = () => {
 
           <TabsContent value="devices" className="space-y-6">
             <TrustedDevices />
+          </TabsContent>
+
+          <TabsContent value="monitor" className="space-y-6">
+            <SecurityMonitor />
+          </TabsContent>
+
+          <TabsContent value="optimizations" className="space-y-6">
+            <SecurityOptimizationGuide />
           </TabsContent>
 
           <TabsContent value="testing" className="space-y-6">
