@@ -4,29 +4,29 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
+    --background: 280 50% 8%;
+    --foreground: 0 0% 98%;
+    --card: 280 30% 12%;
+    --card-foreground: 0 0% 98%;
+    --popover: 280 30% 12%;
+    --popover-foreground: 0 0% 98%;
     --primary: 280 100% 70%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 280 20% 20%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 280 20% 20%;
+    --muted-foreground: 280 10% 70%;
     --accent: 142 76% 56%;
-    --accent-foreground: 0 0% 100%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 90%;
-    --input: 0 0% 96%;
+    --border: 280 20% 25%;
+    --input: 280 20% 18%;
     --ring: 280 100% 70%;
     --radius: 0.5rem;
     
-    --gradient-primary: linear-gradient(135deg, hsl(280, 100%, 70%), hsl(142, 76%, 56%));
-    --shadow-glow: 0 0 40px hsl(280 100% 70% / 0.3);
+    --gradient-primary: linear-gradient(135deg, hsl(280, 60%, 15%), hsl(260, 50%, 8%));
+    --shadow-glow: 0 0 40px hsl(280 100% 70% / 0.4);
     
     /* AI Financial Assistant semantic colors */
     --insight-spending: 210 100% 50%;
@@ -48,12 +48,12 @@
     --metric-warning: 45 100% 50%;
     --metric-critical: 0 100% 50%;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 9%;
-    --sidebar-primary: 25 95% 53%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 96%;
-    --sidebar-accent-foreground: 0 0% 9%;
+    --sidebar-background: 280 50% 8%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 280 100% 70%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 280 20% 20%;
+    --sidebar-accent-foreground: 0 0% 98%;
 
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
