@@ -10,36 +10,37 @@
     --card-foreground: 210 40% 98%;
     --popover: 15 15% 8%;
     --popover-foreground: 210 40% 98%;
-    --primary: 45 100% 65%;
+    --primary: 200 100% 70%;
     --primary-foreground: 15 15% 5%;
     --secondary: 15 10% 12%;
     --secondary-foreground: 210 40% 98%;
     --muted: 15 10% 12%;
     --muted-foreground: 217 11% 65%;
-    --accent: 45 100% 65%;
+    --accent: 200 100% 70%;
     --accent-foreground: 15 15% 5%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 15 10% 18%;
     --input: 15 10% 12%;
-    --ring: 45 100% 65%;
+    --ring: 200 100% 70%;
     --radius: 0.75rem;
     
-    /* Movie-style gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(15, 15%, 5%), hsl(30, 25%, 8%), hsl(45, 40%, 12%));
-    --gradient-cinematic: linear-gradient(180deg, hsl(15, 15%, 5%) 0%, hsl(20, 20%, 8%) 50%, hsl(15, 15%, 5%) 100%);
-    --shadow-glow: 0 0 80px hsl(45 100% 65% / 0.4);
-    --shadow-cinematic: 0 20px 60px hsl(0 0% 0% / 0.8);
+    /* Crypto/FX Movie-style gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(15, 15%, 5%), hsl(210, 30%, 8%), hsl(200, 40%, 12%));
+    --gradient-cinematic: linear-gradient(180deg, hsl(15, 15%, 5%) 0%, hsl(210, 20%, 6%) 50%, hsl(15, 15%, 5%) 100%);
+    --shadow-glow: 0 0 80px hsl(200 100% 70% / 0.3);
+    --shadow-cinematic: 0 20px 60px hsl(0 0% 0% / 0.6);
     
-    /* Film grain texture */
-    --film-grain: radial-gradient(circle at 20% 50%, transparent 20%, hsla(45, 100%, 65%, 0.05) 21%, hsla(45, 100%, 65%, 0.05) 34%, transparent 35%, transparent);
+    /* Crypto data streams */
+    --data-stream: linear-gradient(90deg, transparent, hsl(200 100% 70% / 0.1), transparent);
+    --crypto-grid: linear-gradient(0deg, transparent 24%, hsl(200 100% 70% / 0.05) 25%, hsl(200 100% 70% / 0.05) 26%, transparent 27%, transparent 74%, hsl(200 100% 70% / 0.05) 75%, hsl(200 100% 70% / 0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, hsl(200 100% 70% / 0.05) 25%, hsl(200 100% 70% / 0.05) 26%, transparent 27%, transparent 74%, hsl(200 100% 70% / 0.05) 75%, hsl(200 100% 70% / 0.05) 76%, transparent 77%, transparent);
     
-    /* Movie lighting */
-    --spotlight: radial-gradient(ellipse 80% 60% at 50% 40%, hsl(45 60% 25% / 0.3), transparent 70%);
-    --rim-light: 0 0 120px hsl(45 100% 65% / 0.2);
+    /* FX spotlight */
+    --fx-spotlight: radial-gradient(ellipse 80% 60% at 50% 40%, hsl(200 60% 25% / 0.2), transparent 70%);
+    --fx-rim-light: 0 0 120px hsl(200 100% 70% / 0.15);
     
-    /* Cinematic animations */
-    --flicker-animation: opacity 0.15s ease-in-out infinite alternate;
+    /* Subtle animations */
+    --pulse-animation: opacity 0.8s ease-in-out infinite alternate;
     
     /* AI Financial Assistant semantic colors */
     --insight-spending: 210 100% 50%;
@@ -182,67 +183,109 @@
     @apply bg-background text-foreground;
   }
   
-  /* Movie-style animations */
-  @keyframes film-flicker {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.98; }
+  /* Crypto/FX Movie-style animations */
+  @keyframes data-flow {
+    0% { transform: translateX(-100%); opacity: 0; }
+    50% { opacity: 0.6; }
+    100% { transform: translateX(100%); opacity: 0; }
   }
   
-  @keyframes spotlight-move {
-    0% { transform: translateX(-10px) translateY(-5px); }
-    50% { transform: translateX(10px) translateY(5px); }
-    100% { transform: translateX(-10px) translateY(-5px); }
+  @keyframes crypto-pulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
   }
   
-  @keyframes grain {
-    0%, 100% { transform: translate(0, 0); }
-    10% { transform: translate(-5%, -10%); }
-    20% { transform: translate(-15%, 5%); }
-    30% { transform: translate(7%, -25%); }
-    40% { transform: translate(-5%, 25%); }
-    50% { transform: translate(-15%, 10%); }
-    60% { transform: translate(15%, 0%); }
-    70% { transform: translate(0%, 15%); }
-    80% { transform: translate(3%, 35%); }
-    90% { transform: translate(-10%, 10%); }
+  @keyframes fx-grid-move {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(20px, 20px); }
   }
   
-  .movie-background {
+  @keyframes particle-float {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    25% { transform: translateY(-10px) translateX(5px); }
+    50% { transform: translateY(-5px) translateX(-5px); }
+    75% { transform: translateY(-15px) translateX(3px); }
+  }
+  
+  .crypto-movie-background {
     position: relative;
     background: var(--gradient-cinematic);
     overflow: hidden;
   }
   
-  .movie-background::before {
+  .crypto-movie-background::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--spotlight);
-    animation: spotlight-move 8s ease-in-out infinite;
+    background: var(--fx-spotlight);
+    animation: crypto-pulse 6s ease-in-out infinite;
     pointer-events: none;
+    opacity: 0.4;
   }
   
-  .movie-background::after {
+  .crypto-movie-background::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--film-grain), var(--film-grain);
-    background-size: 200px 200px, 250px 250px;
-    background-position: 0 0, 50px 50px;
-    opacity: 0.3;
-    animation: grain 8s steps(10) infinite;
+    background: var(--crypto-grid);
+    background-size: 40px 40px;
+    animation: fx-grid-move 15s linear infinite;
+    opacity: 0.1;
     pointer-events: none;
   }
   
-  .cinematic-text {
-    text-shadow: 0 0 20px hsl(45 100% 65% / 0.6), 0 0 40px hsl(45 100% 65% / 0.3);
-    animation: film-flicker 4s ease-in-out infinite;
+  .fx-data-streams {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
   }
   
-  .movie-card {
-    background: linear-gradient(135deg, hsl(15 15% 8% / 0.9), hsl(30 25% 12% / 0.8));
-    border: 1px solid hsl(45 40% 25% / 0.3);
-    box-shadow: var(--shadow-cinematic), var(--rim-light);
-    backdrop-filter: blur(10px);
+  .fx-data-streams::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--data-stream);
+    animation: data-flow 8s ease-in-out infinite;
   }
+  
+  .fx-data-streams::after {
+    content: '';
+    position: absolute;
+    top: 60%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--data-stream);
+    animation: data-flow 12s ease-in-out infinite reverse;
+    animation-delay: 2s;
+  }
+  
+  .crypto-text {
+    text-shadow: 0 0 20px hsl(200 100% 70% / 0.4), 0 0 40px hsl(200 100% 70% / 0.2);
+    animation: crypto-pulse 3s ease-in-out infinite;
+  }
+  
+  .fx-card {
+    background: linear-gradient(135deg, hsl(15 15% 8% / 0.7), hsl(210 25% 12% / 0.6));
+    border: 1px solid hsl(200 40% 25% / 0.2);
+    box-shadow: var(--shadow-cinematic), var(--fx-rim-light);
+    backdrop-filter: blur(8px);
+  }
+  
+  .crypto-particles {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: hsl(200 100% 70% / 0.3);
+    border-radius: 50%;
+    animation: particle-float 8s ease-in-out infinite;
+  }
+  
+  .crypto-particles:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+  .crypto-particles:nth-child(2) { top: 20%; left: 80%; animation-delay: 2s; }
+  .crypto-particles:nth-child(3) { top: 70%; left: 20%; animation-delay: 4s; }
+  .crypto-particles:nth-child(4) { top: 80%; left: 70%; animation-delay: 6s; }
 }
