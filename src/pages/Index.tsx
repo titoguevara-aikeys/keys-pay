@@ -30,7 +30,7 @@ export default function Index() {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 px-4 bg-gradient-to-br from-purple-900/90 via-purple-800/80 to-purple-900/90">
+      <section className="relative overflow-hidden py-20 px-4">
         <div className="container mx-auto text-center">
           <div className="flex items-center justify-center gap-3 mb-6">
             <img src="/lovable-uploads/4326dc21-0939-4654-8586-fba79c3b8f84.png?v=2" alt="Keys Pay Logo" className="h-10 w-10" />
