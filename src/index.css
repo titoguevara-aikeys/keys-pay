@@ -26,18 +26,19 @@
     --radius: 0.75rem;
     
     /* Crypto/FX Movie-style gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(15, 15%, 5%), hsl(210, 30%, 8%), hsl(200, 40%, 12%));
-    --gradient-cinematic: linear-gradient(180deg, hsl(15, 15%, 5%) 0%, hsl(210, 20%, 6%) 50%, hsl(15, 15%, 5%) 100%);
-    --shadow-glow: 0 0 80px hsl(200 100% 70% / 0.3);
-    --shadow-cinematic: 0 20px 60px hsl(0 0% 0% / 0.6);
+    --gradient-primary: linear-gradient(135deg, hsl(15, 15%, 8%), hsl(210, 30%, 12%), hsl(200, 40%, 16%));
+    --gradient-cinematic: linear-gradient(180deg, hsl(15, 15%, 8%) 0%, hsl(210, 20%, 10%) 50%, hsl(200, 30%, 12%) 100%);
+    --shadow-glow: 0 0 80px hsl(200 100% 70% / 0.4);
+    --shadow-cinematic: 0 20px 60px hsl(200 50% 20% / 0.3);
     
     /* Crypto data streams */
     --data-stream: linear-gradient(90deg, transparent, hsl(200 100% 70% / 0.1), transparent);
     --crypto-grid: linear-gradient(0deg, transparent 24%, hsl(200 100% 70% / 0.05) 25%, hsl(200 100% 70% / 0.05) 26%, transparent 27%, transparent 74%, hsl(200 100% 70% / 0.05) 75%, hsl(200 100% 70% / 0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, hsl(200 100% 70% / 0.05) 25%, hsl(200 100% 70% / 0.05) 26%, transparent 27%, transparent 74%, hsl(200 100% 70% / 0.05) 75%, hsl(200 100% 70% / 0.05) 76%, transparent 77%, transparent);
     
+    
     /* FX spotlight */
-    --fx-spotlight: radial-gradient(ellipse 80% 60% at 50% 40%, hsl(200 60% 25% / 0.2), transparent 70%);
-    --fx-rim-light: 0 0 120px hsl(200 100% 70% / 0.15);
+    --fx-spotlight: radial-gradient(ellipse 80% 60% at 50% 40%, hsl(200 60% 25% / 0.4), transparent 70%);
+    --fx-rim-light: 0 0 120px hsl(200 100% 70% / 0.25);
     
     /* Subtle animations */
     --pulse-animation: opacity 0.8s ease-in-out infinite alternate;
@@ -220,7 +221,7 @@
     background: var(--fx-spotlight);
     animation: crypto-pulse 6s ease-in-out infinite;
     pointer-events: none;
-    opacity: 0.4;
+    opacity: 0.7;
   }
   
   .crypto-movie-background::after {
