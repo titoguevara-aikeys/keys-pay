@@ -93,6 +93,12 @@
     --portfolio-growth: 142 76% 36%;
     --portfolio-decline: 0 84% 60%;
     --portfolio-neutral: 213 27% 84%;
+    
+    /* Circular Navigation */
+    --nav-gradient-primary: linear-gradient(135deg, hsl(210, 100%, 70%), hsl(195, 100%, 75%));
+    --nav-gradient-secondary: linear-gradient(135deg, hsl(220, 100%, 65%), hsl(240, 100%, 70%));
+    --nav-circle-glow: 0 0 60px hsl(210 100% 70% / 0.4);
+    --nav-hover-glow: 0 0 30px hsl(195 100% 75% / 0.6);
   }
 
   .dark {
