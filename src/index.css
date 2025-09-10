@@ -214,11 +214,20 @@
     50% { transform: translateX(-45%) scaleX(1.1); }
   }
   
-  @keyframes particle-float {
-    0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
-    25% { transform: translateY(-8px) translateX(3px) rotate(1deg); }
-    50% { transform: translateY(-3px) translateX(-3px) rotate(-1deg); }
-    75% { transform: translateY(-12px) translateX(2px) rotate(0.5deg); }
+  @keyframes matrix-rain {
+    0% { 
+      transform: translateY(-100vh);
+      opacity: 1;
+    }
+    100% { 
+      transform: translateY(100vh);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes matrix-flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
   }
   
   .crypto-movie-background {
@@ -292,62 +301,65 @@
     backdrop-filter: blur(8px);
   }
   
-  .crypto-particles {
+  /* Matrix Digital Rain Effect */
+  .matrix-container {
     position: absolute;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 50%;
-    animation: particle-float 12s ease-in-out infinite;
-    opacity: 0.6;
-    box-shadow: 0 0 3px rgba(255, 255, 255, 0.3);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
   }
   
-  /* Film dust particles with varied sizes and behaviors */
-  .crypto-particles:nth-child(1) { 
-    top: 15%; left: 20%; 
-    width: 2px; height: 2px;
-    animation-delay: 0s;
-    background: rgba(200, 220, 255, 0.7);
+  .matrix-column {
+    position: absolute;
+    top: -100vh;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: bold;
+    color: #00ff41;
+    text-shadow: 0 0 5px #00ff41;
+    white-space: pre;
+    line-height: 1.2;
+    animation: matrix-rain linear infinite;
+    opacity: 0.8;
   }
-  .crypto-particles:nth-child(2) { 
-    top: 30%; left: 70%; 
-    width: 1px; height: 1px;
-    background: rgba(255, 255, 255, 0.9);
-    animation-delay: 3s; 
+  
+  .matrix-column:nth-child(odd) {
+    animation-duration: 3s;
+    font-size: 12px;
   }
-  .crypto-particles:nth-child(3) { 
-    top: 60%; left: 10%; 
-    width: 3px; height: 3px;
-    animation-delay: 6s;
-    background: rgba(180, 200, 255, 0.6);
+  
+  .matrix-column:nth-child(even) {
+    animation-duration: 4s;
+    font-size: 16px;
   }
-  .crypto-particles:nth-child(4) { 
-    top: 75%; left: 80%; 
-    width: 1px; height: 1px;
-    background: rgba(255, 255, 255, 0.8);
-    animation-delay: 9s; 
+  
+  .matrix-column:nth-child(3n) {
+    animation-duration: 5s;
+    color: #00cc33;
   }
-  .crypto-particles:nth-child(5) { 
-    top: 25%; left: 45%; 
-    width: 2px; height: 2px;
-    background: rgba(220, 230, 255, 0.7);
-    animation-delay: 2s; 
+  
+  .matrix-column:nth-child(4n) {
+    animation-duration: 3.5s;
+    color: #00ff77;
+    font-size: 10px;
   }
-  .crypto-particles:nth-child(6) { 
-    top: 50%; left: 85%; 
-    width: 1px; height: 1px;
-    animation-delay: 5s;
-    background: rgba(255, 255, 255, 0.9);
+  
+  .matrix-column:nth-child(5n) {
+    animation-duration: 6s;
+    color: #33ff66;
   }
-  .crypto-particles:nth-child(7) { 
-    top: 40%; left: 25%; 
-    width: 2px; height: 2px;
-    background: rgba(190, 210, 255, 0.6);
-    animation-delay: 8s; 
+  
+  /* Matrix character flicker */
+  .matrix-column span {
+    display: inline-block;
+    animation: matrix-flicker 0.1s infinite;
   }
-  .crypto-particles:nth-child(8) { 
-    top: 85%; left: 35%; 
-    width: 1px; height: 1px;
-    animation-delay: 1s;
-    background: rgba(255, 255, 255, 0.7);
+  
+  .matrix-column span:nth-child(odd) {
+    animation-delay: 0.05s;
   }
 }

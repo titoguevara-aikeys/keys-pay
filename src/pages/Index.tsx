@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import ComplianceFooter from '@/components/ComplianceFooter';
 import { Button } from '@/components/ui/button';
@@ -24,23 +24,46 @@ import {
 
 export default function Index() {
   const [activeProvider, setActiveProvider] = useState('ramp');
+  
+  // Matrix characters for digital rain
+  const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+  
+  // Generate matrix columns
+  useEffect(() => {
+    const container = document.querySelector('.matrix-container');
+    if (!container) return;
+    
+    // Clear existing columns
+    container.innerHTML = '';
+    
+    // Create 50 columns across the screen
+    for (let i = 0; i < 50; i++) {
+      const column = document.createElement('div');
+      column.className = 'matrix-column';
+      column.style.left = `${(i * 2)}%`;
+      column.style.animationDelay = `${Math.random() * 5}s`;
+      
+      // Generate random characters for this column
+      let columnText = '';
+      for (let j = 0; j < 30; j++) {
+        const char = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+        columnText += `<span>${char}</span>\n`;
+      }
+      
+      column.innerHTML = columnText;
+      container.appendChild(column);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen crypto-movie-background">
       <Navigation />
       
+      {/* Matrix Digital Rain Background */}
+      <div className="matrix-container"></div>
+      
       {/* Cinema scanning line effects */}
       <div className="fx-data-streams"></div>
-      
-      {/* Film dust particles */}
-      <div className="crypto-particles"></div>
-      <div className="crypto-particles"></div>
-      <div className="crypto-particles"></div>
-      <div className="crypto-particles"></div>
-      <div className="crypto-particles"></div>
-      <div className="crypto-particles"></div>
-      <div className="crypto-particles"></div>
-      <div className="crypto-particles"></div>
       
       {/* Cinema spotlight overlay */}
       <div className="absolute inset-0 pointer-events-none" style={{
