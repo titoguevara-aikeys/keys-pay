@@ -363,3 +363,39 @@
     animation-delay: 0.05s;
   }
 }
+
+/* Tagline Ticker Animation Styles */
+.group\/ticker { 
+  --ticker-duration: 30s; 
+  --ticker-playstate: running; 
+}
+
+.group\/ticker .marquee { 
+  animation: kp-ticker-ltr var(--ticker-duration) linear infinite; 
+  animation-play-state: var(--ticker-playstate); 
+}
+
+[dir='rtl'] .group\/ticker .marquee { 
+  animation-name: kp-ticker-rtl; 
+}
+
+.group\/ticker:hover .marquee { 
+  animation-play-state: paused; 
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .group\/ticker .marquee { 
+    animation: none !important; 
+    transform: translate3d(0,0,0) !important; 
+  }
+}
+
+@keyframes kp-ticker-ltr { 
+  from { transform: translate3d(0,0,0); } 
+  to { transform: translate3d(-50%,0,0); } 
+}
+
+@keyframes kp-ticker-rtl { 
+  from { transform: translate3d(0,0,0); } 
+  to { transform: translate3d(50%,0,0); } 
+}

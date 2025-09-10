@@ -51,6 +51,9 @@ import NiumAdminPage from "./pages/admin/NiumAdmin";
 import SystemCheck from "./pages/SystemCheck";
 import PaymentsSendPage from "./pages/PaymentsSend";
 import CollectionsAccountsPage from "./pages/CollectionsAccounts";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import TaglinesAdmin from "./pages/admin/TaglinesAdmin";
+import AllowlistAdmin from "./pages/admin/AllowlistAdmin";
 
 const queryClient = new QueryClient();
 
@@ -189,6 +192,9 @@ const App = () => (
                 <CollectionsAccountsPage />
               </ProtectedRoute>
             } />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/taglines" element={<TaglinesAdmin />} />
+            <Route path="/admin/allowlist" element={<AllowlistAdmin />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

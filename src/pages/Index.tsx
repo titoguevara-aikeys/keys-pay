@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import ComplianceFooter from '@/components/ComplianceFooter';
+import TaglineTicker from '@/components/marketing/TaglineTicker';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -58,6 +59,7 @@ export default function Index() {
   return (
     <div className="min-h-screen crypto-movie-background">
       <Navigation />
+      <TaglineTicker sticky height={44} />
       
       {/* Matrix Digital Rain Background */}
       <div className="matrix-container"></div>
