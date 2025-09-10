@@ -37,6 +37,10 @@ export default function Index() {
       <div className="crypto-particles"></div>
       <div className="crypto-particles"></div>
       <div className="crypto-particles"></div>
+      <div className="crypto-particles"></div>
+      <div className="crypto-particles"></div>
+      <div className="crypto-particles"></div>
+      <div className="crypto-particles"></div>
       
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 px-4">
