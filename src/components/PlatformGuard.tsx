@@ -10,11 +10,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 // IntellectualPropertyProtection import removed for development
 import { IntruderWarning } from '@/components/security/IntruderWarning';
 
+console.log('React in PlatformGuard:', React);
+console.log('useState in PlatformGuard:', useState);
+
 interface PlatformGuardProps {
   children: React.ReactNode;
 }
 
 export const PlatformGuard: React.FC<PlatformGuardProps> = ({ children }) => {
+  console.log('PlatformGuard component rendering, React available:', !!React);
+  
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
   const [showWarning, setShowWarning] = useState(false);
