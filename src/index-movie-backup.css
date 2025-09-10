@@ -4,42 +4,29 @@
 
 @layer base {
   :root {
-    --background: 15 15% 5%;
+    --background: 222 47% 11%;
     --foreground: 210 40% 98%;
-    --card: 15 15% 8%;
+    --card: 224 71% 4%;
     --card-foreground: 210 40% 98%;
-    --popover: 15 15% 8%;
+    --popover: 224 71% 4%;
     --popover-foreground: 210 40% 98%;
-    --primary: 45 100% 65%;
-    --primary-foreground: 15 15% 5%;
-    --secondary: 15 10% 12%;
+    --primary: 200 100% 70%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 215 28% 17%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 15 10% 12%;
+    --muted: 215 28% 17%;
     --muted-foreground: 217 11% 65%;
-    --accent: 45 100% 65%;
-    --accent-foreground: 15 15% 5%;
+    --accent: 200 100% 70%;
+    --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 15 10% 18%;
-    --input: 15 10% 12%;
-    --ring: 45 100% 65%;
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 200 100% 70%;
     --radius: 0.75rem;
     
-    /* Movie-style gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(15, 15%, 5%), hsl(30, 25%, 8%), hsl(45, 40%, 12%));
-    --gradient-cinematic: linear-gradient(180deg, hsl(15, 15%, 5%) 0%, hsl(20, 20%, 8%) 50%, hsl(15, 15%, 5%) 100%);
-    --shadow-glow: 0 0 80px hsl(45 100% 65% / 0.4);
-    --shadow-cinematic: 0 20px 60px hsl(0 0% 0% / 0.8);
-    
-    /* Film grain texture */
-    --film-grain: radial-gradient(circle at 20% 50%, transparent 20%, hsla(45, 100%, 65%, 0.05) 21%, hsla(45, 100%, 65%, 0.05) 34%, transparent 35%, transparent);
-    
-    /* Movie lighting */
-    --spotlight: radial-gradient(ellipse 80% 60% at 50% 40%, hsl(45 60% 25% / 0.3), transparent 70%);
-    --rim-light: 0 0 120px hsl(45 100% 65% / 0.2);
-    
-    /* Cinematic animations */
-    --flicker-animation: opacity 0.15s ease-in-out infinite alternate;
+    --gradient-primary: linear-gradient(135deg, hsl(200, 100%, 70%), hsl(210, 100%, 65%));
+    --shadow-glow: 0 0 40px hsl(200 100% 70% / 0.3);
     
     /* AI Financial Assistant semantic colors */
     --insight-spending: 210 100% 50%;
@@ -162,7 +149,7 @@
     --insight-saving-bg: 120 30% 15%;
     --insight-saving-border: 120 30% 25%;
     --insight-investment: 270 70% 60%;
-    --insight-investment-bg: 270 30% 15%;
+    --investment-bg: 270 30% 15%;
     --insight-investment-border: 270 30% 25%;
     
     /* Dark mode financial metrics */
@@ -180,69 +167,5 @@
 
   body {
     @apply bg-background text-foreground;
-  }
-  
-  /* Movie-style animations */
-  @keyframes film-flicker {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.98; }
-  }
-  
-  @keyframes spotlight-move {
-    0% { transform: translateX(-10px) translateY(-5px); }
-    50% { transform: translateX(10px) translateY(5px); }
-    100% { transform: translateX(-10px) translateY(-5px); }
-  }
-  
-  @keyframes grain {
-    0%, 100% { transform: translate(0, 0); }
-    10% { transform: translate(-5%, -10%); }
-    20% { transform: translate(-15%, 5%); }
-    30% { transform: translate(7%, -25%); }
-    40% { transform: translate(-5%, 25%); }
-    50% { transform: translate(-15%, 10%); }
-    60% { transform: translate(15%, 0%); }
-    70% { transform: translate(0%, 15%); }
-    80% { transform: translate(3%, 35%); }
-    90% { transform: translate(-10%, 10%); }
-  }
-  
-  .movie-background {
-    position: relative;
-    background: var(--gradient-cinematic);
-    overflow: hidden;
-  }
-  
-  .movie-background::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--spotlight);
-    animation: spotlight-move 8s ease-in-out infinite;
-    pointer-events: none;
-  }
-  
-  .movie-background::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--film-grain), var(--film-grain);
-    background-size: 200px 200px, 250px 250px;
-    background-position: 0 0, 50px 50px;
-    opacity: 0.3;
-    animation: grain 8s steps(10) infinite;
-    pointer-events: none;
-  }
-  
-  .cinematic-text {
-    text-shadow: 0 0 20px hsl(45 100% 65% / 0.6), 0 0 40px hsl(45 100% 65% / 0.3);
-    animation: film-flicker 4s ease-in-out infinite;
-  }
-  
-  .movie-card {
-    background: linear-gradient(135deg, hsl(15 15% 8% / 0.9), hsl(30 25% 12% / 0.8));
-    border: 1px solid hsl(45 40% 25% / 0.3);
-    box-shadow: var(--shadow-cinematic), var(--rim-light);
-    backdrop-filter: blur(10px);
   }
 }
