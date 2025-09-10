@@ -29,10 +29,10 @@ export default function Index() {
     <div className="min-h-screen crypto-movie-background">
       <Navigation />
       
-      {/* Crypto FX Data Streams */}
+      {/* Cinema scanning line effects */}
       <div className="fx-data-streams"></div>
       
-      {/* Floating crypto particles */}
+      {/* Film dust particles */}
       <div className="crypto-particles"></div>
       <div className="crypto-particles"></div>
       <div className="crypto-particles"></div>
@@ -41,6 +41,12 @@ export default function Index() {
       <div className="crypto-particles"></div>
       <div className="crypto-particles"></div>
       <div className="crypto-particles"></div>
+      
+      {/* Cinema spotlight overlay */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: 'var(--cinema-spotlight)',
+        animation: 'spotlight-sweep 8s ease-in-out infinite'
+      }}></div>
       
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 px-4">
