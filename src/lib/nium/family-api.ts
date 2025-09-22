@@ -92,112 +92,107 @@ export class NiumFamilyAPI {
   }
 
   private generateMockFamilyData(endpoint: string, method: string, options: RequestInit): any {
-    const mockMembers: NiumFamilyMember[] = [
-      {
-        id: 'family-1',
-        customerHashId: 'cust-' + crypto.randomUUID(),
-        walletHashId: 'wallet-' + crypto.randomUUID(),
-        firstName: 'Emma',
-        lastName: 'Johnson',
-        email: 'emma@family.com',
-        accountNumber: 'VA' + Math.random().toString().slice(2, 18),
-        iban: `AE${Math.random().toString().slice(2, 20).padStart(18, '0')}`,
-        balance: 125.50,
-        spendingLimit: 200,
-        dailyLimit: 50,
-        status: 'active',
-        cardDetails: {
-          cardId: 'card-' + crypto.randomUUID(),
-          last4: '4567',
-          status: 'active'
-        },
-        created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-        relationship_type: 'child'
-      },
-      {
-        id: 'family-2',
-        customerHashId: 'cust-' + crypto.randomUUID(),
-        walletHashId: 'wallet-' + crypto.randomUUID(),
-        firstName: 'Alex',
-        lastName: 'Johnson',
-        email: 'alex@family.com',
-        accountNumber: 'VA' + Math.random().toString().slice(2, 18),
-        iban: `AE${Math.random().toString().slice(2, 20).padStart(18, '0')}`,
-        balance: 89.25,
-        spendingLimit: 150,
-        dailyLimit: 30,
-        status: 'active',
-        cardDetails: {
-          cardId: 'card-' + crypto.randomUUID(),
-          last4: '8901',
-          status: 'active'
-        },
-        created_at: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-        relationship_type: 'child'
-      }
-    ];
+    // Session-persistent in-memory store (persists while the app is open)
+    type Store = { members: NiumFamilyMember[]; activities: NiumFamilyActivity[] };
+    const g = globalThis as any;
 
-    const mockActivities: NiumFamilyActivity[] = [
-      {
-        id: 'act-1',
-        childId: 'family-1',
-        child_name: 'Emma Johnson',
-        activity_type: 'allowance_paid',
-        description: 'Weekly allowance payment received',
-        amount: 25,
-        currency: 'AED',
-        created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      },
-      {
-        id: 'act-2',
-        childId: 'family-2',
-        child_name: 'Alex Johnson',
-        activity_type: 'card_transaction',
-        description: 'Purchase at Local Cafe',
-        amount: 12.50,
-        currency: 'AED',
-        created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-      },
-      {
-        id: 'act-3',
-        childId: 'family-1',
-        child_name: 'Emma Johnson',
-        activity_type: 'account_created',
-        description: 'NIUM virtual account created successfully',
-        created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-      }
-    ];
+    // Seed store once per session with two default members and some activity
+    if (!g.__niumFamilyStore) {
+      const seededMembers: NiumFamilyMember[] = [
+        {
+          id: 'family-1',
+          customerHashId: 'cust-' + crypto.randomUUID(),
+          walletHashId: 'wallet-' + crypto.randomUUID(),
+          firstName: 'Emma',
+          lastName: 'Johnson',
+          email: 'emma@family.com',
+          accountNumber: 'VA' + Math.random().toString().slice(2, 18),
+          iban: `AE${Math.random().toString().slice(2, 20).padStart(18, '0')}`,
+          balance: 125.5,
+          spendingLimit: 200,
+          dailyLimit: 50,
+          status: 'active',
+          cardDetails: { cardId: 'card-' + crypto.randomUUID(), last4: '4567', status: 'active' },
+          created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+          relationship_type: 'child',
+        },
+        {
+          id: 'family-2',
+          customerHashId: 'cust-' + crypto.randomUUID(),
+          walletHashId: 'wallet-' + crypto.randomUUID(),
+          firstName: 'Alex',
+          lastName: 'Johnson',
+          email: 'alex@family.com',
+          accountNumber: 'VA' + Math.random().toString().slice(2, 18),
+          iban: `AE${Math.random().toString().slice(2, 20).padStart(18, '0')}`,
+          balance: 89.25,
+          spendingLimit: 150,
+          dailyLimit: 30,
+          status: 'active',
+          cardDetails: { cardId: 'card-' + crypto.randomUUID(), last4: '8901', status: 'active' },
+          created_at: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+          relationship_type: 'child',
+        },
+      ];
 
-    // Route based on endpoint
-    if (endpoint.includes('family-members') || endpoint === '/family/members') {
-      return {
-        ok: true,
-        data: mockMembers,
-        total: mockMembers.length
-      };
+      const seededActivities: NiumFamilyActivity[] = [
+        {
+          id: 'act-1',
+          childId: 'family-1',
+          child_name: 'Emma Johnson',
+          activity_type: 'allowance_paid',
+          description: 'Weekly allowance payment received',
+          amount: 25,
+          currency: 'AED',
+          created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        },
+        {
+          id: 'act-2',
+          childId: 'family-2',
+          child_name: 'Alex Johnson',
+          activity_type: 'card_transaction',
+          description: 'Purchase at Local Cafe',
+          amount: 12.5,
+          currency: 'AED',
+          created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+        },
+      ];
+
+      g.__niumFamilyStore = { members: seededMembers, activities: seededActivities } as Store;
     }
 
-    if (endpoint.includes('family-activity') || endpoint === '/family/activity') {
-      return {
-        ok: true,
-        data: mockActivities.slice(0, 10),
-        total: mockActivities.length
-      };
+    const store: Store = g.__niumFamilyStore as Store;
+
+    // Try to parse payload for POST requests
+    let payload: any = undefined;
+    try {
+      const bodyStr = (options as any)?.body as string | undefined;
+      payload = bodyStr ? JSON.parse(bodyStr) : undefined;
+    } catch {}
+
+    // Routing
+    if (endpoint.includes('/family/members') && method === 'GET' || endpoint === '/family/members') {
+      return { ok: true, data: store.members, total: store.members.length };
     }
 
-    if (endpoint.includes('family-stats') || endpoint === '/family/stats') {
+    if (endpoint.includes('/family/activity')) {
+      return { ok: true, data: store.activities.slice(0, 10), total: store.activities.length };
+    }
+
+    if (endpoint.includes('/family/stats')) {
+      const totalSavings = store.members.reduce((sum, m) => sum + (m.balance || 0), 0);
       return {
         ok: true,
         data: {
-          totalChildren: mockMembers.length,
+          totalChildren: store.members.length,
           activeChores: 5,
           pendingApprovals: 2,
-          totalSavings: mockMembers.reduce((sum, m) => sum + m.balance, 0),
+          totalSavings,
           weeklyAllowances: 50,
           completedGoals: 3,
           interestEarned: 12.75,
-          avgProgressPercentage: 78
-        }
+          avgProgressPercentage: 78,
+        },
       };
     }
 
@@ -206,32 +201,34 @@ export class NiumFamilyAPI {
         id: 'family-' + Date.now(),
         customerHashId: 'cust-' + crypto.randomUUID(),
         walletHashId: 'wallet-' + crypto.randomUUID(),
-        firstName: 'New',
-        lastName: 'Child',
-        email: 'new@family.com',
+        firstName: payload?.firstName || 'New',
+        lastName: payload?.lastName || 'Child',
+        email: payload?.email || `child+${Math.random().toString().slice(2,8)}@family.com`,
         accountNumber: 'VA' + Math.random().toString().slice(2, 18),
         iban: `AE${Math.random().toString().slice(2, 20).padStart(18, '0')}`,
         balance: 0,
-        spendingLimit: 100,
-        dailyLimit: 25,
+        spendingLimit: payload?.spendingLimit ?? 100,
+        dailyLimit: payload?.dailyLimit ?? 25,
         status: 'active',
         created_at: new Date().toISOString(),
-        relationship_type: 'child'
+        relationship_type: payload?.relationshipType || 'child',
       };
 
-      return {
-        ok: true,
-        data: newMember,
-        message: 'Family member created successfully via NIUM sandbox'
-      };
+      store.members.push(newMember);
+      store.activities.unshift({
+        id: 'act-' + Date.now(),
+        childId: newMember.id,
+        child_name: `${newMember.firstName} ${newMember.lastName}`,
+        activity_type: 'account_created',
+        description: 'Family member created in sandbox',
+        created_at: new Date().toISOString(),
+      });
+
+      return { ok: true, data: newMember, message: 'Family member created successfully via NIUM sandbox' };
     }
 
     // Default response
-    return {
-      ok: true,
-      data: null,
-      message: 'NIUM Sandbox - Mock response'
-    };
+    return { ok: true, data: null, message: 'NIUM Sandbox - Mock response' };
   }
 
   // Core family member management
