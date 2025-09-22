@@ -41,12 +41,17 @@ export const NiumAddFamilyMemberDialog: React.FC<NiumAddFamilyMemberDialogProps>
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    console.log('🟢 Form submitted with data:', formData);
+    
     if (!formData.firstName || !formData.lastName || !formData.email) {
+      console.log('🔴 Validation failed - missing required fields');
       return;
     }
 
     try {
+      console.log('🟡 Calling addFamilyMember.mutateAsync...');
       await addFamilyMember.mutateAsync(formData);
+      console.log('✅ Family member added successfully!');
       
       // Reset form and close dialog
       setFormData({
@@ -59,7 +64,7 @@ export const NiumAddFamilyMemberDialog: React.FC<NiumAddFamilyMemberDialogProps>
       });
       onClose();
     } catch (error) {
-      console.error('Failed to add family member:', error);
+      console.error('🔴 Failed to add family member:', error);
     }
   };
 

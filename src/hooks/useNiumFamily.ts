@@ -37,10 +37,17 @@ export const useAddNiumFamilyMember = () => {
     }) => {
       if (!user) throw new Error('User not authenticated');
       
+      console.log('🟣 Calling niumFamilyAPI.createFamilyMember with:', {
+        parentId: user.id,
+        ...memberData,
+      });
+      
       const response = await niumFamilyAPI.createFamilyMember({
         parentId: user.id,
         ...memberData,
       });
+      
+      console.log('🟣 API Response:', response);
       
       if (!response.ok) throw new Error('Failed to create family member');
       return response.data;

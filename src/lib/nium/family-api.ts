@@ -54,6 +54,7 @@ export class NiumFamilyAPI {
 
   private async makeRequest(endpoint: string, options: RequestInit = {}) {
     try {
+      console.log('🌐 Making request to:', `${this.baseUrl}${endpoint}`, 'with options:', options);
       const response = await fetch(`${this.baseUrl}${endpoint}`, {
         headers: {
           'Content-Type': 'application/json',
@@ -62,11 +63,15 @@ export class NiumFamilyAPI {
         ...options,
       });
 
+      console.log('🌐 Response status:', response.status, 'ok:', response.ok);
+      
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
 
-      return await response.json();
+      const result = await response.json();
+      console.log('🌐 Response data:', result);
+      return result;
     } catch (error) {
       // Fallback to mock API in development/sandbox
       console.warn('NIUM API unavailable, using mock data:', error);
@@ -246,10 +251,13 @@ export class NiumFamilyAPI {
     spendingLimit: number;
     dailyLimit: number;
   }): Promise<{ ok: boolean; data: NiumFamilyMember }> {
-    return this.makeRequest('/family/create-member', {
+    console.log('🔵 niumFamilyAPI.createFamilyMember called with:', data);
+    const result = await this.makeRequest('/family/create-member', {
       method: 'POST',
       body: JSON.stringify(data),
     });
+    console.log('🔵 niumFamilyAPI.createFamilyMember result:', result);
+    return result;
   }
 
   async updateSpendingLimits(memberId: string, limits: {

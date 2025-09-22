@@ -63,6 +63,7 @@ const FamilyDashboardComponent = () => {
 
   // Memoized callbacks to prevent unnecessary re-renders
   const handleAddDialog = useCallback(() => {
+    console.log('🔵 Add Family Member button clicked!');
     setShowAddDialog(true);
   }, []);
 
