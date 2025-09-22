@@ -240,6 +240,46 @@ export class NiumFamilyAPI {
       return { ok: false, error: 'Member not found' };
     }
 
+    // Transfer money between family accounts
+    if (method === 'POST' && endpoint.includes('/family/transfer')) {
+      const { childWalletId, amount, description } = payload || {};
+      
+      if (!childWalletId || !amount || amount <= 0) {
+        return { ok: false, error: 'Invalid transfer data' };
+      }
+
+      // Find the child by wallet ID
+      const memberIndex = store.members.findIndex(m => m.walletHashId === childWalletId);
+      
+      if (memberIndex === -1) {
+        return { ok: false, error: 'Child wallet not found' };
+      }
+
+      // Update child's balance
+      store.members[memberIndex].balance += parseFloat(amount);
+
+      // Generate system reference number
+      const systemReferenceNumber = 'TXN' + Date.now() + Math.random().toString(36).substr(2, 5).toUpperCase();
+
+      // Add activity record
+      store.activities.unshift({
+        id: 'act-' + Date.now(),
+        childId: store.members[memberIndex].id,
+        child_name: `${store.members[memberIndex].firstName} ${store.members[memberIndex].lastName}`,
+        activity_type: 'allowance_paid',
+        description: description || 'Money transfer received',
+        amount: parseFloat(amount),
+        currency: 'AED',
+        created_at: new Date().toISOString(),
+      });
+
+      return { 
+        ok: true, 
+        systemReferenceNumber,
+        message: 'Transfer completed successfully via NIUM sandbox' 
+      };
+    }
+
     if (method === 'POST' && endpoint.includes('create-member')) {
       const newMember: NiumFamilyMember = {
         id: 'family-' + Date.now(),
