@@ -205,7 +205,7 @@ export class NiumFamilyAPI {
             email: 'alex@family.com',
             accountNumber: 'VA' + Math.random().toString().slice(2, 18),
             iban: `AE${Math.random().toString().slice(2, 20).padStart(18, '0')}`,
-            balance: 89.25,
+            balance: 187.25,
             spendingLimit: 150,
             dailyLimit: 30,
             status: 'active',
@@ -393,7 +393,7 @@ export class NiumFamilyAPI {
         email: payload?.email || `child+${Math.random().toString().slice(2,8)}@family.com`,
         accountNumber: 'VA' + Math.random().toString().slice(2, 18),
         iban: `AE${Math.random().toString().slice(2, 20).padStart(18, '0')}`,
-        balance: 0,
+        balance: 250, // Starting balance for new family members
         spendingLimit: payload?.spendingLimit ?? 100,
         dailyLimit: payload?.dailyLimit ?? 25,
         status: 'active',
