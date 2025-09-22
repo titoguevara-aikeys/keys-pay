@@ -196,6 +196,50 @@ export class NiumFamilyAPI {
       };
     }
 
+    // Card issuance
+    if (method === 'POST' && endpoint.includes('/card/issue')) {
+      const memberId = endpoint.split('/')[3]; // Extract member ID from path like /family/members/[id]/card/issue
+      const memberIndex = store.members.findIndex(m => m.id === memberId);
+      
+      if (memberIndex !== -1) {
+        const cardId = 'card-' + crypto.randomUUID();
+        const last4 = Math.floor(1000 + Math.random() * 9000).toString();
+        
+        // Update member with card details
+        store.members[memberIndex].cardDetails = {
+          cardId,
+          last4,
+          status: 'active'
+        };
+
+        // Add activity
+        store.activities.unshift({
+          id: 'act-' + Date.now(),
+          childId: memberId,
+          child_name: `${store.members[memberIndex].firstName} ${store.members[memberIndex].lastName}`,
+          activity_type: 'account_created',
+          description: 'Virtual card issued successfully',
+          created_at: new Date().toISOString(),
+        });
+
+        return { 
+          ok: true, 
+          cardId, 
+          last4,
+          data: {
+            memberId,
+            cardId,
+            last4,
+            status: 'active',
+            issued_at: new Date().toISOString()
+          },
+          message: 'Virtual card issued successfully via NIUM sandbox' 
+        };
+      }
+
+      return { ok: false, error: 'Member not found' };
+    }
+
     if (method === 'POST' && endpoint.includes('create-member')) {
       const newMember: NiumFamilyMember = {
         id: 'family-' + Date.now(),
