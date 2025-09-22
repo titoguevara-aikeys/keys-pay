@@ -146,7 +146,11 @@ const App = () => (
                 <Transactions />
               </ProtectedRoute>
             } />
-            <Route path="/mobile-app" element={<MobileApp />} />
+            <Route path="/mobile-app" element={
+              <ProtectedRoute>
+                <MobileApp />
+              </ProtectedRoute>
+            } />
             <Route path="/keyspay/admin" element={
               <AdminRoute>
                 <KeyspayAdmin />
@@ -192,9 +196,16 @@ const App = () => (
                 <CollectionsAccountsPage />
               </ProtectedRoute>
             } />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/taglines" element={<TaglinesAdmin />} />
-            <Route path="/admin/allowlist" element={<AllowlistAdmin />} />
+            <Route path="/admin/taglines" element={
+              <AdminRoute>
+                <TaglinesAdmin />
+              </AdminRoute>
+            } />
+            <Route path="/admin/allowlist" element={
+              <AdminRoute>
+                <AllowlistAdmin />
+              </AdminRoute>
+            } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
