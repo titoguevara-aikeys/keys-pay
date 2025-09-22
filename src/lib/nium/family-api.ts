@@ -71,6 +71,10 @@ export class NiumFamilyAPI {
 
       const result = await response.json();
       console.log('🌐 Response data:', result);
+
+      // Keep local mock store in sync even when server endpoints succeed
+      this.syncStoreOnServerSuccess(endpoint, options, result);
+
       return result;
     } catch (error) {
       // Fallback to mock API in development/sandbox
@@ -91,74 +95,152 @@ export class NiumFamilyAPI {
     return this.generateMockFamilyData(endpoint, method, options);
   }
 
+  // Persisted mock store helpers
+  private STORAGE_KEY = '__niumFamilyStore__';
+
+  private loadPersistedStore(): any | null {
+    if (typeof window === 'undefined') return null;
+    try {
+      const raw = window.localStorage.getItem(this.STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  }
+
+  private persistStore(store: any) {
+    if (typeof window === 'undefined') return;
+    try { window.localStorage.setItem(this.STORAGE_KEY, JSON.stringify(store)); } catch {}
+  }
+
+  private syncStoreOnServerSuccess(endpoint: string, options: RequestInit = {}, result: any) {
+    try {
+      const method = (options.method || 'GET').toString().toUpperCase();
+      const g = globalThis as any;
+      let store = g.__niumFamilyStore || this.loadPersistedStore();
+      if (!store) return;
+
+      // Try to parse payload
+      let payload: any = undefined;
+      try { const bodyStr = (options as any)?.body as string | undefined; payload = bodyStr ? JSON.parse(bodyStr) : undefined; } catch {}
+
+      // Money transfer success - update local store
+      if (method === 'POST' && endpoint.includes('/family/transfer') && payload) {
+        const idx = store.members.findIndex((m: any) => m.walletHashId === payload.childWalletId);
+        if (idx !== -1) {
+          const amt = parseFloat(payload.amount as any) || 0;
+          store.members[idx].balance += amt;
+          store.activities.unshift({
+            id: 'act-' + Date.now(),
+            childId: store.members[idx].id,
+            child_name: `${store.members[idx].firstName} ${store.members[idx].lastName}`,
+            activity_type: 'allowance_paid',
+            description: payload.description || 'Money transfer received',
+            amount: amt,
+            currency: payload.currency || 'AED',
+            created_at: new Date().toISOString(),
+          });
+          g.__niumFamilyStore = store; this.persistStore(store);
+        }
+      }
+
+      // Limits update success - sync local store
+      if (method === 'PATCH' && endpoint.includes('/family/members') && endpoint.includes('/limits') && payload) {
+        const memberId = endpoint.split('/')[3];
+        const idx = store.members.findIndex((m: any) => m.id === memberId);
+        if (idx !== -1) {
+          if (typeof payload.spendingLimit !== 'undefined') store.members[idx].spendingLimit = payload.spendingLimit;
+          if (typeof payload.dailyLimit !== 'undefined') store.members[idx].dailyLimit = payload.dailyLimit;
+          g.__niumFamilyStore = store; this.persistStore(store);
+        }
+      }
+
+      // Card issuance success - sync local store
+      if (method === 'POST' && endpoint.includes('/card/issue')) {
+        const memberId = endpoint.split('/')[3];
+        const idx = store.members.findIndex((m: any) => m.id === memberId);
+        if (idx !== -1) {
+          const last4 = result?.last4 || Math.floor(1000 + Math.random() * 9000).toString();
+          const cardId = result?.cardId || 'card-' + crypto.randomUUID();
+          store.members[idx].cardDetails = { cardId, last4, status: 'active' };
+          g.__niumFamilyStore = store; this.persistStore(store);
+        }
+      }
+    } catch {}
+  }
+
   private generateMockFamilyData(endpoint: string, method: string, options: RequestInit): any {
     // Session-persistent in-memory store (persists while the app is open)
     type Store = { members: NiumFamilyMember[]; activities: NiumFamilyActivity[] };
     const g = globalThis as any;
 
-    // Seed store once per session with two default members and some activity
+    // Load persisted store if available; otherwise seed and persist
+    let persisted = this.loadPersistedStore() as Store | null;
     if (!g.__niumFamilyStore) {
-      const seededMembers: NiumFamilyMember[] = [
-        {
-          id: 'family-1',
-          customerHashId: 'cust-' + crypto.randomUUID(),
-          walletHashId: 'wallet-' + crypto.randomUUID(),
-          firstName: 'Emma',
-          lastName: 'Johnson',
-          email: 'emma@family.com',
-          accountNumber: 'VA' + Math.random().toString().slice(2, 18),
-          iban: `AE${Math.random().toString().slice(2, 20).padStart(18, '0')}`,
-          balance: 125.5,
-          spendingLimit: 200,
-          dailyLimit: 50,
-          status: 'active',
-          cardDetails: { cardId: 'card-' + crypto.randomUUID(), last4: '4567', status: 'active' },
-          created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-          relationship_type: 'child',
-        },
-        {
-          id: 'family-2',
-          customerHashId: 'cust-' + crypto.randomUUID(),
-          walletHashId: 'wallet-' + crypto.randomUUID(),
-          firstName: 'Alex',
-          lastName: 'Johnson',
-          email: 'alex@family.com',
-          accountNumber: 'VA' + Math.random().toString().slice(2, 18),
-          iban: `AE${Math.random().toString().slice(2, 20).padStart(18, '0')}`,
-          balance: 89.25,
-          spendingLimit: 150,
-          dailyLimit: 30,
-          status: 'active',
-          cardDetails: { cardId: 'card-' + crypto.randomUUID(), last4: '8901', status: 'active' },
-          created_at: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-          relationship_type: 'child',
-        },
-      ];
+      if (persisted) {
+        g.__niumFamilyStore = persisted;
+      } else {
+        const seededMembers: NiumFamilyMember[] = [
+          {
+            id: 'family-1',
+            customerHashId: 'cust-' + crypto.randomUUID(),
+            walletHashId: 'wallet-' + crypto.randomUUID(),
+            firstName: 'Emma',
+            lastName: 'Johnson',
+            email: 'emma@family.com',
+            accountNumber: 'VA' + Math.random().toString().slice(2, 18),
+            iban: `AE${Math.random().toString().slice(2, 20).padStart(18, '0')}`,
+            balance: 125.5,
+            spendingLimit: 200,
+            dailyLimit: 50,
+            status: 'active',
+            cardDetails: { cardId: 'card-' + crypto.randomUUID(), last4: '4567', status: 'active' },
+            created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+            relationship_type: 'child',
+          },
+          {
+            id: 'family-2',
+            customerHashId: 'cust-' + crypto.randomUUID(),
+            walletHashId: 'wallet-' + crypto.randomUUID(),
+            firstName: 'Alex',
+            lastName: 'Johnson',
+            email: 'alex@family.com',
+            accountNumber: 'VA' + Math.random().toString().slice(2, 18),
+            iban: `AE${Math.random().toString().slice(2, 20).padStart(18, '0')}`,
+            balance: 89.25,
+            spendingLimit: 150,
+            dailyLimit: 30,
+            status: 'active',
+            cardDetails: { cardId: 'card-' + crypto.randomUUID(), last4: '8901', status: 'active' },
+            created_at: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+            relationship_type: 'child',
+          },
+        ];
 
-      const seededActivities: NiumFamilyActivity[] = [
-        {
-          id: 'act-1',
-          childId: 'family-1',
-          child_name: 'Emma Johnson',
-          activity_type: 'allowance_paid',
-          description: 'Weekly allowance payment received',
-          amount: 25,
-          currency: 'AED',
-          created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-        },
-        {
-          id: 'act-2',
-          childId: 'family-2',
-          child_name: 'Alex Johnson',
-          activity_type: 'card_transaction',
-          description: 'Purchase at Local Cafe',
-          amount: 12.5,
-          currency: 'AED',
-          created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-        },
-      ];
+        const seededActivities: NiumFamilyActivity[] = [
+          {
+            id: 'act-1',
+            childId: 'family-1',
+            child_name: 'Emma Johnson',
+            activity_type: 'allowance_paid',
+            description: 'Weekly allowance payment received',
+            amount: 25,
+            currency: 'AED',
+            created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          },
+          {
+            id: 'act-2',
+            childId: 'family-2',
+            child_name: 'Alex Johnson',
+            activity_type: 'card_transaction',
+            description: 'Purchase at Local Cafe',
+            amount: 12.5,
+            currency: 'AED',
+            created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          },
+        ];
 
-      g.__niumFamilyStore = { members: seededMembers, activities: seededActivities } as Store;
+        g.__niumFamilyStore = { members: seededMembers, activities: seededActivities } as Store;
+        this.persistStore(g.__niumFamilyStore);
+      }
     }
 
     const store: Store = g.__niumFamilyStore as Store;
@@ -222,6 +304,9 @@ export class NiumFamilyAPI {
           created_at: new Date().toISOString(),
         });
 
+        // Persist
+        this.persistStore(store as any);
+
         return { 
           ok: true, 
           cardId, 
@@ -239,7 +324,7 @@ export class NiumFamilyAPI {
 
       return { ok: false, error: 'Member not found' };
     }
-
+    
     // Transfer money between family accounts
     if (method === 'POST' && endpoint.includes('/family/transfer')) {
       const { childWalletId, amount, description } = payload || {};
@@ -273,11 +358,29 @@ export class NiumFamilyAPI {
         created_at: new Date().toISOString(),
       });
 
+      // Persist
+      this.persistStore(store as any);
+
       return { 
         ok: true, 
         systemReferenceNumber,
         message: 'Transfer completed successfully via NIUM sandbox' 
       };
+    }
+
+    // Update spending limits (PATCH)
+    if (method === 'PATCH' && endpoint.includes('/family/members') && endpoint.includes('/limits')) {
+      const memberId = endpoint.split('/')[3];
+      const { spendingLimit, dailyLimit } = payload || {};
+      const idx = store.members.findIndex(m => m.id === memberId);
+      if (idx === -1) return { ok: false, error: 'Member not found' };
+      if (typeof spendingLimit !== 'undefined') store.members[idx].spendingLimit = Number(spendingLimit);
+      if (typeof dailyLimit !== 'undefined') store.members[idx].dailyLimit = Number(dailyLimit);
+
+      // Persist
+      this.persistStore(store as any);
+
+      return { ok: true, data: { memberId, spendingLimit: store.members[idx].spendingLimit, dailyLimit: store.members[idx].dailyLimit }, message: 'Spending limits updated (mock)' };
     }
 
     if (method === 'POST' && endpoint.includes('create-member')) {
@@ -307,6 +410,9 @@ export class NiumFamilyAPI {
         description: 'Family member created in sandbox',
         created_at: new Date().toISOString(),
       });
+
+      // Persist
+      this.persistStore(store as any);
 
       return { ok: true, data: newMember, message: 'Family member created successfully via NIUM sandbox' };
     }
