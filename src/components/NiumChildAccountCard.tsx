@@ -71,17 +71,21 @@ export const NiumChildAccountCard: React.FC<NiumChildAccountCardProps> = ({
       
       <CardContent className="space-y-4">
         {/* Account Balance */}
-        <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border">
-          <div className="flex items-center gap-2">
-            <Banknote className="h-5 w-5 text-blue-600" />
-            <div>
-              <p className="text-sm text-muted-foreground">NIUM Account Balance</p>
-              <p className="text-xl font-bold">AED {member.balance.toFixed(2)}</p>
+        <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-100 rounded-full">
+                <Banknote className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Available Balance</p>
+                <p className="text-2xl font-bold text-blue-700">AED {member.balance.toFixed(2)}</p>
+              </div>
             </div>
-          </div>
-          <div className="text-right">
-            <p className="text-xs text-muted-foreground">Account: {member.accountNumber}</p>
-            <p className="text-xs text-muted-foreground">IBAN: {member.iban.slice(0, 10)}...</p>
+            <div className="text-right text-xs text-muted-foreground space-y-1">
+              <p>Account: {member.accountNumber}</p>
+              <p>IBAN: {member.iban.slice(0, 10)}...</p>
+            </div>
           </div>
         </div>
 
