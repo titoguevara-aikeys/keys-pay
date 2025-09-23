@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import type { NiumFamilyMember } from '@/lib/nium/family-api';
 import { useBlockChildCard, useIssueChildCard } from '@/hooks/useNiumFamily';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface NiumChildAccountCardProps {
   member: NiumFamilyMember;
@@ -30,6 +31,7 @@ export const NiumChildAccountCard: React.FC<NiumChildAccountCardProps> = ({
 }) => {
   const issueCard = useIssueChildCard();
   const blockCard = useBlockChildCard();
+  const { formatAmount } = useCurrency();
 
   const handleIssueCard = async () => {
     if (!member.cardDetails) {
@@ -80,7 +82,7 @@ export const NiumChildAccountCard: React.FC<NiumChildAccountCardProps> = ({
               <div>
                 <p className="text-sm text-muted-foreground">Available Balance</p>
                 <p className="text-2xl font-extrabold tracking-tight text-foreground">
-                  AED {member.balance.toFixed(2)}
+                  {formatAmount(member.balance, true, 'AED')}
                 </p>
               </div>
             </div>
@@ -145,14 +147,14 @@ export const NiumChildAccountCard: React.FC<NiumChildAccountCardProps> = ({
               <Shield className="h-4 w-4 text-orange-500" />
               <p className="text-xs text-muted-foreground">Monthly Limit</p>
             </div>
-            <p className="font-semibold">AED {member.spendingLimit}</p>
+            <p className="font-semibold">{formatAmount(member.spendingLimit, true, 'AED')}</p>
           </div>
           <div className="p-3 border rounded-lg">
             <div className="flex items-center gap-2 mb-1">
               <DollarSign className="h-4 w-4 text-green-500" />
               <p className="text-xs text-muted-foreground">Daily Limit</p>
             </div>
-            <p className="font-semibold">AED {member.dailyLimit}</p>
+            <p className="font-semibold">{formatAmount(member.dailyLimit, true, 'AED')}</p>
           </div>
         </div>
 
