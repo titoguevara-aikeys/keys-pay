@@ -16,8 +16,8 @@
 ### CORS Configuration
 **Allowed Origins** (Production):
 ```
-https://aikeys-hub.com
-https://*.aikeys-hub.com
+https://keys-pay.com
+https://*.keys-pay.com
 https://f44c23a1-66a8-4cd0-9d92-d6761abf4d0a.lovableproject.com
 ```
 
@@ -25,8 +25,8 @@ https://f44c23a1-66a8-4cd0-9d92-d6761abf4d0a.lovableproject.com
 
 ### Allowed Redirect URLs
 ```
-https://aikeys-hub.com/*
-https://aikeys-hub.com/auth/callback
+https://keys-pay.com/*
+https://keys-pay.com/auth/callback
 https://f44c23a1-66a8-4cd0-9d92-d6761abf4d0a.lovableproject.com/*
 ```
 

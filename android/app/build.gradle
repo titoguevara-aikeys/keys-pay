@@ -45,7 +45,7 @@ android {
         buildConfigField "String", "AIKEYS_VERSION_INFO",
             "\"tag=${latestTag}, commits=${commitCount}, days=${daysSinceEpoch}, idx=${dailyIndex}\""
         
-        buildConfigField "String", "AIKEYS_BASE_URL", "\"https://aikeys-hub.com\""
+        buildConfigField "String", "AIKEYS_BASE_URL", "\"https://keys-pay.com\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

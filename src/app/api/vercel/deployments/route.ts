@@ -1,6 +1,6 @@
 export async function GET() {
   try {
-    const VERCEL_PROJECT_ID = process.env.VERCEL_PROJECT_ID || "aikey-mena-hub";
+    const VERCEL_PROJECT_ID = process.env.VERCEL_PROJECT_ID || "keys-pay";
     const VERCEL_TOKEN = process.env.VERCEL_TOKEN;
     
     if (!VERCEL_TOKEN) {

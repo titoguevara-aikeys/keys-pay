@@ -43,14 +43,14 @@ async function collectMetrics(): Promise<MonitoringData> {
   try {
     // Monitor primary endpoints
     const startTime = Date.now();
-    const mainResponse = await fetch('https://aikeys-hub.com/', { 
+    const mainResponse = await fetch('https://keys-pay.com/', { 
       method: 'HEAD',
       headers: { 'User-Agent': 'AIKeys-Monitor/1.0' }
     });
     const ttfb = Date.now() - startTime;
 
     const aiStartTime = Date.now();
-    const aiResponse = await fetch('https://aikeys-hub.com/ai-assistant', { 
+    const aiResponse = await fetch('https://keys-pay.com/ai-assistant', { 
       method: 'HEAD',
       headers: { 'User-Agent': 'AIKeys-Monitor/1.0' }
     });

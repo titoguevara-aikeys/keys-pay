@@ -5,9 +5,9 @@ A native Android WebView wrapper for the AIKEYS Wallet platform with auto-versio
 
 ## Features
 
-- **WebView Wrapper**: Loads https://aikeys-hub.com with full JavaScript support  
+- **WebView Wrapper**: Loads https://keys-pay.com with full JavaScript support  
 - **Auto-versioning**: Daily increment based on Unix epoch + CI build number
-- **Deep Links**: Handles `aikeys://` and `https://aikeys-hub.com/*` URLs
+- **Deep Links**: Handles `aikeys://` and `https://keys-pay.com/*` URLs
 - **Offline Support**: Shows retry screen when network is unavailable
 - **File Downloads**: Uses Android DownloadManager for file handling
 - **Splash Screen**: Modern Android 12+ splash screen implementation
@@ -63,8 +63,8 @@ The GitHub Actions workflow automatically:
 ## Deep Link Handling
 
 The app handles these URL schemes:
-- `aikeys://path` → loads `https://aikeys-hub.com/path`  
-- `https://aikeys-hub.com/path` → loads directly in WebView
+- `aikeys://path` → loads `https://keys-pay.com/path`  
+- `https://keys-pay.com/path` → loads directly in WebView
 - External URLs → opens in system browser
 
 ## App Permissions

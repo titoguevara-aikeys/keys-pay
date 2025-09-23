@@ -53,7 +53,7 @@ const Navigation = () => {
           {/* Logo */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <a href="https://aikeys-hub.com" aria-label="Keys Pay home">
+              <a href="https://keys-pay.com" aria-label="Keys Pay home">
                 <img 
                   src="/lovable-uploads/4326dc21-0939-4654-8586-fba79c3b8f84.png?v=2" 
                   alt="Keys Pay logo" 

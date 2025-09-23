@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity() {
                     webView.loadUrl("$BASE_URL/$path")
                 }
                 "https" -> {
-                    if (uri.host == "aikeys-hub.com") {
+                    if (uri.host == "keys-pay.com") {
                         webView.loadUrl(uri.toString())
                     }
                 }

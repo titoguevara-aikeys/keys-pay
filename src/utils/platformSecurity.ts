@@ -6,10 +6,8 @@ export class PlatformSecurity {
   static validateDomain(): boolean {
     const currentDomain = window.location.hostname;
     const authorizedDomains = [
-      'www.aikeys.ai',
-      'www.aikeys-hub.com',
-      'aikeys.ai',
-      'aikeys-hub.com',
+      'www.keys-pay.com',
+      'keys-pay.com',
       'localhost' // for development
     ];
     

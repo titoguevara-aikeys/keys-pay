@@ -27,11 +27,11 @@ async function triggerVercelDeployment(projectId: string, token: string, branch:
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      name: `aikey-mena-hub-${Date.now()}`,
+      name: `keys-pay-${Date.now()}`,
       gitSource: {
         type: 'github',
         ref: branch,
-        repoId: '901639267' // aikeys/aikey-mena-hub repository ID
+        repoId: 'TBD' // keys-pay repository ID - update with actual repo ID
       },
       target: 'production',
       projectSettings: {

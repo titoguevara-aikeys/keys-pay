@@ -15,8 +15,8 @@ export const env = {
 // Server-only environment (for API routes)
 // Only access process.env if we're in a Node.js environment
 export const serverEnv = typeof process !== 'undefined' ? {
-  VERCEL_PROJECT_ID: process.env.VERCEL_PROJECT_ID || "aikey-mena-hub",
-  VERCEL_TEAM_ID: process.env.VERCEL_TEAM_ID || "aikeys",
+  VERCEL_PROJECT_ID: process.env.VERCEL_PROJECT_ID || "keys-pay",
+  VERCEL_TEAM_ID: process.env.VERCEL_TEAM_ID || "keys-pay",
   VERCEL_TOKEN: process.env.VERCEL_TOKEN,
   SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
   NIUM_API_KEY: process.env.NIUM_API_KEY,

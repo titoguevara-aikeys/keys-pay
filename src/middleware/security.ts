@@ -26,7 +26,7 @@ export const securityHeaders = {
 };
 
 export const setCORSHeaders = {
-  'Access-Control-Allow-Origin': process.env.NODE_ENV === 'production' ? 'https://aikeys-hub.com' : '*',
+  'Access-Control-Allow-Origin': process.env.NODE_ENV === 'production' ? 'https://keys-pay.com' : '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
   'Access-Control-Allow-Credentials': 'true',

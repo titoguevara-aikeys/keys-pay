@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ANDROID_KEYSTORE_PATH: keystore.jks
-      AIKEYS_BASE_URL: https://aikeys-hub.com
+      AIKEYS_BASE_URL: https://keys-pay.com
       PACKAGE_NAME: com.aikeys.wallet
 
     steps:
