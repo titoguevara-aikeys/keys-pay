@@ -12,7 +12,7 @@ export const SUPPORTED_CURRENCIES: Currency[] = [
   { code: 'USD', name: 'US Dollar', symbol: '$', flag: '🇺🇸' },
   { code: 'EUR', name: 'Euro', symbol: '€', flag: '🇪🇺' },
   { code: 'GBP', name: 'British Pound', symbol: '£', flag: '🇬🇧' },
-  { code: 'AED', name: 'UAE Dirham', symbol: 'د.إ', flag: '🇦🇪' },
+  { code: 'AED', name: 'UAE Dirham', symbol: 'AED', flag: '🇦🇪' },
   { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$', flag: '🇸🇬' },
   { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$', flag: '🇨🇦' },
   { code: 'AUD', name: 'Australian Dollar', symbol: 'A$', flag: '🇦🇺' },
@@ -33,7 +33,7 @@ export const SUPPORTED_CURRENCIES: Currency[] = [
   { code: 'THB', name: 'Thai Baht', symbol: '฿', flag: '🇹🇭' },
   { code: 'MYR', name: 'Malaysian Ringgit', symbol: 'RM', flag: '🇲🇾' },
   { code: 'PLN', name: 'Polish Złoty', symbol: 'zł', flag: '🇵🇱' },
-  { code: 'SAR', name: 'Saudi Riyal', symbol: 'ر.س', flag: '🇸🇦' },
+  { code: 'SAR', name: 'Saudi Riyal', symbol: 'SAR', flag: '🇸🇦' },
   { code: 'PHP', name: 'Philippine Peso', symbol: '₱', flag: '🇵🇭' },
   { code: 'IDR', name: 'Indonesian Rupiah', symbol: 'Rp', flag: '🇮🇩' },
   { code: 'VND', name: 'Vietnamese Dong', symbol: '₫', flag: '🇻🇳' },
@@ -129,7 +129,10 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ children }) 
 
     // Handle negative amounts
     const prefix = convertedAmount < 0 ? '-' : '';
-    return `${prefix}${selectedCurrency.symbol}${formattedNumber}`;
+    const sym = selectedCurrency.symbol;
+    const needsSpace = /^[A-Z]{2,4}$/.test(sym);
+    const displaySymbol = needsSpace ? `${sym} ` : sym;
+    return `${prefix}${displaySymbol}${formattedNumber}`;
   };
 
   const getCurrencySymbol = (): string => {

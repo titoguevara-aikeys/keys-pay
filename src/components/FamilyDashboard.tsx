@@ -31,6 +31,7 @@ import { NiumEditFamilyMemberDialog } from './NiumEditFamilyMemberDialog';
 import { NiumTransferMoneyDialog } from './NiumTransferMoneyDialog';
 import { useToast } from '@/hooks/use-toast';
 import { FamilySkeleton } from './skeletons/FamilySkeleton';
+import CurrencyDisplay from './CurrencyDisplay';
 
 import type { NiumFamilyMember } from '@/lib/nium/family-api';
 
@@ -190,7 +191,7 @@ const FamilyDashboardComponent = () => {
               <DollarSign className="h-5 w-5 text-purple-500" />
               <div>
                 <p className="text-sm text-muted-foreground">Total Savings</p>
-                <p className="text-2xl font-bold">${dashboardStats.totalSavings}</p>
+                <CurrencyDisplay amount={dashboardStats.totalSavings} fromCurrency="USD" className="text-2xl font-bold" />
               </div>
             </div>
           </CardContent>
@@ -202,7 +203,7 @@ const FamilyDashboardComponent = () => {
               <TrendingUp className="h-5 w-5 text-orange-500" />
               <div>
                 <p className="text-sm text-muted-foreground">Interest Earned</p>
-                <p className="text-2xl font-bold">${dashboardStats.interestEarned}</p>
+                <CurrencyDisplay amount={dashboardStats.interestEarned} fromCurrency="USD" className="text-2xl font-bold" />
               </div>
             </div>
           </CardContent>
