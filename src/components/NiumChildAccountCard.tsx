@@ -71,15 +71,17 @@ export const NiumChildAccountCard: React.FC<NiumChildAccountCardProps> = ({
       
       <CardContent className="space-y-4">
         {/* Account Balance */}
-        <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+        <div className="p-4 rounded-lg border bg-secondary/60">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-full">
-                <Banknote className="h-5 w-5 text-blue-600" />
+              <div className="p-2 rounded-full bg-primary/15">
+                <Banknote className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Available Balance</p>
-                <p className="text-2xl font-bold text-blue-700">AED {member.balance.toFixed(2)}</p>
+                <p className="text-2xl font-extrabold tracking-tight text-foreground">
+                  AED {member.balance.toFixed(2)}
+                </p>
               </div>
             </div>
             <div className="text-right text-xs text-muted-foreground space-y-1">
