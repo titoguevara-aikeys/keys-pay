@@ -33,7 +33,7 @@ export const SUPPORTED_CURRENCIES: Currency[] = [
   { code: 'THB', name: 'Thai Baht', symbol: '฿', flag: '🇹🇭' },
   { code: 'MYR', name: 'Malaysian Ringgit', symbol: 'RM', flag: '🇲🇾' },
   { code: 'PLN', name: 'Polish Złoty', symbol: 'zł', flag: '🇵🇱' },
-  { code: 'SAR', name: 'Saudi Riyal', symbol: 'ر.س', flag: '🇸🇦' },
+  { code: 'SAR', name: 'Saudi Riyal', symbol: '﷼', flag: '🇸🇦' },
   { code: 'PHP', name: 'Philippine Peso', symbol: '₱', flag: '🇵🇭' },
   { code: 'IDR', name: 'Indonesian Rupiah', symbol: 'Rp', flag: '🇮🇩' },
   { code: 'VND', name: 'Vietnamese Dong', symbol: '₫', flag: '🇻🇳' },
