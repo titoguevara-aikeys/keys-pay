@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,9 +12,9 @@ import {
   CheckCircle,
   Menu,
   Sun,
-  Moon
+  Moon,
+  Command
 } from 'lucide-react';
-import { useTheme } from 'next-themes';
 
 interface NavItem {
   label: string;
@@ -43,9 +43,23 @@ interface NavItem {
 const MegaNav = () => {
   const [activePanel, setActivePanel] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [theme, setTheme] = useState('dark');
   const { user, signOut } = useAuth();
   const { data: profile } = useProfile();
-  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    // Check for saved theme preference or default to 'dark'
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.classList.toggle('dark', newTheme === 'dark');
+  };
 
   const navItems: NavItem[] = [
     {
@@ -250,11 +264,30 @@ const MegaNav = () => {
 
             {/* Right Side Actions */}
             <div className="flex items-center gap-3">
+              {/* Command Palette Trigger */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  const event = new KeyboardEvent('keydown', {
+                    key: 'k',
+                    metaKey: true,
+                    bubbles: true
+                  });
+                  document.dispatchEvent(event);
+                }}
+                className="hidden md:flex items-center gap-2"
+                title="Command Palette (⌘K)"
+              >
+                <Command className="h-4 w-4" />
+                <span className="text-sm">⌘K</span>
+              </Button>
+
               {/* Theme Toggle */}
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                onClick={toggleTheme}
                 className="hidden md:flex"
               >
                 {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}

@@ -20,6 +20,8 @@ import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import { ExchangeRateProvider } from "@/contexts/ExchangeRateContext";
 import { PlatformGuard } from "@/components/PlatformGuard";
 import { SecurityProvider } from "@/components/security/SecurityProvider";
+import { CommandPalette } from "@/components/command/CommandPalette";
+import { MouseTrail } from "@/components/effects/MouseTrail";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AdminRoute from "@/components/AdminRoute";
 import ComplianceFooter from "@/components/ComplianceFooter";
@@ -64,9 +66,11 @@ const App = () => (
         <MockAuthProvider>
           <ExchangeRateProvider>
             <CurrencyProvider>
-            <TooltipProvider>
+        <TooltipProvider>
         <Toaster />
         <Sonner />
+        <CommandPalette />
+        <MouseTrail />
         <BrowserRouter>
           <Routes>
             <Route path="/auth" element={<MockAuth />} />
