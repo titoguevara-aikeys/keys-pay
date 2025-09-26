@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 interface WebVitalsData {
   name: string;
@@ -40,7 +40,7 @@ export function logWebVitals() {
 }
 
 export function WebVitals() {
-  useEffect(() => {
+  React.useEffect(() => {
     logWebVitals();
   }, []);
 
