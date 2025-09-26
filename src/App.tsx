@@ -69,9 +69,9 @@ const App = () => (
         <TooltipProvider>
         <Toaster />
         <Sonner />
-        <CommandPalette />
-        <MouseTrail />
         <BrowserRouter>
+          <CommandPalette />
+          <MouseTrail />
           <Routes>
             <Route path="/auth" element={<MockAuth />} />
             <Route path="/aikeys" element={<Aikeys />} />
