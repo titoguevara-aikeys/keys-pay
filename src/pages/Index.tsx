@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import MegaNav from '@/components/nav/MegaNav';
 import RadialNavMenu from '@/components/nav/RadialNavMenu';
 import ComplianceFooter from '@/components/ComplianceFooter';
-import TaglineTicker from '@/components/marketing/TaglineTicker';
+
 import { ParticleField } from '@/components/effects/ParticleField';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -69,7 +69,6 @@ export default function Index() {
       />
       
       <MegaNav />
-      <TaglineTicker sticky height={44} />
       
       {/* Matrix Digital Rain Background */}
       <div className="matrix-container"></div>

@@ -5,16 +5,6 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
-      taglineTicker: {
-        fallbackItems: "Money that Builds Tomorrow. · Move Money. Live Freely. · Money that Moves with You. · Money in One Tap. · Money Without Borders. · Secure Money, Seamless Life.",
-        labels: {
-          aria: "Keys Pay taglines",
-          pause: "Pause",
-          toggle: "Toggle language", 
-          toAR: "AR",
-          toEN: "EN"
-        }
-      },
       admin: {
         title: "Taglines Admin",
         add: "Add",
@@ -52,16 +42,6 @@ const resources = {
   },
   ar: {
     translation: {
-      taglineTicker: {
-        fallbackItems: "المال الذي يبني الغد. · حرّك مالك. عِش بحرية. · المال الذي يتحرك معك. · أموالك بلمسة واحدة. · المال بلا حدود. · مال آمن، حياة سلسة.",
-        labels: {
-          aria: "شريط عناوين كيز باي",
-          pause: "إيقاف مؤقت", 
-          toggle: "تبديل اللغة",
-          toAR: "ع",
-          toEN: "EN"
-        }
-      },
       admin: {
         title: "لوحة إدارة الشعارات",
         add: "إضافة",
