@@ -129,6 +129,10 @@ export default {
 					'0%, 100%': { textShadow: '0 0 20px hsl(200 100% 70% / 0.4)' },
 					'50%': { textShadow: '0 0 40px hsl(200 100% 70% / 0.8), 0 0 60px hsl(200 100% 70% / 0.4)' }
 				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0px)' },
+					'50%': { transform: 'translateY(-20px)' }
+				},
 				'particle-float': {
 					'0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
 					'25%': { transform: 'translateY(-10px) rotate(90deg)' },
@@ -147,6 +151,10 @@ export default {
 				'slide-out-right': 'slide-out-right 0.3s ease-out',
 				'crypto-pulse': 'crypto-pulse 3s ease-in-out infinite',
 				'particle-float': 'particle-float 6s ease-in-out infinite',
+				'spin-slow': 'spin 8s linear infinite',
+				'float': 'float 3s ease-in-out infinite',
+				'float-slow': 'float 4s ease-in-out infinite',
+				'float-delayed': 'float 3s ease-in-out infinite 1s',
 				'enter': 'fade-in 0.3s ease-out, scale-in 0.2s ease-out',
 				'exit': 'fade-out 0.3s ease-out, scale-out 0.2s ease-out'
 			}
