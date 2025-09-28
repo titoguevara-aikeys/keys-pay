@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import MegaNav from '@/components/nav/MegaNav';
 import RadialNavMenu from '@/components/nav/RadialNavMenu';
 import ComplianceFooter from '@/components/ComplianceFooter';
-
-import { ParticleField } from '@/components/effects/ParticleField';
+import { FloatingIcons } from '@/components/effects/FloatingIcons';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -27,60 +26,13 @@ import {
 
 export default function Index() {
   const [activeProvider, setActiveProvider] = useState('ramp');
-  
-  // Matrix characters for digital rain
-  const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
-  
-  // Generate matrix columns
-  useEffect(() => {
-    const container = document.querySelector('.matrix-container');
-    if (!container) return;
-    
-    // Clear existing columns
-    container.innerHTML = '';
-    
-    // Create 50 columns across the screen
-    for (let i = 0; i < 50; i++) {
-      const column = document.createElement('div');
-      column.className = 'matrix-column';
-      column.style.left = `${(i * 2)}%`;
-      column.style.animationDelay = `${Math.random() * 5}s`;
-      
-      // Generate random characters for this column
-      let columnText = '';
-      for (let j = 0; j < 30; j++) {
-        const char = matrixChars[Math.floor(Math.random() * matrixChars.length)];
-        columnText += `<span>${char}</span>\n`;
-      }
-      
-      column.innerHTML = columnText;
-      container.appendChild(column);
-    }
-  }, []);
 
   return (
-    <div className="min-h-screen crypto-movie-background">
-      {/* Particle Effects */}
-      <ParticleField 
-        particleCount={60}
-        className="fixed inset-0"
-        color="hsl(var(--primary))"
-        interactive={true}
-      />
+    <div className="min-h-screen bg-background">
+      {/* Floating Icons Background */}
+      <FloatingIcons />
       
       <MegaNav />
-      
-      {/* Matrix Digital Rain Background */}
-      <div className="matrix-container"></div>
-      
-      {/* Cinema scanning line effects */}
-      <div className="fx-data-streams"></div>
-      
-      {/* Cinema spotlight overlay */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'var(--cinema-spotlight)',
-        animation: 'spotlight-sweep 8s ease-in-out infinite'
-      }}></div>
       
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 px-4">

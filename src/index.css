@@ -230,31 +230,26 @@
     50% { opacity: 0.3; }
   }
   
-  .crypto-movie-background {
-    position: relative;
-    background: var(--gradient-cinematic);
-    overflow: hidden;
+  /* Floating Icons Animation */
+  @keyframes float-vertical {
+    0% {
+      transform: translateY(100vh) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-100px) rotate(360deg);
+      opacity: 0;
+    }
   }
   
-  .crypto-movie-background::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--film-grain);
-    animation: film-grain 0.2s infinite;
-    pointer-events: none;
-    opacity: 0.4;
-    mix-blend-mode: overlay;
-  }
-  
-  /* Cinema vignette overlay */
-  .crypto-movie-background::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--cinema-vignette);
-    pointer-events: none;
-    opacity: 0.8;
+  .floating-icon {
+    will-change: transform;
   }
   
   .fx-data-streams {
