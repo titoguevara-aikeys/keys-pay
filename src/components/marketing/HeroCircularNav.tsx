@@ -1,24 +1,25 @@
 import { 
   LayoutDashboard, 
   Bot, 
-  ArrowUpDown, 
+  ArrowLeftRight, 
   CreditCard, 
   Users, 
   Smartphone, 
-  Bitcoin, 
+  Coins, 
   BarChart3 
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import keysLogo from '@/assets/keys-logo-icon.png';
 
 const navigationItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', color: 'from-emerald-500 to-teal-600', position: 'top', to: '/analytics' },
-  { icon: Bot, label: 'AI Assistant', color: 'from-purple-500 to-pink-600', position: 'top-right', to: '/aikeys' },
-  { icon: ArrowUpDown, label: 'Transactions', color: 'from-blue-500 to-indigo-600', position: 'right', to: '/transactions' },
-  { icon: CreditCard, label: 'Cards', color: 'from-cyan-500 to-blue-600', position: 'bottom-right', to: '/cards' },
-  { icon: Bitcoin, label: 'Crypto Hub', color: 'from-orange-500 to-amber-600', position: 'bottom', to: '/crypto-hub' },
-  { icon: BarChart3, label: 'Analytics', color: 'from-yellow-500 to-orange-600', position: 'bottom-left', to: '/analytics' },
-  { icon: Smartphone, label: 'Super App', color: 'from-indigo-500 to-purple-600', position: 'left', to: '/super-app' },
-  { icon: Users, label: 'Family', color: 'from-pink-500 to-rose-600', position: 'top-left', to: '/family-controls' },
+  { icon: Users, label: 'Family', color: 'bg-pink-500/20 text-pink-400', position: 'top', to: '/family-controls' },
+  { icon: Bot, label: 'AI Assistant', color: 'bg-purple-500/20 text-purple-400', position: 'top-right', to: '/aikeys' },
+  { icon: LayoutDashboard, label: 'Dashboard', color: 'bg-emerald-500/20 text-emerald-400', position: 'right', to: '/analytics' },
+  { icon: ArrowLeftRight, label: 'Transactions', color: 'bg-blue-500/20 text-blue-400', position: 'bottom-right', to: '/transactions' },
+  { icon: CreditCard, label: 'Cards', color: 'bg-teal-500/20 text-teal-400', position: 'bottom', to: '/cards' },
+  { icon: BarChart3, label: 'Analytics', color: 'bg-orange-500/20 text-orange-400', position: 'bottom-left', to: '/analytics' },
+  { icon: Coins, label: 'Crypto Hub', color: 'bg-yellow-500/20 text-yellow-400', position: 'left', to: '/crypto-hub' },
+  { icon: Smartphone, label: 'Super App', color: 'bg-blue-500/20 text-blue-400', position: 'top-left', to: '/super-app' },
 ];
 
 const positionClasses = {
@@ -36,69 +37,29 @@ export default function HeroCircularNav() {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
       {/* Central Logo */}
-      <div className="relative w-64 h-64 flex items-center justify-center">
-        {/* Outer glow */}
-        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-600/20 to-purple-600/20 blur-3xl animate-pulse" />
-        
-        {/* Central circle */}
-        <div className="relative w-40 h-40 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-2xl">
-          <div className="w-32 h-32 rounded-full bg-slate-950 flex items-center justify-center">
-            <svg viewBox="0 0 40 40" className="w-20 h-20 text-blue-400">
-              <path
-                fill="currentColor"
-                d="M20 0L0 10v10l10 5 10-5V10l10-5-10-5zM10 25l10 5 10-5v10l-10 5-10-5V25z"
-              />
-            </svg>
-          </div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="relative flex h-48 w-48 items-center justify-center rounded-full bg-slate-900/80 backdrop-blur-sm shadow-2xl border border-emerald-500/20">
+          <img src={keysLogo} alt="Keys Pay" className="h-20 w-20 animate-pulse" />
+          {/* Animated glow rings */}
+          <div className="absolute h-full w-full rounded-full border-2 border-emerald-400/30 animate-ping"></div>
+          <div className="absolute h-[120%] w-[120%] rounded-full border border-emerald-400/20"></div>
+          <div className="absolute h-[140%] w-[140%] rounded-full border border-emerald-400/10"></div>
         </div>
+      </div>
 
-        {/* Connecting lines */}
-        <svg className="absolute inset-0 w-full h-full" style={{ overflow: 'visible' }}>
-          {navigationItems.map((_, index) => {
-            const angle = (index * 45) * (Math.PI / 180);
-            const x1 = 50;
-            const y1 = 50;
-            const x2 = 50 + Math.cos(angle - Math.PI / 2) * 40;
-            const y2 = 50 + Math.sin(angle - Math.PI / 2) * 40;
-            
-            return (
-              <line
-                key={index}
-                x1={`${x1}%`}
-                y1={`${y1}%`}
-                x2={`${x2}%`}
-                y2={`${y2}%`}
-                stroke="url(#gradient)"
-                strokeWidth="1"
-                strokeDasharray="4 4"
-                className="animate-pulse"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              />
-            );
-          })}
-          <defs>
-            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgb(59, 130, 246)" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="rgb(147, 51, 234)" stopOpacity="0.5" />
-            </linearGradient>
-          </defs>
-        </svg>
-
-        {/* Navigation items */}
-        {navigationItems.map((item, index) => (
+      {/* Navigation Items in Circular Layout */}
+      <div className="relative w-[600px] h-[600px]">
+        {navigationItems.map((item) => (
           <Link
             key={item.label}
             to={item.to}
-            className={`absolute ${positionClasses[item.position as keyof typeof positionClasses]} group cursor-pointer`}
-            style={{ animationDelay: `${index * 0.1}s` }}
+            className={`absolute group ${positionClasses[item.position as keyof typeof positionClasses]}`}
           >
-            <div className="flex flex-col items-center gap-2">
-              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${item.color} bg-opacity-10 backdrop-blur-sm border border-white/10 flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300`}>
-                <item.icon className="w-7 h-7 text-white" />
+            <div className="flex items-center gap-3 rounded-2xl bg-slate-900/60 backdrop-blur-md px-5 py-4 shadow-lg border border-slate-700/50 transition-all duration-300 hover:scale-110 hover:shadow-xl hover:shadow-emerald-500/20 hover:border-emerald-500/50">
+              <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${item.color} transition-transform group-hover:scale-110`}>
+                <item.icon className="h-5 w-5" />
               </div>
-              <span className="text-sm text-gray-300 font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                {item.label}
-              </span>
+              <span className="text-sm font-medium text-white whitespace-nowrap">{item.label}</span>
             </div>
           </Link>
         ))}
