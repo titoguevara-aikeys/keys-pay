@@ -23,7 +23,7 @@ import {
   FileText,
   Clock
 } from 'lucide-react';
-import { useAuth } from '@/contexts/MockAuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import Navigation from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 

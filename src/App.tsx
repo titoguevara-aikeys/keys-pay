@@ -15,7 +15,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { MockAuthProvider } from "@/contexts/MockAuthContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import { ExchangeRateProvider } from "@/contexts/ExchangeRateContext";
 import { PlatformGuard } from "@/components/PlatformGuard";
@@ -26,7 +26,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import AdminRoute from "@/components/AdminRoute";
 import ComplianceFooter from "@/components/ComplianceFooter";
 import Index from "./pages/Index";
-import MockAuth from "./pages/MockAuth";
+import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
 import VerifyOtp from "./pages/VerifyOtp";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -66,7 +66,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <PlatformGuard>
       <SecurityProvider>
-        <MockAuthProvider>
+        <AuthProvider>
           <ExchangeRateProvider>
             <CurrencyProvider>
         <TooltipProvider>
@@ -76,7 +76,7 @@ const App = () => (
           <CommandPalette />
           <MouseTrail />
           <Routes>
-            <Route path="/auth" element={<MockAuth />} />
+            <Route path="/auth" element={<Auth />} />
             <Route path="/auth/forgot-password" element={<ForgotPassword />} />
             <Route path="/auth/verify-otp" element={<VerifyOtp />} />
             <Route path="/onboarding" element={
@@ -233,7 +233,7 @@ const App = () => (
             </TooltipProvider>
             </CurrencyProvider>
           </ExchangeRateProvider>
-      </MockAuthProvider>
+      </AuthProvider>
       </SecurityProvider>
     </PlatformGuard>
   </QueryClientProvider>

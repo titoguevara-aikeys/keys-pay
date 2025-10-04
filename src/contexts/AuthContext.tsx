@@ -28,31 +28,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUserRole = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      // SECURITY: Use server-side function to check roles from secure user_roles table
+      const { data: primaryRole, error: roleError } = await supabase
+        .rpc('get_user_primary_role', { _user_id: userId });
+      
+      if (roleError) {
+        console.error('Error fetching user role:', roleError);
+        setUserRole('user');
+        setIsAdmin(false);
+        setIsProtectedOwner(false);
+        return;
+      }
+      
+      // Check if user is admin using security definer function
+      const { data: isAdminCheck, error: adminError } = await supabase
+        .rpc('is_admin_user', { _user_id: userId });
+      
+      if (adminError) {
+        console.error('Error checking admin status:', adminError);
+      }
+      
+      // Check protected owner status from profiles
+      const { data: profile } = await supabase
         .from('profiles')
-        .select('role, is_admin, is_protected_owner, email')
+        .select('is_protected_owner')
         .eq('user_id', userId)
         .maybeSingle();
       
-      if (error && error.code !== 'PGRST116') { // PGRST116 is "not found"
-        console.error('Error fetching user role:', error);
-        setUserRole('user');
-        setIsAdmin(false);
-        setIsProtectedOwner(false);
-        return;
-      }
-      
-      if (!data) {
-        // Profile doesn't exist yet, use defaults
-        setUserRole('user');
-        setIsAdmin(false);
-        setIsProtectedOwner(false);
-        return;
-      }
-      
-      const role = data.role || 'user';
-      const isAdminUser = data.is_admin || role === 'admin' || role === 'moderator' || role === 'super_admin';
-      const isOwner = data.is_protected_owner || false;
+      const role = primaryRole || 'user';
+      const isAdminUser = isAdminCheck || false;
+      const isOwner = profile?.is_protected_owner || false;
       
       setUserRole(role);
       setIsAdmin(isAdminUser);

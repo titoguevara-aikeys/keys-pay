@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/MockAuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield, AlertTriangle } from 'lucide-react';
 
@@ -9,7 +9,7 @@ interface AdminRouteProps {
 }
 
 const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
-  const { user, loading } = useAuth();
+  const { user, loading, isAdmin } = useAuth();
 
   if (loading) {
     return (
@@ -23,9 +23,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
     return <Navigate to="/auth" replace />;
   }
 
-  // TEMPORARILY DISABLED: Admin security check for debugging
-  // TODO: Re-enable admin security once super admin access is confirmed working
-  /*
+  // SECURITY: Admin verification using secure role-based access control
   if (!isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
@@ -53,7 +51,6 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
       </div>
     );
   }
-  */
 
   return <>{children}</>;
 };
