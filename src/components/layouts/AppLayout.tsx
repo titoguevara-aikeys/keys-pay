@@ -1,6 +1,6 @@
 import React from 'react';
 import MegaNav from '@/components/nav/MegaNav';
-import { ParticleField } from '@/components/effects/ParticleField';
+import ParticleField from '@/components/effects/ParticleField';
 
 interface AppLayoutProps {
   children: React.ReactNode;

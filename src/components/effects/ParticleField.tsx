@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface Particle {
   x: number;
@@ -7,6 +7,9 @@ interface Particle {
   vy: number;
   size: number;
   opacity: number;
+  rotation: number;
+  rotationSpeed: number;
+  color: string;
   life: number;
   maxLife: number;
 }
@@ -18,11 +21,10 @@ interface ParticleFieldProps {
   interactive?: boolean;
 }
 
-export function ParticleField({ 
-  particleCount = 50, 
-  className = '', 
-  color = '#60a5fa',
-  interactive = true 
+export default function ParticleField({ 
+  particleCount = 15, 
+  className = '',
+  interactive = false
 }: ParticleFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
@@ -36,9 +38,18 @@ export function ParticleField({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const colors = [
+      'rgba(59, 130, 246, 0.6)',   // blue
+      'rgba(139, 92, 246, 0.6)',   // purple
+      'rgba(236, 72, 153, 0.6)',   // pink
+      'rgba(251, 146, 60, 0.6)',   // orange
+      'rgba(34, 197, 94, 0.6)',    // green
+      'rgba(6, 182, 212, 0.6)',    // cyan
+    ];
+
     const resizeCanvas = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     };
 
     const createParticle = (): Particle => ({
@@ -46,10 +57,13 @@ export function ParticleField({
       y: Math.random() * canvas.height,
       vx: (Math.random() - 0.5) * 0.5,
       vy: (Math.random() - 0.5) * 0.5,
-      size: Math.random() * 2 + 1,
-      opacity: Math.random() * 0.5 + 0.2,
+      size: Math.random() * 40 + 20, // 20-60px
+      opacity: Math.random() * 0.3 + 0.1, // 0.1-0.4
+      rotation: Math.random() * 360,
+      rotationSpeed: (Math.random() - 0.5) * 2, // -1 to 1 degrees per frame
+      color: colors[Math.floor(Math.random() * colors.length)],
       life: 0,
-      maxLife: Math.random() * 1000 + 1000
+      maxLife: Math.random() * 500 + 500, // 500-1000 frames
     });
 
     const initParticles = () => {
@@ -57,73 +71,75 @@ export function ParticleField({
     };
 
     const updateParticles = () => {
-      particlesRef.current.forEach((particle, index) => {
+      particlesRef.current.forEach((particle) => {
         particle.x += particle.vx;
         particle.y += particle.vy;
-        particle.life += 1;
+        particle.rotation += particle.rotationSpeed;
+        particle.life++;
 
-        // Interaction with mouse
-        if (interactive) {
+        if (interactive && mouseRef.current) {
           const dx = mouseRef.current.x - particle.x;
           const dy = mouseRef.current.y - particle.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           
-          if (distance < 100) {
-            const force = (100 - distance) / 100;
-            particle.vx += dx * force * 0.001;
-            particle.vy += dy * force * 0.001;
+          if (distance < 150) {
+            const force = (150 - distance) / 150;
+            particle.vx -= (dx / distance) * force * 0.1;
+            particle.vy -= (dy / distance) * force * 0.1;
           }
         }
 
-        // Fade based on life
-        particle.opacity = Math.max(0, 0.7 - (particle.life / particle.maxLife));
-
-        // Boundaries
-        if (particle.x < 0 || particle.x > canvas.width || 
-            particle.y < 0 || particle.y > canvas.height || 
-            particle.life >= particle.maxLife) {
-          particlesRef.current[index] = createParticle();
+        // Fade in and out
+        if (particle.life < 100) {
+          particle.opacity = (particle.life / 100) * 0.3;
+        } else if (particle.life > particle.maxLife - 100) {
+          particle.opacity = ((particle.maxLife - particle.life) / 100) * 0.3;
         }
+
+        // Respawn if out of bounds or life expired
+        if (
+          particle.x < -100 ||
+          particle.x > canvas.width + 100 ||
+          particle.y < -100 ||
+          particle.y > canvas.height + 100 ||
+          particle.life >= particle.maxLife
+        ) {
+          Object.assign(particle, createParticle());
+        }
+
+        // Damping
+        particle.vx *= 0.99;
+        particle.vy *= 0.99;
       });
     };
 
     const drawParticles = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      particlesRef.current.forEach(particle => {
-        ctx.save();
-        ctx.globalAlpha = particle.opacity;
-        ctx.fillStyle = color;
-        
-        // Add glow effect
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = color;
-        
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      });
 
-      // Draw connections between nearby particles
-      particlesRef.current.forEach((particle1, i) => {
-        particlesRef.current.slice(i + 1).forEach(particle2 => {
-          const dx = particle1.x - particle2.x;
-          const dy = particle1.y - particle2.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          
-          if (distance < 80) {
-            ctx.save();
-            ctx.globalAlpha = (80 - distance) / 80 * 0.2;
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 0.5;
-            ctx.beginPath();
-            ctx.moveTo(particle1.x, particle1.y);
-            ctx.lineTo(particle2.x, particle2.y);
-            ctx.stroke();
-            ctx.restore();
-          }
-        });
+      particlesRef.current.forEach((particle) => {
+        ctx.save();
+        ctx.translate(particle.x, particle.y);
+        ctx.rotate((particle.rotation * Math.PI) / 180);
+        ctx.globalAlpha = particle.opacity;
+
+        // Draw logo as colored shape (simplified Keys logo)
+        const size = particle.size;
+        ctx.fillStyle = particle.color;
+        
+        // Keys logo simplified geometric shape
+        ctx.beginPath();
+        ctx.moveTo(-size/3, -size/3);
+        ctx.lineTo(size/3, -size/3);
+        ctx.lineTo(size/3, 0);
+        ctx.lineTo(size/6, 0);
+        ctx.lineTo(size/6, size/3);
+        ctx.lineTo(-size/6, size/3);
+        ctx.lineTo(-size/6, size/6);
+        ctx.lineTo(-size/3, size/6);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.restore();
       });
     };
 
@@ -134,43 +150,32 @@ export function ParticleField({
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current.x = e.clientX - rect.left;
-      mouseRef.current.y = e.clientY - rect.top;
+      mouseRef.current = { x: e.clientX, y: e.clientY };
     };
 
-    const handleResize = () => {
-      resizeCanvas();
-      initParticles();
-    };
-
-    // Initialize
     resizeCanvas();
     initParticles();
     animate();
 
-    // Event listeners
     if (interactive) {
-      canvas.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mousemove', handleMouseMove);
     }
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', resizeCanvas);
 
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
-      if (interactive) {
-        canvas.removeEventListener('mousemove', handleMouseMove);
-      }
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', resizeCanvas);
     };
-  }, [particleCount, color, interactive]);
+  }, [particleCount, interactive]);
 
   return (
     <canvas
       ref={canvasRef}
-      className={`absolute inset-0 pointer-events-none ${className}`}
-      style={{ zIndex: 1 }}
+      className={`fixed inset-0 pointer-events-none ${className}`}
+      style={{ zIndex: 0 }}
     />
   );
 }

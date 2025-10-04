@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import HeroCircularNav from './HeroCircularNav';
-import FloatingLogos from './FloatingLogos';
+import ParticleField from '@/components/effects/ParticleField';
 
 export default function DarkHero() {
   return (
@@ -13,8 +13,8 @@ export default function DarkHero() {
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl" />
       
-      {/* Floating logos */}
-      <FloatingLogos />
+      {/* Animated rotating logo particles */}
+      <ParticleField particleCount={20} interactive={true} />
       
       <div className="container mx-auto px-4 relative">
         <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-5rem)]">
