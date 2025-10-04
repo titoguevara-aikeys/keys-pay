@@ -1327,6 +1327,45 @@ export type Database = {
           },
         ]
       }
+      data_migrations: {
+        Row: {
+          completed_at: string | null
+          created_by: string | null
+          error_log: Json | null
+          id: string
+          records_migrated: number | null
+          source_platform: string
+          started_at: string | null
+          status: string | null
+          target_table: string
+          total_records: number | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_by?: string | null
+          error_log?: Json | null
+          id?: string
+          records_migrated?: number | null
+          source_platform: string
+          started_at?: string | null
+          status?: string | null
+          target_table: string
+          total_records?: number | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_by?: string | null
+          error_log?: Json | null
+          id?: string
+          records_migrated?: number | null
+          source_platform?: string
+          started_at?: string | null
+          status?: string | null
+          target_table?: string
+          total_records?: number | null
+        }
+        Relationships: []
+      }
       deals: {
         Row: {
           api_deal_id: string | null
@@ -1741,6 +1780,102 @@ export type Database = {
         }
         Relationships: []
       }
+      international_transfers: {
+        Row: {
+          amount: number
+          completed_at: string | null
+          created_at: string | null
+          exchange_rate: number | null
+          fees: number | null
+          id: string
+          provider_reference: string | null
+          recipient_country: string
+          recipient_name: string
+          sender_name: string
+          source_currency: string
+          status: Database["public"]["Enums"]["transaction_status"] | null
+          target_currency: string
+          transfer_method: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          completed_at?: string | null
+          created_at?: string | null
+          exchange_rate?: number | null
+          fees?: number | null
+          id?: string
+          provider_reference?: string | null
+          recipient_country: string
+          recipient_name: string
+          sender_name: string
+          source_currency: string
+          status?: Database["public"]["Enums"]["transaction_status"] | null
+          target_currency: string
+          transfer_method?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          completed_at?: string | null
+          created_at?: string | null
+          exchange_rate?: number | null
+          fees?: number | null
+          id?: string
+          provider_reference?: string | null
+          recipient_country?: string
+          recipient_name?: string
+          sender_name?: string
+          source_currency?: string
+          status?: Database["public"]["Enums"]["transaction_status"] | null
+          target_currency?: string
+          transfer_method?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      investment_products: {
+        Row: {
+          apy_rate: number | null
+          created_at: string | null
+          description: string | null
+          features: Json | null
+          id: string
+          is_active: boolean | null
+          maximum_investment: number | null
+          minimum_investment: number | null
+          product_name: string
+          product_type: string
+          risk_level: number | null
+        }
+        Insert: {
+          apy_rate?: number | null
+          created_at?: string | null
+          description?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          maximum_investment?: number | null
+          minimum_investment?: number | null
+          product_name: string
+          product_type: string
+          risk_level?: number | null
+        }
+        Update: {
+          apy_rate?: number | null
+          created_at?: string | null
+          description?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          maximum_investment?: number | null
+          minimum_investment?: number | null
+          product_name?: string
+          product_type?: string
+          risk_level?: number | null
+        }
+        Relationships: []
+      }
       jobs: {
         Row: {
           attempts: number | null
@@ -1796,6 +1931,165 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      keyspay_api_credentials: {
+        Row: {
+          api_key_encrypted: string | null
+          api_secret_encrypted: string | null
+          config: Json | null
+          created_at: string | null
+          endpoint_url: string | null
+          id: string
+          is_sandbox: boolean | null
+          service_name: string
+          updated_at: string | null
+          webhook_secret: string | null
+        }
+        Insert: {
+          api_key_encrypted?: string | null
+          api_secret_encrypted?: string | null
+          config?: Json | null
+          created_at?: string | null
+          endpoint_url?: string | null
+          id?: string
+          is_sandbox?: boolean | null
+          service_name: string
+          updated_at?: string | null
+          webhook_secret?: string | null
+        }
+        Update: {
+          api_key_encrypted?: string | null
+          api_secret_encrypted?: string | null
+          config?: Json | null
+          created_at?: string | null
+          endpoint_url?: string | null
+          id?: string
+          is_sandbox?: boolean | null
+          service_name?: string
+          updated_at?: string | null
+          webhook_secret?: string | null
+        }
+        Relationships: []
+      }
+      keyspay_migrations: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          error_log: string | null
+          id: string
+          migrated_records: number | null
+          migration_name: string
+          source_system: string
+          started_at: string | null
+          status: Database["public"]["Enums"]["migration_status"] | null
+          target_table: string
+          total_records: number | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          error_log?: string | null
+          id?: string
+          migrated_records?: number | null
+          migration_name: string
+          source_system: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["migration_status"] | null
+          target_table: string
+          total_records?: number | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          error_log?: string | null
+          id?: string
+          migrated_records?: number | null
+          migration_name?: string
+          source_system?: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["migration_status"] | null
+          target_table?: string
+          total_records?: number | null
+        }
+        Relationships: []
+      }
+      keyspay_services: {
+        Row: {
+          config: Json | null
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          provider: string | null
+          service_type: string
+          status: Database["public"]["Enums"]["service_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          config?: Json | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          provider?: string | null
+          service_type: string
+          status?: Database["public"]["Enums"]["service_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          config?: Json | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          provider?: string | null
+          service_type?: string
+          status?: Database["public"]["Enums"]["service_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      keyspay_user_profiles: {
+        Row: {
+          created_at: string | null
+          crypto_balance: number | null
+          id: string
+          investment_balance: number | null
+          kyc_data: Json | null
+          kyc_status: string | null
+          preferences: Json | null
+          risk_profile: string | null
+          total_balance: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          crypto_balance?: number | null
+          id?: string
+          investment_balance?: number | null
+          kyc_data?: Json | null
+          kyc_status?: string | null
+          preferences?: Json | null
+          risk_profile?: string | null
+          total_balance?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          crypto_balance?: number | null
+          id?: string
+          investment_balance?: number | null
+          kyc_data?: Json | null
+          kyc_status?: string | null
+          preferences?: Json | null
+          risk_profile?: string | null
+          total_balance?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       keyspay_webhook_events: {
         Row: {
@@ -2001,6 +2295,45 @@ export type Database = {
         }
         Relationships: []
       }
+      loyalty_points: {
+        Row: {
+          created_at: string | null
+          id: string
+          next_tier_threshold: number | null
+          points_balance: number | null
+          points_earned_lifetime: number | null
+          points_redeemed_lifetime: number | null
+          tier_benefits: Json | null
+          tier_status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          next_tier_threshold?: number | null
+          points_balance?: number | null
+          points_earned_lifetime?: number | null
+          points_redeemed_lifetime?: number | null
+          tier_benefits?: Json | null
+          tier_status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          next_tier_threshold?: number | null
+          points_balance?: number | null
+          points_earned_lifetime?: number | null
+          points_redeemed_lifetime?: number | null
+          tier_benefits?: Json | null
+          tier_status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       memberships: {
         Row: {
           active: boolean
@@ -2024,6 +2357,48 @@ export type Database = {
           expires_at?: string | null
           id?: string
           tier?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      merchant_accounts: {
+        Row: {
+          business_name: string
+          business_type: string | null
+          commission_rate: number | null
+          created_at: string | null
+          id: string
+          merchant_id: string | null
+          monthly_volume: number | null
+          payment_methods_enabled: string[] | null
+          settlement_currency: string | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          business_name: string
+          business_type?: string | null
+          commission_rate?: number | null
+          created_at?: string | null
+          id?: string
+          merchant_id?: string | null
+          monthly_volume?: number | null
+          payment_methods_enabled?: string[] | null
+          settlement_currency?: string | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          business_name?: string
+          business_type?: string | null
+          commission_rate?: number | null
+          created_at?: string | null
+          id?: string
+          merchant_id?: string | null
+          monthly_volume?: number | null
+          payment_methods_enabled?: string[] | null
+          settlement_currency?: string | null
+          status?: string | null
           user_id?: string
         }
         Relationships: []
@@ -2809,9 +3184,91 @@ export type Database = {
         }
         Relationships: []
       }
+      platform_services: {
+        Row: {
+          api_endpoint: string | null
+          category: Database["public"]["Enums"]["service_category"]
+          configuration: Json | null
+          created_at: string | null
+          credentials_required: string[] | null
+          id: string
+          provider: string
+          service_name: string
+          status: Database["public"]["Enums"]["service_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          api_endpoint?: string | null
+          category: Database["public"]["Enums"]["service_category"]
+          configuration?: Json | null
+          created_at?: string | null
+          credentials_required?: string[] | null
+          id?: string
+          provider: string
+          service_name: string
+          status?: Database["public"]["Enums"]["service_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          api_endpoint?: string | null
+          category?: Database["public"]["Enums"]["service_category"]
+          configuration?: Json | null
+          created_at?: string | null
+          credentials_required?: string[] | null
+          id?: string
+          provider?: string
+          service_name?: string
+          status?: Database["public"]["Enums"]["service_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      premium_cards: {
+        Row: {
+          annual_fee: number | null
+          benefits: Json | null
+          card_tier: string
+          created_at: string | null
+          credit_limit: number | null
+          expires_at: string | null
+          id: string
+          issued_at: string | null
+          rewards_rate: number | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          annual_fee?: number | null
+          benefits?: Json | null
+          card_tier: string
+          created_at?: string | null
+          credit_limit?: number | null
+          expires_at?: string | null
+          id?: string
+          issued_at?: string | null
+          rewards_rate?: number | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          annual_fee?: number | null
+          benefits?: Json | null
+          card_tier?: string
+          created_at?: string | null
+          credit_limit?: number | null
+          expires_at?: string | null
+          id?: string
+          issued_at?: string | null
+          rewards_rate?: number | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           business_role: string | null
+          country: string | null
           created_at: string
           cross_platform_preferences: Json | null
           email: string | null
@@ -2819,13 +3276,16 @@ export type Database = {
           id: string
           is_admin: boolean
           is_protected_owner: boolean | null
+          kyc_status: string | null
           last_login_platform: string | null
           last_name: string | null
           membership_tier: string | null
+          onboarding_completed: boolean | null
           owner_since: string | null
           phone: string | null
           platform_access_history: Json | null
           platform_signature: string | null
+          preferred_language: string | null
           primary_organization_id: string | null
           registration_platform: string | null
           role: Database["public"]["Enums"]["app_role"]
@@ -2836,6 +3296,7 @@ export type Database = {
         }
         Insert: {
           business_role?: string | null
+          country?: string | null
           created_at?: string
           cross_platform_preferences?: Json | null
           email?: string | null
@@ -2843,13 +3304,16 @@ export type Database = {
           id?: string
           is_admin?: boolean
           is_protected_owner?: boolean | null
+          kyc_status?: string | null
           last_login_platform?: string | null
           last_name?: string | null
           membership_tier?: string | null
+          onboarding_completed?: boolean | null
           owner_since?: string | null
           phone?: string | null
           platform_access_history?: Json | null
           platform_signature?: string | null
+          preferred_language?: string | null
           primary_organization_id?: string | null
           registration_platform?: string | null
           role?: Database["public"]["Enums"]["app_role"]
@@ -2860,6 +3324,7 @@ export type Database = {
         }
         Update: {
           business_role?: string | null
+          country?: string | null
           created_at?: string
           cross_platform_preferences?: Json | null
           email?: string | null
@@ -2867,13 +3332,16 @@ export type Database = {
           id?: string
           is_admin?: boolean
           is_protected_owner?: boolean | null
+          kyc_status?: string | null
           last_login_platform?: string | null
           last_name?: string | null
           membership_tier?: string | null
+          onboarding_completed?: boolean | null
           owner_since?: string | null
           phone?: string | null
           platform_access_history?: Json | null
           platform_signature?: string | null
+          preferred_language?: string | null
           primary_organization_id?: string | null
           registration_platform?: string | null
           role?: Database["public"]["Enums"]["app_role"]
@@ -3935,6 +4403,92 @@ export type Database = {
         }
         Relationships: []
       }
+      user_financial_profiles: {
+        Row: {
+          aml_status: string | null
+          aum_value: number | null
+          created_at: string | null
+          id: string
+          investment_preferences: Json | null
+          kyc_status: string | null
+          risk_profile: string | null
+          updated_at: string | null
+          user_id: string
+          wealth_tier: string | null
+        }
+        Insert: {
+          aml_status?: string | null
+          aum_value?: number | null
+          created_at?: string | null
+          id?: string
+          investment_preferences?: Json | null
+          kyc_status?: string | null
+          risk_profile?: string | null
+          updated_at?: string | null
+          user_id: string
+          wealth_tier?: string | null
+        }
+        Update: {
+          aml_status?: string | null
+          aum_value?: number | null
+          created_at?: string | null
+          id?: string
+          investment_preferences?: Json | null
+          kyc_status?: string | null
+          risk_profile?: string | null
+          updated_at?: string | null
+          user_id?: string
+          wealth_tier?: string | null
+        }
+        Relationships: []
+      }
+      user_investments: {
+        Row: {
+          created_at: string | null
+          current_value: number
+          id: string
+          invested_amount: number
+          invested_at: string | null
+          maturity_date: string | null
+          product_id: string
+          returns_earned: number | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          current_value: number
+          id?: string
+          invested_amount: number
+          invested_at?: string | null
+          maturity_date?: string | null
+          product_id: string
+          returns_earned?: number | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          current_value?: number
+          id?: string
+          invested_amount?: number
+          invested_at?: string | null
+          maturity_date?: string | null
+          product_id?: string
+          returns_earned?: number | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_investments_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "investment_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           created_at: string | null
@@ -4267,6 +4821,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      audit_security_configuration: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      award_loyalty_points: {
+        Args: {
+          p_transaction_amount: number
+          p_transaction_type?: string
+          p_user_id: string
+        }
+        Returns: Json
+      }
       calculate_spending_insights: {
         Args: { period_days?: number; user_id_param: string }
         Returns: {
@@ -4323,9 +4889,33 @@ export type Database = {
         }
         Returns: Json
       }
+      enforce_otp_security_baseline: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      get_crypto_markets: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          base_image: string
+          base_name: string
+          base_symbol: string
+          change_24h: number
+          id: string
+          last_price: number
+          market_cap: number
+          quote_name: string
+          quote_symbol: string
+          updated_at: string
+          volume_24h: number
+        }[]
+      }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: Database["public"]["Enums"]["app_role"]
+      }
+      get_platform_service_status: {
+        Args: { service_name: string }
+        Returns: Json
       }
       get_security_metrics: {
         Args: { p_user_id: string }
@@ -4400,6 +4990,15 @@ export type Database = {
         }
         Returns: string
       }
+      log_security_config_change: {
+        Args: {
+          changed_by?: string
+          config_type: string
+          new_value: string
+          old_value: string
+        }
+        Returns: string
+      }
       log_security_event: {
         Args:
           | {
@@ -4456,6 +5055,18 @@ export type Database = {
         }
         Returns: string
       }
+      start_keys_pay_migration: {
+        Args: {
+          migration_name: string
+          source_table: string
+          target_table: string
+        }
+        Returns: string
+      }
+      sync_crypto_market_data: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       transfer_between_accounts: {
         Args: {
           p_amount: number
@@ -4474,6 +5085,15 @@ export type Database = {
           p_value: Json
         }
         Returns: boolean
+      }
+      update_user_points: {
+        Args: {
+          description_param?: string
+          points_change: number
+          transaction_type_param: string
+          user_id_param: string
+        }
+        Returns: Json
       }
       upsert_wiki_page: {
         Args: {
@@ -4512,6 +5132,10 @@ export type Database = {
           results: Json
         }
       }
+      validate_otp_security_settings: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       validate_platform_license: {
         Args: Record<PropertyKey, never>
         Returns: boolean
@@ -4543,7 +5167,22 @@ export type Database = {
         | "equity"
         | "revenue"
         | "expense"
+      migration_status:
+        | "pending"
+        | "in_progress"
+        | "completed"
+        | "failed"
+        | "rolled_back"
       organization_role: "owner" | "admin" | "member" | "viewer"
+      service_category:
+        | "payment_hub"
+        | "crypto_wallet"
+        | "international"
+        | "merchants"
+        | "financial"
+        | "wealth"
+      service_status: "active" | "inactive" | "maintenance" | "coming_soon"
+      transaction_status: "pending" | "completed" | "failed" | "cancelled"
       transfer_status:
         | "pending"
         | "processing"
@@ -4701,7 +5340,24 @@ export const Constants = {
         "revenue",
         "expense",
       ],
+      migration_status: [
+        "pending",
+        "in_progress",
+        "completed",
+        "failed",
+        "rolled_back",
+      ],
       organization_role: ["owner", "admin", "member", "viewer"],
+      service_category: [
+        "payment_hub",
+        "crypto_wallet",
+        "international",
+        "merchants",
+        "financial",
+        "wealth",
+      ],
+      service_status: ["active", "inactive", "maintenance", "coming_soon"],
+      transaction_status: ["pending", "completed", "failed", "cancelled"],
       transfer_status: [
         "pending",
         "processing",

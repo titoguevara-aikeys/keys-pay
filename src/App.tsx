@@ -27,6 +27,9 @@ import AdminRoute from "@/components/AdminRoute";
 import ComplianceFooter from "@/components/ComplianceFooter";
 import Index from "./pages/Index";
 import MockAuth from "./pages/MockAuth";
+import Onboarding from "./pages/Onboarding";
+import VerifyOtp from "./pages/VerifyOtp";
+import ForgotPassword from "./pages/ForgotPassword";
 import NotFound from "./pages/NotFound";
 import FamilyControls from "./pages/FamilyControls";
 import Cards from "./pages/Cards";
@@ -74,6 +77,18 @@ const App = () => (
           <MouseTrail />
           <Routes>
             <Route path="/auth" element={<MockAuth />} />
+            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+            <Route path="/auth/verify-otp" element={<VerifyOtp />} />
+            <Route path="/onboarding" element={
+              <ProtectedRoute>
+                <Onboarding />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Index />
+              </ProtectedRoute>
+            } />
             <Route path="/aikeys" element={<Aikeys />} />
             <Route path="/travel" element={
               <ProtectedRoute>
