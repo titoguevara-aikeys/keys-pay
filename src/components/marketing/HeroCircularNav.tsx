@@ -8,16 +8,17 @@ import {
   Bitcoin, 
   BarChart3 
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const navigationItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', color: 'from-emerald-500 to-teal-600', position: 'top' },
-  { icon: Bot, label: 'AI Assistant', color: 'from-purple-500 to-pink-600', position: 'top-right' },
-  { icon: ArrowUpDown, label: 'Transactions', color: 'from-blue-500 to-indigo-600', position: 'right' },
-  { icon: CreditCard, label: 'Cards', color: 'from-cyan-500 to-blue-600', position: 'bottom-right' },
-  { icon: Bitcoin, label: 'Crypto Hub', color: 'from-orange-500 to-amber-600', position: 'bottom' },
-  { icon: BarChart3, label: 'Analytics', color: 'from-yellow-500 to-orange-600', position: 'bottom-left' },
-  { icon: Smartphone, label: 'Super App', color: 'from-indigo-500 to-purple-600', position: 'left' },
-  { icon: Users, label: 'Family', color: 'from-pink-500 to-rose-600', position: 'top-left' },
+  { icon: LayoutDashboard, label: 'Dashboard', color: 'from-emerald-500 to-teal-600', position: 'top', to: '/analytics' },
+  { icon: Bot, label: 'AI Assistant', color: 'from-purple-500 to-pink-600', position: 'top-right', to: '/aikeys' },
+  { icon: ArrowUpDown, label: 'Transactions', color: 'from-blue-500 to-indigo-600', position: 'right', to: '/transactions' },
+  { icon: CreditCard, label: 'Cards', color: 'from-cyan-500 to-blue-600', position: 'bottom-right', to: '/cards' },
+  { icon: Bitcoin, label: 'Crypto Hub', color: 'from-orange-500 to-amber-600', position: 'bottom', to: '/crypto-hub' },
+  { icon: BarChart3, label: 'Analytics', color: 'from-yellow-500 to-orange-600', position: 'bottom-left', to: '/analytics' },
+  { icon: Smartphone, label: 'Super App', color: 'from-indigo-500 to-purple-600', position: 'left', to: '/super-app' },
+  { icon: Users, label: 'Family', color: 'from-pink-500 to-rose-600', position: 'top-left', to: '/family-controls' },
 ];
 
 const positionClasses = {
@@ -85,8 +86,9 @@ export default function HeroCircularNav() {
 
         {/* Navigation items */}
         {navigationItems.map((item, index) => (
-          <div
+          <Link
             key={item.label}
+            to={item.to}
             className={`absolute ${positionClasses[item.position as keyof typeof positionClasses]} group cursor-pointer`}
             style={{ animationDelay: `${index * 0.1}s` }}
           >
@@ -98,7 +100,7 @@ export default function HeroCircularNav() {
                 {item.label}
               </span>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
