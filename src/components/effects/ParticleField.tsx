@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import keysLogo from '@/assets/keys-logo-icon.png';
 
 interface Particle {
   x: number;
@@ -30,10 +31,18 @@ export default function ParticleField({
   const particlesRef = useRef<Particle[]>([]);
   const mouseRef = useRef({ x: 0, y: 0 });
   const animationFrameRef = useRef<number>();
+  const [logoImage, setLogoImage] = useState<HTMLImageElement | null>(null);
+
+  // Load logo image
+  useEffect(() => {
+    const img = new Image();
+    img.src = keysLogo;
+    img.onload = () => setLogoImage(img);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !logoImage) return;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -122,22 +131,17 @@ export default function ParticleField({
         ctx.rotate((particle.rotation * Math.PI) / 180);
         ctx.globalAlpha = particle.opacity;
 
-        // Draw logo as colored shape (simplified Keys logo)
+        // Draw the actual Keys Pay logo
         const size = particle.size;
-        ctx.fillStyle = particle.color;
         
-        // Keys logo simplified geometric shape
-        ctx.beginPath();
-        ctx.moveTo(-size/3, -size/3);
-        ctx.lineTo(size/3, -size/3);
-        ctx.lineTo(size/3, 0);
-        ctx.lineTo(size/6, 0);
-        ctx.lineTo(size/6, size/3);
-        ctx.lineTo(-size/6, size/3);
-        ctx.lineTo(-size/6, size/6);
-        ctx.lineTo(-size/3, size/6);
-        ctx.closePath();
-        ctx.fill();
+        // Apply color tint
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.drawImage(logoImage, -size / 2, -size / 2, size, size);
+        
+        // Apply color overlay
+        ctx.globalCompositeOperation = 'source-atop';
+        ctx.fillStyle = particle.color;
+        ctx.fillRect(-size / 2, -size / 2, size, size);
 
         ctx.restore();
       });
@@ -169,7 +173,7 @@ export default function ParticleField({
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', resizeCanvas);
     };
-  }, [particleCount, interactive]);
+  }, [particleCount, interactive, logoImage]);
 
   return (
     <canvas
