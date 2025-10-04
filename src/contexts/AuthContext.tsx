@@ -28,7 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUserRole = async (userId: string) => {
     try {
-      // SECURITY: Use server-side function to check roles from secure user_roles table
+      // Use secure server-side function to get user's primary role
       const { data: primaryRole, error: roleError } = await supabase
         .rpc('get_user_primary_role', { _user_id: userId });
       
@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
       
-      // Check if user is admin using security definer function
+      // Check if user is admin using secure server-side function
       const { data: isAdminCheck, error: adminError } = await supabase
         .rpc('is_admin_user', { _user_id: userId });
       
@@ -48,7 +48,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.error('Error checking admin status:', adminError);
       }
       
-      // Check protected owner status from profiles
+      // Get protected owner status from profiles (legacy field)
       const { data: profile } = await supabase
         .from('profiles')
         .select('is_protected_owner')

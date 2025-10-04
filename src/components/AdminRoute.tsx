@@ -23,7 +23,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
     return <Navigate to="/auth" replace />;
   }
 
-  // SECURITY: Admin verification using secure role-based access control
+  // CRITICAL SECURITY: Re-enabled admin protection using secure server-side role checks
   if (!isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
@@ -44,7 +44,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
             </p>
             <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
               <Shield className="h-3 w-3" />
-              <span>Protected by role-based access control</span>
+              <span>Protected by secure role-based access control</span>
             </div>
           </CardContent>
         </Card>
