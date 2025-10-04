@@ -1,17 +1,16 @@
-import Navbar from '@/components/marketing/Navbar';
-import Hero from '@/components/marketing/Hero';
+import DarkNavbar from '@/components/marketing/DarkNavbar';
+import DarkHero from '@/components/marketing/DarkHero';
 import Features from '@/components/marketing/Features';
 import Pricing from '@/components/marketing/Pricing';
 import FAQ from '@/components/marketing/FAQ';
 import Footer from '@/components/marketing/Footer';
 
 export default function Index() {
-
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <div className="min-h-screen bg-slate-950">
+      <DarkNavbar />
       <main>
-        <Hero />
+        <DarkHero />
         <Features />
         <Pricing />
         <FAQ />
