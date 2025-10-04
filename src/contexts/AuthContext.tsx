@@ -33,10 +33,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .rpc('get_user_primary_role', { _user_id: userId });
       
       if (roleError) {
-        console.error('Error fetching user role:', roleError);
-        setUserRole('user');
-        setIsAdmin(false);
-        setIsProtectedOwner(false);
+        console.warn('Could not fetch user role via RPC, using default:', roleError);
+        // Fallback: check profiles table directly
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role, is_admin, is_protected_owner')
+          .eq('user_id', userId)
+          .maybeSingle();
+        
+        if (profile) {
+          setUserRole(profile.role || 'user');
+          setIsAdmin(profile.is_admin || profile.role === 'admin' || profile.role === 'super_admin' || false);
+          setIsProtectedOwner(profile.is_protected_owner || false);
+        } else {
+          setUserRole('user');
+          setIsAdmin(false);
+          setIsProtectedOwner(false);
+        }
         return;
       }
       
@@ -45,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .rpc('is_admin_user', { _user_id: userId });
       
       if (adminError) {
-        console.error('Error checking admin status:', adminError);
+        console.warn('Could not check admin status via RPC:', adminError);
       }
       
       // Get protected owner status from profiles (legacy field)

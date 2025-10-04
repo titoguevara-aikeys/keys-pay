@@ -1,6 +1,6 @@
 // Custom hooks for NIUM Family API integration
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useAuth } from '@/contexts/MockAuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { niumFamilyAPI, type NiumFamilyMember, type NiumFamilyActivity } from '@/lib/nium/family-api';
 import { useToast } from './use-toast';
 
