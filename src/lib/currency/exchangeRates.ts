@@ -18,8 +18,9 @@ export interface ExchangeRateResponse {
   rates: Record<string, number>;
 }
 
-// Free tier API key - in production, this should be in environment variables
-const API_KEY = 'fca_live_LvCQqHnIzLaaRiFyIjA0Gr7yx2DW3OKXGPk8bv3U';
+// NOTE: FreeCurrencyAPI key needs to be obtained from https://freecurrencyapi.com/
+// For now, using fallback mock data to prevent errors
+const API_KEY = ''; // Get your free API key from https://freecurrencyapi.com/
 const BASE_URL = 'https://api.freecurrencyapi.com/v1/latest';
 
 /**
