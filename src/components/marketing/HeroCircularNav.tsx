@@ -23,14 +23,14 @@ const navigationItems = [
 ];
 
 const positionClasses = {
-  'top': 'top-[8%] left-1/2 -translate-x-1/2',
-  'top-right': 'top-[20%] right-[20%]',
-  'right': 'right-[8%] top-1/2 -translate-y-1/2',
-  'bottom-right': 'bottom-[20%] right-[20%]',
-  'bottom': 'bottom-[8%] left-1/2 -translate-x-1/2',
-  'bottom-left': 'bottom-[20%] left-[20%]',
-  'left': 'left-[8%] top-1/2 -translate-y-1/2',
-  'top-left': 'top-[20%] left-[20%]',
+  'top': 'top-[5%] left-1/2 -translate-x-1/2',
+  'top-right': 'top-[15%] right-[15%]',
+  'right': 'right-[5%] top-1/2 -translate-y-1/2',
+  'bottom-right': 'bottom-[15%] right-[15%]',
+  'bottom': 'bottom-[5%] left-1/2 -translate-x-1/2',
+  'bottom-left': 'bottom-[15%] left-[15%]',
+  'left': 'left-[5%] top-1/2 -translate-y-1/2',
+  'top-left': 'top-[15%] left-[15%]',
 };
 
 export default function HeroCircularNav() {
