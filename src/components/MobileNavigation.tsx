@@ -46,7 +46,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ className = '' }) =
     { to: '/', icon: Home, label: 'Dashboard', badge: null },
     { to: '/cards', icon: CreditCard, label: 'Cards', badge: null },
     { to: '/analytics', icon: BarChart3, label: 'Analytics', badge: null },
-    { to: '/crypto-hub', icon: Wallet, label: 'Crypto', badge: null },
+    { to: '/crypto', icon: Wallet, label: 'Crypto', badge: null },
     { to: '/family-controls', icon: Users, label: 'Family', badge: null },
   ];
 

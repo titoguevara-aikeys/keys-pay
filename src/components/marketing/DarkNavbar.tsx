@@ -75,7 +75,7 @@ export default function DarkNavbar() {
             <Link to="/transactions" onClick={() => setMobileMenuOpen(false)} className="py-2 text-gray-300 hover:text-white transition-colors">
               Transactions
             </Link>
-            <Link to="/crypto-hub" onClick={() => setMobileMenuOpen(false)} className="py-2 text-gray-300 hover:text-white transition-colors">
+            <Link to="/crypto" onClick={() => setMobileMenuOpen(false)} className="py-2 text-gray-300 hover:text-white transition-colors">
               Crypto Hub
             </Link>
             <Link to="/cards" onClick={() => setMobileMenuOpen(false)} className="py-2 text-gray-300 hover:text-white transition-colors">
