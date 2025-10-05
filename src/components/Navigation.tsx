@@ -92,8 +92,8 @@ const Navigation = () => {
             <CurrencySelector showLabel={false} className="text-sm" />
           </div>
 
-          {/* User Section */}
-          {user && (
+          {/* User Section or Auth Buttons */}
+          {user ? (
             <div className="hidden md:flex items-center gap-3">
               <div className="flex items-center gap-2 px-3 py-1.5 bg-muted/50 rounded-lg border">
                 <User className="h-4 w-4 text-muted-foreground" />
@@ -125,6 +125,19 @@ const Navigation = () => {
                 <LogOut className="h-4 w-4" />
                 Logout
               </Button>
+            </div>
+          ) : (
+            <div className="hidden md:flex items-center gap-3">
+              <NavLink to="/auth">
+                <Button variant="ghost" size="sm">
+                  Login
+                </Button>
+              </NavLink>
+              <NavLink to="/auth">
+                <Button size="sm" className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700">
+                  Open Account
+                </Button>
+              </NavLink>
             </div>
           )}
 
