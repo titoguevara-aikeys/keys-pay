@@ -1,11 +1,55 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Search, MessageSquare, Globe, Menu, X, Command } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import keysPayLogo from '@/assets/keys-pay-logo.png';
 
 export default function DarkNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('EN');
+  const navigate = useNavigate();
+
+  const languages = [
+    { code: 'EN', name: 'English' },
+    { code: 'ES', name: 'Español' },
+    { code: 'FR', name: 'Français' },
+    { code: 'DE', name: 'Deutsch' },
+    { code: 'ZH', name: '中文' },
+    { code: 'JA', name: '日本語' },
+  ];
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // You can implement search logic here
+      console.log('Searching for:', searchQuery);
+      setSearchOpen(false);
+      setSearchQuery('');
+    }
+  };
+
+  const handleAIChat = () => {
+    navigate('/ai-assistant');
+  };
+
+  const handleCommandK = () => {
+    setSearchOpen(true);
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-lg border-b border-white/5">
@@ -24,23 +68,50 @@ export default function DarkNavbar() {
 
         {/* Desktop Navigation - Right Actions */}
         <div className="hidden lg:flex items-center gap-4">
-          <button className="p-2 text-gray-400 hover:text-white transition-colors">
+          <button 
+            onClick={() => setSearchOpen(true)}
+            className="p-2 text-gray-400 hover:text-white transition-colors"
+            aria-label="Search"
+          >
             <Search size={20} />
           </button>
           
-          <button className="flex items-center gap-2 px-3 py-1.5 text-gray-400 hover:text-white transition-colors">
+          <button 
+            onClick={handleCommandK}
+            className="flex items-center gap-2 px-3 py-1.5 text-gray-400 hover:text-white transition-colors"
+            aria-label="Command palette"
+          >
             <Command size={16} />
             <span className="text-sm">K</span>
           </button>
           
-          <button className="p-2 text-gray-400 hover:text-white transition-colors">
+          <button 
+            onClick={handleAIChat}
+            className="p-2 text-gray-400 hover:text-white transition-colors"
+            aria-label="AI Assistant"
+          >
             <MessageSquare size={20} />
           </button>
           
-          <button className="flex items-center gap-2 px-3 py-1.5 text-gray-400 hover:text-white transition-colors">
-            <Globe size={18} />
-            <span className="text-sm">EN</span>
-          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center gap-2 px-3 py-1.5 text-gray-400 hover:text-white transition-colors">
+                <Globe size={18} />
+                <span className="text-sm">{selectedLanguage}</span>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              {languages.map((lang) => (
+                <DropdownMenuItem
+                  key={lang.code}
+                  onClick={() => setSelectedLanguage(lang.code)}
+                  className="cursor-pointer"
+                >
+                  {lang.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           
           <Link to="/auth">
             <Button variant="ghost" className="text-white hover:text-white hover:bg-white/10">
@@ -86,14 +157,26 @@ export default function DarkNavbar() {
             </Link>
             
             <div className="border-t border-white/5 pt-4 mt-2">
-              <button className="flex items-center gap-3 py-2 text-gray-400 hover:text-white transition-colors w-full">
+              <button 
+                onClick={() => {
+                  setSearchOpen(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center gap-3 py-2 text-gray-400 hover:text-white transition-colors w-full"
+              >
                 <Search size={20} />
                 <span>Search</span>
               </button>
               
-              <button className="flex items-center gap-3 py-2 text-gray-400 hover:text-white transition-colors w-full">
+              <button 
+                onClick={() => {
+                  handleAIChat();
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center gap-3 py-2 text-gray-400 hover:text-white transition-colors w-full"
+              >
                 <MessageSquare size={20} />
-                <span>Chat</span>
+                <span>AI Assistant</span>
               </button>
             </div>
             
@@ -111,6 +194,35 @@ export default function DarkNavbar() {
           </div>
         </div>
       )}
+
+      {/* Search Dialog */}
+      <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Search Keys Pay</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSearch} className="space-y-4">
+            <Input
+              type="search"
+              placeholder="Search for features, pages, help..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full"
+              autoFocus
+            />
+            <div className="flex justify-end gap-2">
+              <Button 
+                type="button" 
+                variant="ghost" 
+                onClick={() => setSearchOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">Search</Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 }
