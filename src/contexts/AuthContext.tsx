@@ -177,7 +177,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      // Attempt global sign out to invalidate refresh tokens across devices
+      await supabase.auth.signOut({ scope: 'global' } as any);
+    } catch (e) {
+      // Some environments may return session_not_found; still clear local state
+      console.warn('Sign out encountered an issue, clearing local session anyway');
+    } finally {
+      // Proactively clear local auth state to ensure UI updates immediately
+      setSession(null);
+      setUser(null);
+      setSanitizedUser(null);
+      setUserRole(null);
+      setIsAdmin(false);
+      setIsProtectedOwner(false);
+    }
   };
 
   const value = {

@@ -134,7 +134,7 @@ const Navigation = () => {
                   Login
                 </Button>
               </NavLink>
-              <NavLink to="/auth">
+              <NavLink to="/auth?tab=signup">
                 <Button size="sm" className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700">
                   Open Account
                 </Button>
@@ -156,6 +156,18 @@ const Navigation = () => {
                 </option>
               ))}
             </select>
+            {!user ? (
+              <>
+                <NavLink to="/auth">
+                  <Button variant="ghost" size="sm">Login</Button>
+                </NavLink>
+                <NavLink to="/auth?tab=signup">
+                  <Button size="sm" className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700">
+                    Open Account
+                  </Button>
+                </NavLink>
+              </>
+            ) : null}
           </div>
         </div>
       </div>
