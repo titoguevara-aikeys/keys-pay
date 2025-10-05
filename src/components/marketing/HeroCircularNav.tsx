@@ -22,8 +22,8 @@ const navigationItems = [
   { icon: Smartphone, label: 'Super App', color: 'bg-blue-500/20 text-blue-400', position: 'top-left', to: '/super-app' },
 ];
 
-// Calculate circular positions - radius of 180px from center
-const radius = 180;
+// Calculate circular positions - radius of 230px from center
+const radius = 230;
 const positionStyles = {
   'top': { top: '50%', left: '50%', transform: `translate(-50%, calc(-50% - ${radius}px))` },
   'top-right': { top: '50%', left: '50%', transform: `translate(calc(-50% + ${radius * 0.707}px), calc(-50% - ${radius * 0.707}px))` },
@@ -50,7 +50,7 @@ export default function HeroCircularNav() {
       </div>
 
       {/* Navigation Items in Circular Layout */}
-      <div className="relative w-[500px] h-[500px]">
+      <div className="relative w-[600px] h-[600px]">
         {navigationItems.map((item) => (
           <Link
             key={item.label}
