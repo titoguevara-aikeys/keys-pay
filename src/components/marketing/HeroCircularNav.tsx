@@ -22,15 +22,17 @@ const navigationItems = [
   { icon: Smartphone, label: 'Super App', color: 'bg-blue-500/20 text-blue-400', position: 'top-left', to: '/super-app' },
 ];
 
-const positionClasses = {
-  'top': 'top-[5%] left-1/2 -translate-x-1/2',
-  'top-right': 'top-[15%] right-[15%]',
-  'right': 'right-[5%] top-1/2 -translate-y-1/2',
-  'bottom-right': 'bottom-[15%] right-[15%]',
-  'bottom': 'bottom-[5%] left-1/2 -translate-x-1/2',
-  'bottom-left': 'bottom-[15%] left-[15%]',
-  'left': 'left-[5%] top-1/2 -translate-y-1/2',
-  'top-left': 'top-[15%] left-[15%]',
+// Calculate circular positions - radius of 180px from center
+const radius = 180;
+const positionStyles = {
+  'top': { top: '50%', left: '50%', transform: `translate(-50%, calc(-50% - ${radius}px))` },
+  'top-right': { top: '50%', left: '50%', transform: `translate(calc(-50% + ${radius * 0.707}px), calc(-50% - ${radius * 0.707}px))` },
+  'right': { top: '50%', left: '50%', transform: `translate(calc(-50% + ${radius}px), -50%)` },
+  'bottom-right': { top: '50%', left: '50%', transform: `translate(calc(-50% + ${radius * 0.707}px), calc(-50% + ${radius * 0.707}px))` },
+  'bottom': { top: '50%', left: '50%', transform: `translate(-50%, calc(-50% + ${radius}px))` },
+  'bottom-left': { top: '50%', left: '50%', transform: `translate(calc(-50% - ${radius * 0.707}px), calc(-50% + ${radius * 0.707}px))` },
+  'left': { top: '50%', left: '50%', transform: `translate(calc(-50% - ${radius}px), -50%)` },
+  'top-left': { top: '50%', left: '50%', transform: `translate(calc(-50% - ${radius * 0.707}px), calc(-50% - ${radius * 0.707}px))` },
 };
 
 export default function HeroCircularNav() {
@@ -48,12 +50,13 @@ export default function HeroCircularNav() {
       </div>
 
       {/* Navigation Items in Circular Layout */}
-      <div className="relative w-[450px] h-[450px]">
+      <div className="relative w-[500px] h-[500px]">
         {navigationItems.map((item) => (
           <Link
             key={item.label}
             to={item.to}
-            className={`absolute group ${positionClasses[item.position as keyof typeof positionClasses]}`}
+            className="absolute group"
+            style={positionStyles[item.position as keyof typeof positionStyles]}
           >
             <div className="flex items-center gap-3 rounded-2xl bg-slate-900/60 backdrop-blur-md px-5 py-4 shadow-lg border border-slate-700/50 transition-all duration-300 hover:scale-110 hover:shadow-xl hover:shadow-emerald-500/20 hover:border-emerald-500/50">
               <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${item.color} transition-transform group-hover:scale-110`}>
