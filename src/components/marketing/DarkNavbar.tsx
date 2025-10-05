@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, MessageSquare, Globe, Menu, X, Command } from 'lucide-react';
+import { Search, MessageSquare, Globe, Menu, X, Command, CheckCircle, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -16,21 +16,29 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import keysPayLogo from '@/assets/keys-pay-logo.png';
+import { useAuth } from '@/contexts/AuthContext';
+import { useProfile } from '@/hooks/useProfile';
+import { Badge } from '@/components/ui/badge';
+import i18n from '@/i18n/config';
 
 export default function DarkNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLanguage, setSelectedLanguage] = useState('EN');
+  const [selectedLanguage, setSelectedLanguage] = useState(i18n.language.toUpperCase());
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+  const { data: profile } = useProfile();
+  const isVerified = profile?.kyc_status === 'verified';
 
   const languages = [
-    { code: 'EN', name: 'English' },
-    { code: 'ES', name: 'Español' },
-    { code: 'FR', name: 'Français' },
-    { code: 'DE', name: 'Deutsch' },
-    { code: 'ZH', name: '中文' },
-    { code: 'JA', name: '日本語' },
+    { code: 'en', name: 'English' },
+    { code: 'es', name: 'Español' },
+    { code: 'fr', name: 'Français' },
+    { code: 'de', name: 'Deutsch' },
+    { code: 'zh', name: '中文' },
+    { code: 'ja', name: '日本語' },
+    { code: 'ar', name: 'العربية' },
   ];
 
   const handleSearch = (e: React.FormEvent) => {
@@ -100,11 +108,14 @@ export default function DarkNavbar() {
                 <span className="text-sm">{selectedLanguage}</span>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuContent align="end" className="w-48 z-[60]">
               {languages.map((lang) => (
                 <DropdownMenuItem
                   key={lang.code}
-                  onClick={() => setSelectedLanguage(lang.code)}
+                  onClick={() => {
+                    i18n.changeLanguage(lang.code);
+                    setSelectedLanguage(lang.code.toUpperCase());
+                  }}
                   className="cursor-pointer"
                 >
                   {lang.name}
@@ -113,17 +124,53 @@ export default function DarkNavbar() {
             </DropdownMenuContent>
           </DropdownMenu>
           
-          <Link to="/auth">
-            <Button variant="ghost" className="text-white hover:text-white hover:bg-white/10">
-              Login
-            </Button>
-          </Link>
-          
-          <Link to="/auth">
-            <Button className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-lg shadow-emerald-500/20">
-              Open Account
-            </Button>
-          </Link>
+          {user ? (
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg border border-white/10">
+                <User className="h-4 w-4 text-gray-300" />
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-white">
+                    {profile?.first_name ? `${profile.first_name} ${profile.last_name || ''}`.trim() : user.email?.split('@')[0] || 'User'}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-400">
+                      ID: {user.id?.slice(-8)?.toUpperCase() || 'N/A'}
+                    </span>
+                    {isVerified && (
+                      <div className="flex items-center gap-1">
+                        <CheckCircle className="h-3 w-3 text-emerald-500" />
+                        <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300 text-[10px]">
+                          Verified
+                        </Badge>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => { signOut(); navigate('/auth'); }}
+                className="text-white hover:text-white hover:bg-white/10"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <>
+              <Link to="/auth">
+                <Button variant="ghost" className="text-white hover:text-white hover:bg-white/10">
+                  Login
+                </Button>
+              </Link>
+              <Link to="/auth?tab=signup">
+                <Button className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-lg shadow-emerald-500/20">
+                  Open Account
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -186,7 +233,7 @@ export default function DarkNavbar() {
               </Button>
             </Link>
             
-            <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
+            <Link to="/auth?tab=signup" onClick={() => setMobileMenuOpen(false)}>
               <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white">
                 Open Account
               </Button>
