@@ -62,7 +62,11 @@ const Auth = () => {
         setError(error.message);
       }
     } else {
-      setMessage('Check your email for a confirmation link to complete your registration.');
+      setMessage('Account created! Please check your email to confirm, then you will be redirected to complete KYC verification.');
+      // After successful signup, wait a moment then redirect to KYC
+      setTimeout(() => {
+        navigate('/kyc');
+      }, 3000);
     }
     setLoading(false);
   };
@@ -176,6 +180,13 @@ const Auth = () => {
             
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-4">
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    After creating your account, you'll need to complete KYC verification to access all features.
+                  </AlertDescription>
+                </Alert>
+
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Email</Label>
                   <Input

@@ -40,7 +40,8 @@ const Navigation = () => {
     { to: '/mobile-app', icon: Smartphone, label: 'Mobile App' },
   ];
 
-  const isVerified = profile?.email && profile?.phone;
+  // Check KYC verification status instead of just email/phone presence
+  const isVerified = profile?.kyc_status === 'verified';
   
   const handleLogout = () => {
     signOut();

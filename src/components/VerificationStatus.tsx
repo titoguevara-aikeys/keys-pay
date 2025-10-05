@@ -8,9 +8,8 @@ const VerificationStatus = () => {
   
   if (isLoading || !profile) return null;
   
-  // For demo purposes, consider user verified if they have email and phone
-  // In real implementation, this would check actual KYC status
-  const isVerified = profile.email && profile.phone;
+  // Check actual KYC verification status
+  const isVerified = profile.kyc_status === 'verified';
   
   if (!isVerified) return null;
 

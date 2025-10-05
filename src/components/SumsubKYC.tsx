@@ -74,6 +74,26 @@ export const SumsubKYC: React.FC = () => {
         .on('idCheck.onStepCompleted', (payload: unknown) => {
           console.log('Sumsub step completed', payload);
         })
+        .on('idCheck.applicantStatus', async (payload: any) => {
+          console.log('Sumsub applicant status', payload);
+          // Update profile KYC status when verification is completed
+          if (payload?.reviewStatus === 'completed' && user?.id) {
+            try {
+              const { error: updateError } = await supabase
+                .from('profiles')
+                .update({ kyc_status: 'verified' })
+                .eq('user_id', user.id);
+              
+              if (updateError) {
+                console.error('Failed to update KYC status:', updateError);
+              } else {
+                console.log('KYC status updated to verified');
+              }
+            } catch (err) {
+              console.error('Error updating KYC status:', err);
+            }
+          }
+        })
         .on('idCheck.onError', (payload: unknown) => {
           console.error('Sumsub error', payload);
         });
