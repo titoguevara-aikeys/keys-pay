@@ -37,11 +37,11 @@ const positionStyles = {
 
 export default function HeroCircularNav() {
   return (
-    <div className="relative w-full h-full flex items-center justify-center scale-[0.6] sm:scale-75 md:scale-90 lg:scale-100">
+    <div className="relative w-full h-full flex items-center justify-center scale-[0.65] sm:scale-75 md:scale-90 lg:scale-100">
       {/* Central Logo */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="relative flex h-32 w-32 sm:h-40 sm:w-40 lg:h-48 lg:w-48 items-center justify-center rounded-full bg-slate-900/80 backdrop-blur-sm shadow-2xl border border-emerald-500/20">
-          <img src={keysLogo} alt="Keys Pay" className="h-14 w-14 sm:h-16 sm:w-16 lg:h-20 lg:w-20 animate-pulse" />
+        <div className="relative flex h-36 w-36 sm:h-44 sm:w-44 lg:h-48 lg:w-48 items-center justify-center rounded-full bg-gradient-to-br from-slate-900 to-slate-800 backdrop-blur-sm shadow-2xl border-2 border-emerald-500/30">
+          <img src={keysLogo} alt="Keys Pay" className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 animate-pulse" />
           {/* Animated glow rings */}
           <div className="absolute h-full w-full rounded-full border-2 border-emerald-400/30 animate-ping"></div>
           <div className="absolute h-[120%] w-[120%] rounded-full border border-emerald-400/20"></div>
@@ -58,11 +58,11 @@ export default function HeroCircularNav() {
             className="absolute group"
             style={positionStyles[item.position as keyof typeof positionStyles]}
           >
-            <div className="flex items-center gap-2 sm:gap-3 rounded-xl sm:rounded-2xl bg-slate-900/60 backdrop-blur-md px-3 py-2 sm:px-4 sm:py-3 lg:px-5 lg:py-4 shadow-lg border border-slate-700/50 transition-all duration-300 hover:scale-110 hover:shadow-xl hover:shadow-emerald-500/20 hover:border-emerald-500/50">
-              <div className={`flex h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 items-center justify-center rounded-lg ${item.color} transition-transform group-hover:scale-110`}>
-                <item.icon className="h-4 w-4 sm:h-4.5 sm:w-4.5 lg:h-5 lg:w-5" />
+            <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl sm:rounded-2xl bg-slate-900/70 backdrop-blur-md px-4 py-2.5 sm:px-5 sm:py-3 lg:px-6 lg:py-4 shadow-lg border border-slate-700/60 transition-all duration-300 hover:scale-110 hover:shadow-xl hover:shadow-emerald-500/25 hover:border-emerald-500/60 hover:bg-slate-900/80">
+              <div className={`flex h-9 w-9 sm:h-10 sm:w-10 lg:h-11 lg:w-11 items-center justify-center rounded-lg ${item.color} transition-transform group-hover:scale-110`}>
+                <item.icon className="h-5 w-5 sm:h-5 sm:w-5 lg:h-6 lg:w-6 stroke-[2.5]" />
               </div>
-              <span className="text-xs sm:text-sm font-medium text-white whitespace-nowrap">{item.label}</span>
+              <span className="text-sm sm:text-sm lg:text-base font-semibold text-white whitespace-nowrap tracking-wide">{item.label}</span>
             </div>
           </Link>
         ))}
