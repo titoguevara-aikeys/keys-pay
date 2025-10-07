@@ -61,22 +61,44 @@ const Auth = () => {
     setError(null);
     setMessage(null);
 
-    const { error } = await signUp(email, password);
-    
-    if (error) {
-      if (error.message.includes('User already registered')) {
-        setError('This email is already registered. Please sign in instead.');
-      } else {
-        setError(error.message);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/kyc`
+        }
+      });
+
+      if (error) {
+        if (error.message.includes('User already registered')) {
+          setError('This email is already registered. Please sign in instead.');
+        } else {
+          setError(error.message);
+        }
+        setLoading(false);
+        return;
       }
-    } else {
-      setMessage('Account created! Please check your email to confirm, then you will be redirected to complete KYC verification.');
-      // After successful signup, wait a moment then redirect to KYC
-      setTimeout(() => {
-        navigate('/kyc');
-      }, 3000);
+
+      // Check if email confirmation is required
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session) {
+        // Email confirmation is disabled - user is automatically logged in
+        setMessage('Account created successfully! Redirecting to KYC verification...');
+        setTimeout(() => {
+          navigate('/kyc');
+        }, 1500);
+      } else {
+        // Email confirmation is enabled
+        setMessage('Account created! Please check your email and click the confirmation link to continue. Once confirmed, you can sign in.');
+        setShowResend(true);
+      }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred during sign up.');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleResend = async () => {
