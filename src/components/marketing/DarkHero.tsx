@@ -5,7 +5,7 @@ import ParticleField from '@/components/effects/ParticleField';
 
 export default function DarkHero() {
   return (
-    <section className="relative min-h-screen bg-slate-950 overflow-hidden pt-20">
+    <section className="relative min-h-screen bg-slate-950 overflow-hidden pt-16 md:pt-20">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-slate-950 to-blue-900/20" />
       
@@ -16,33 +16,35 @@ export default function DarkHero() {
       {/* Animated rotating logo particles */}
       <ParticleField particleCount={20} interactive={true} />
       
-      <div className="container mx-auto px-4 relative">
-        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-5rem)]">
-          {/* Left column - Text content */}
-          <div className="space-y-8 pt-12 lg:pt-0">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold">
+      <div className="container mx-auto px-4 sm:px-6 relative">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-12 items-center justify-center min-h-[calc(100vh-5rem)]">
+          {/* Text content - centered on mobile */}
+          <div className="space-y-6 md:space-y-8 pt-8 lg:pt-0 text-center lg:text-left w-full max-w-2xl lg:max-w-none">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
               <span className="text-white">Keys </span>
               <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
                 Pay Wallet
               </span>
             </h1>
             
-            <p className="text-xl text-gray-400 max-w-xl leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-xl mx-auto lg:mx-0 leading-relaxed px-4 sm:px-0">
               Claim your free Keys Pay WalletID. Connect the money management you know today with the ecosystem of tomorrow
             </p>
             
-            <Link to="/auth">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-lg px-8 py-6 rounded-full shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all duration-300"
-              >
-                Touch the Future Now
-              </Button>
-            </Link>
+            <div className="flex justify-center lg:justify-start">
+              <Link to="/auth">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 rounded-full shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all duration-300"
+                >
+                  Touch the Future Now
+                </Button>
+              </Link>
+            </div>
           </div>
 
-          {/* Right column - Circular navigation */}
-          <div className="relative h-[600px] flex items-center justify-center">
+          {/* Circular navigation - scaled for mobile */}
+          <div className="relative w-full h-[400px] sm:h-[500px] lg:h-[600px] flex items-center justify-center">
             <HeroCircularNav />
           </div>
         </div>
