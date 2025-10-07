@@ -210,10 +210,10 @@ const Auth = () => {
             
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-4">
-                <Alert>
+                <Alert className="bg-primary/5 border-primary/20">
                   <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
-                    After creating your account, you'll need to complete KYC verification to access all features.
+                  <AlertDescription className="text-sm">
+                    <strong>Important:</strong> You will receive a confirmation email. Please check your inbox (and spam folder) and click the verification link to activate your account.
                   </AlertDescription>
                 </Alert>
 
@@ -234,7 +234,7 @@ const Auth = () => {
                   <Input
                     id="signup-password"
                     type="password"
-                    placeholder="Create a password"
+                    placeholder="Create a password (min. 6 characters)"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -250,31 +250,52 @@ const Auth = () => {
                 )}
 
                 {message && (
-                  <Alert>
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{message}</AlertDescription>
+                  <Alert className="bg-green-50 border-green-200">
+                    <AlertCircle className="h-4 w-4 text-green-600" />
+                    <AlertDescription className="text-green-800">
+                      <strong>Check your email!</strong><br/>
+                      {message}
+                      <div className="mt-3 space-y-1 text-xs text-green-700">
+                        <p>📧 Check your inbox for the confirmation email</p>
+                        <p>📁 Don't forget to check your spam/junk folder</p>
+                        <p>🔗 Click the link in the email to verify your account</p>
+                        <p>✅ After verification, return here to sign in</p>
+                      </div>
+                    </AlertDescription>
                   </Alert>
                 )}
                 
-                {(showResend || message) && (
+                {message && (
                   <Button
                     type="button"
                     onClick={handleResend}
-                    variant="secondary"
+                    variant="outline"
                     className="w-full"
                     disabled={loading}
                   >
-                    {loading ? 'Sending...' : 'Resend confirmation email'}
+                    {loading ? 'Sending...' : '📨 Resend confirmation email'}
                   </Button>
                 )}
 
                 <Button 
                   type="submit" 
                   className="w-full" 
-                  disabled={loading}
+                  disabled={loading || !!message}
                 >
                   {loading ? 'Creating Account...' : 'Create Account'}
                 </Button>
+
+                {message && (
+                  <div className="text-center text-sm text-muted-foreground mt-4">
+                    Already verified? <button 
+                      type="button"
+                      onClick={() => setActiveTab('signin')} 
+                      className="text-primary hover:underline font-medium"
+                    >
+                      Sign in here
+                    </button>
+                  </div>
+                )}
               </form>
             </TabsContent>
           </Tabs>
