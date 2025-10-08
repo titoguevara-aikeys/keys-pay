@@ -49,6 +49,7 @@ import { useInsertDemoData } from '@/hooks/useDemoData';
 import { debounce } from '../../utils/debounce';
 import { useWebWorker } from '@/hooks/useWebWorker';
 import { VirtualizedList } from './VirtualizedList';
+import { CoachFeed } from '@/components/coach/CoachFeed';
 
 interface EnhancedMessage {
   id: string;
@@ -368,6 +369,22 @@ export const EnhancedAIAssistant = () => {
                   </Button>
                 ))}
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Shariah-Compliant Financial Coach */}
+          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Shield className="h-5 w-5 text-green-600" />
+                Islamic Financial Education
+              </CardTitle>
+              <CardDescription>
+                Shariah-compliant financial lessons and guidance
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <CoachFeed shariahMode={true} />
             </CardContent>
           </Card>
 
