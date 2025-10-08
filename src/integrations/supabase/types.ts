@@ -1682,6 +1682,75 @@ export type Database = {
         }
         Relationships: []
       }
+      financial_lessons: {
+        Row: {
+          copy_ar: string
+          copy_en: string
+          created_at: string
+          cta_ar: string
+          cta_en: string
+          id: string
+          is_active: boolean
+          lesson_number: number
+          primary_metric: string
+          shariah_alternative_ar: string | null
+          shariah_alternative_en: string | null
+          shariah_compatible: boolean
+          shariah_notes_ar: string | null
+          shariah_notes_en: string | null
+          shariah_prohibited_flags: string[] | null
+          title_ar: string
+          title_en: string
+          track: string
+          trigger: string
+          updated_at: string
+        }
+        Insert: {
+          copy_ar: string
+          copy_en: string
+          created_at?: string
+          cta_ar: string
+          cta_en: string
+          id: string
+          is_active?: boolean
+          lesson_number: number
+          primary_metric: string
+          shariah_alternative_ar?: string | null
+          shariah_alternative_en?: string | null
+          shariah_compatible?: boolean
+          shariah_notes_ar?: string | null
+          shariah_notes_en?: string | null
+          shariah_prohibited_flags?: string[] | null
+          title_ar: string
+          title_en: string
+          track: string
+          trigger: string
+          updated_at?: string
+        }
+        Update: {
+          copy_ar?: string
+          copy_en?: string
+          created_at?: string
+          cta_ar?: string
+          cta_en?: string
+          id?: string
+          is_active?: boolean
+          lesson_number?: number
+          primary_metric?: string
+          shariah_alternative_ar?: string | null
+          shariah_alternative_en?: string | null
+          shariah_compatible?: boolean
+          shariah_notes_ar?: string | null
+          shariah_notes_en?: string | null
+          shariah_prohibited_flags?: string[] | null
+          title_ar?: string
+          title_en?: string
+          track?: string
+          trigger?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       fraud_rules: {
         Row: {
           created_at: string
@@ -4485,6 +4554,50 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "investment_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_lesson_progress: {
+        Row: {
+          action_taken: boolean
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          id: string
+          lesson_id: string
+          notes: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_taken?: boolean
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          lesson_id: string
+          notes?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_taken?: boolean
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          lesson_id?: string
+          notes?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_lesson_progress_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "financial_lessons"
             referencedColumns: ["id"]
           },
         ]
